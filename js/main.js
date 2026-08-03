@@ -83,7 +83,10 @@
   function renderSocials(container, large) {
     var html = SOCIAL_ORDER.filter(function (k) { return site.socials && site.socials[k]; }).map(function (k) {
       var def = SOCIAL_DEFS[k];
-      return '<a class="social-btn' + (large ? " social-btn-lg" : "") + '" href="' + esc(site.socials[k]) + '" target="_blank" rel="noopener noreferrer" title="' + esc(def.label) + '" aria-label="' + esc(def.label) + '">' + socialContent(k) + "</a>";
+      var url = site.socials[k];
+      if (k === "email" && url.indexOf("mailto:") !== 0) url = "mailto:" + url;
+      if (k === "qq" && /^\d+$/.test(url)) url = "https://wpa.qq.com/msgrd?v=3&uin=" + url + "&site=qq&menu=yes";
+      return '<a class="social-btn' + (large ? " social-btn-lg" : "") + '" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer" title="' + esc(def.label) + '" aria-label="' + esc(def.label) + '">' + socialContent(k) + "</a>";
     }).join("");
     container.innerHTML = html;
     container.classList.toggle("hidden", !html);
