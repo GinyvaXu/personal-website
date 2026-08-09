@@ -32,10 +32,10 @@ window.SITE_DATA = {
     "douyin": ""
   },
   "danmaku": {
-    "enabled": false,
+    "enabled": true,
     "demo": true,
-    "supabaseUrl": "",
-    "supabaseAnonKey": "",
+    "supabaseUrl": "https://nqyzlbqqxpwjxfrxhqnn.supabase.co",
+    "supabaseAnonKey": "sb_publishable_1Pwm_xixqJWBA2Dz7ZkeHQ_cFmwwUGV",
     "pollMs": 15000,
     "maxVisible": 20
   }

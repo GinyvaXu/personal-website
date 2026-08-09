@@ -70,8 +70,8 @@ README.md         本文档
 ## 访客弹幕（Supabase 免费，约 10 分钟）
 
 首页的访客互动是「弹幕」：访客可以在你的名字 / 头像旁边发射一条漂浮的留言，
-可以留昵称也可以匿名，无需登录。当前是**演示模式**（自动漂浮几条示例弹幕、不显示输入框），
-配置好下面的步骤后就变成真实可发、真实管理。
+可以留昵称也可以匿名，无需登录。**✅ 当前已开通真实弹幕**（配置已填入 `data/site.js`），
+下面的步骤保留供以后新建项目参考。
 
 1. 打开 https://supabase.com 并注册（用 GitHub 账号一键登录即可）。
 2. 点 `New project` 创建一个免费项目（名字随意，地区选 Singapore 或 Tokyo）。
@@ -95,7 +95,7 @@ README.md         本文档
      for select to anon using (hidden = false);
    ```
 
-4. 左侧 `Settings` → `API`：复制 `Project URL` 和 `anon public` key，
+4. 左侧 `Settings` → `API`：复制 `Project URL` 和 `anon public` key（新版界面叫 `publishable key`，以 `sb_publishable_` 开头，可直接替代 anon key 使用），
    填到 `data/site.js` 的 `danmaku` 配置里，并把 `enabled` 改为 `true`：
 
    ```js
