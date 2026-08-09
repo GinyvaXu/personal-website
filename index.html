@@ -4,7 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>个人网站</title>
-<meta name="description" content="个人网站：关于我、我的项目与联系方式">
+<meta name="description" content="Ginyva / 八奈見真尋 的个人网站：关于我、主力项目 AgentFloat、开发日志与联系方式">
+<script>
+  (function () {
+    var t;
+    try { t = localStorage.getItem("site-theme"); } catch (e) {}
+    if (t === "dark" || (!t && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches)) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234f46e5'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='22' font-size='16' font-family='sans-serif' font-weight='bold' fill='white' text-anchor='middle'>我</text%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -18,6 +27,10 @@
       <span class="brand-dot" aria-hidden="true"></span>
       <span id="brandName">个人网站</span>
     </a>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="切换深浅色模式" aria-pressed="false" title="切换深浅色">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M4.5 4.5l1.6 1.6M17.9 17.9l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.5 19.5l1.6-1.6M17.9 6.1l1.6-1.6"></path></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z"></path></svg>
+    </button>
     <button class="nav-toggle" id="navToggle" aria-label="打开菜单" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -26,6 +39,8 @@
       <li><a class="nav-link" href="#about">关于我</a></li>
       <li><a class="nav-link" href="#featured">主力项目</a></li>
       <li><a class="nav-link" href="#projects">我的项目</a></li>
+      <li><a class="nav-link" href="#logs">日志</a></li>
+      <li><a class="nav-link" href="#guestbook">留言</a></li>
       <li><a class="nav-link" href="#contact">联系</a></li>
     </ul>
   </nav>
@@ -44,8 +59,8 @@
       <p class="hero-tagline" id="heroTagline"></p>
       <div class="hero-socials" id="heroSocials"></div>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#projects">查看我的项目</a>
-        <a class="btn btn-ghost" href="#contact">联系我</a>
+        <a class="btn btn-primary" href="#featured">看看主力项目</a>
+        <a class="btn btn-ghost" href="#projects">浏览全部项目</a>
       </div>
     </div>
   </section>
@@ -80,6 +95,23 @@
     </div>
   </section>
 
+  <section class="section" id="logs">
+    <div class="container">
+      <h2 class="section-title reveal">开发日志</h2>
+      <p class="section-sub reveal">记录每一次迭代、踩过的坑和想说的话。</p>
+      <div class="logs-list reveal" id="logsList"></div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="guestbook">
+    <div class="container guestbook-inner">
+      <h2 class="section-title reveal">留言板</h2>
+      <p class="section-sub reveal">欢迎留下你的想法 —— 评论需要 GitHub 账号登录。</p>
+      <div class="guestbook-box reveal" id="guestbookBox"></div>
+      <p class="section-sub guestbook-visits reveal">本站累计访问 <span id="busuanzi_value_site_pv">--</span> 次 · 访客 <span id="busuanzi_value_site_uv">--</span> 人</p>
+    </div>
+  </section>
+
   <section class="section" id="contact">
     <div class="container contact-inner">
       <h2 class="section-title reveal">联系我</h2>
@@ -103,8 +135,10 @@
   </div>
 </div>
 
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <script src="data/site.js"></script>
 <script src="data/projects.js"></script>
+<script src="data/logs.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

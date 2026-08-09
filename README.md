@@ -8,9 +8,13 @@
 ## 功能特点
 
 - 浅色简约风格，带轻盈动效（滚动渐现、卡片悬浮、弹窗过渡）
-- 「主力项目」模块：置顶隆重展示当前主力项目（如 AgentFloat，带玻璃小球演示动画）
+- 「主力项目」模块：置顶隆重展示当前主力项目（AgentFloat 界面截图画廊 + 浏览器窗格展示）
+- 暗色模式：右上角一键切换，记忆偏好，跟随系统
 - 名字在 Ginyva / 八奈見真尋 之间轮换显示（Hero 与顶部导航）
-- 项目以「卡片 + 点击弹出详情」的形式逐一展示，每个项目都带 GitHub 仓库链接
+- 自动数据：卡片、弹窗、主力模块自动显示 GitHub star 数与最新发布版本（本地缓存 30 分钟，断网/失败自动降级）
+- 项目以「卡片 + 点击弹出详情」的形式逐一展示，每个项目都带 GitHub 仓库链接与界面截图（如有）
+- 「开发日志」区块：记录迭代与踩坑（数据在 `data/logs.js`）
+- 「留言板」：giscus 评论（需 GitHub 登录）+ 访问计数
 - 数据驱动：新增项目只需在 `data/projects.js` 里加一条记录
 - 社交链接：GitHub、Steam 必显示，微信 / QQ / 邮箱 / B 站 / 微博 / 抖音 选填（留空自动隐藏）
 - 手机 / 平板 / 电脑自适应
@@ -23,6 +27,7 @@ css/style.css     样式与动画（一般不用改）
 js/main.js        页面逻辑（一般不用改）
 data/site.js      个人信息 + 社交链接 ← 改这里
 data/projects.js  项目列表 ← 改这里
+data/logs.js      开发日志 ← 改这里
 assets/           存放头像、项目截图等图片
 填写信息.txt       信息填写模板（填好后可让我帮你更新网站）
 发布更新.bat      本地一键发布到 GitHub Pages
@@ -47,6 +52,28 @@ README.md         本文档
 
 - 想让某个项目成为「当前主力」：给它加 `"featured": true`（建议同时只置 1 个），它会出现在主页「主力项目」模块并带「主力」角标
 - 每个项目建议至少放一个 GitHub 仓库链接（`links` 里 `label` 含 GitHub 的会直接显示在卡片右下角）
+
+## 开发日志
+
+打开 `data/logs.js`，复制任意一条 `{ ... },` 粘贴到数组最前面，改好 `date / title / tags / content` 即可（content 多段用空行分隔）。
+
+## 自动数据（star 数与最新版本）
+
+网页会自动调用 GitHub API 拉取每个项目仓库的 star 数与最新 Release 版本，并缓存 30 分钟。
+- 无需配置；GitHub 匿名 API 限额约 60 次/小时/IP，对个人站完全够用
+- 断网或请求失败时自动显示 `—` 并保留手动填写的 `lastUpdate`，不影响正常浏览
+
+## 暗色模式
+
+右上角 ☀/☾ 按钮一键切换，偏好保存在浏览器里；首次访问跟随系统深浅色。
+
+## 留言板（giscus，约 3 分钟）
+
+1. 打开仓库 `GinyvaXu/personal-website` → `Settings` → 勾选 `Discussions` 启用
+2. 访问 https://github.com/apps/giscus 安装到该仓库
+3. 打开 https://giscus.app 按提示选择仓库与分类，把生成的 `data-repo-id` 和 `data-category-id` 填到 `data/site.js` 的 `giscus` 配置里，并把 `enabled` 改为 `true`
+
+开启后留言板自动出现；评论数据存在仓库的 Discussions 里，你可以随时在 GitHub 上管理或删除。
 
 ## 部署到 GitHub Pages（第一次）
 

@@ -12,6 +12,7 @@
  *   - "names"     轮换显示的名字列表（Hero 与顶部导航会轮流切换）
  *   - "tagline"   Hero 副标题
  *   - "about"     关于我段落
+ *   - "giscus"    留言板配置（开启步骤见 README「留言板」一节）
  *   - 社交链接不需要的，留空 "" 即可（对应的图标会自动隐藏）
  * ============================================================ */
 window.SITE_DATA = {
@@ -29,5 +30,12 @@ window.SITE_DATA = {
     "bilibili": "https://space.bilibili.com/494464519",
     "weibo": "",
     "douyin": ""
+  },
+  "giscus": {
+    "enabled": false,
+    "repo": "GinyvaXu/personal-website",
+    "repoId": "",
+    "category": "General",
+    "categoryId": ""
   }
 };

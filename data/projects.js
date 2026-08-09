@@ -27,6 +27,11 @@ window.PROJECTS = [
     "type": "软件",
     "status": "进行中",
     "featured": true,
+    "screenshots": [
+      {"src": "assets/agentfloat/about.png", "caption": "设置页 · 关于"},
+      {"src": "assets/agentfloat/api-light.png", "caption": "API 用量 · 浅色"},
+      {"src": "assets/agentfloat/api-dark.png", "caption": "API 用量 · 深色"}
+    ],
     "summary": "通用多能 AI Agent 桌面悬浮助手：毛玻璃浮窗 + 双通道环绕菜单 + Skills 辅助窗 + API 用量监控 + AI 快报，一个浮窗唤醒整个 AI 工作流。",
     "detail": "一颗毛玻璃小球收纳你的整个 AI 工作流：点击即启动任意 Agent（Claude Code / Codex CLI / 自定义命令），悬停或长按唤出环形菜单，4/6/8 扇区随心分配动作；内置 Skills 辅助窗（本机 skills 扫描 + 中英对照）、通用 JSONPath 的 API 余额监控（低余额变色警告）、多源聚合的 AI 快报（Hacker News / GitHub Trending / 少数派 / 量子位 / arXiv + 本地 Agent 摘要）、剪贴板历史与自定义命令面板。支持亮/暗双主题、自由拖拽、贴边吸附、系统托盘、开机自启与全局热键 Ctrl+Alt+C。",
     "tech": ["Python", "PyQt5", "JSONPath", "PyInstaller", "Inno Setup"],

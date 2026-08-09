@@ -3,6 +3,7 @@
 
   var site = window.SITE_DATA || {};
   var projects = window.PROJECTS || [];
+  var logs = window.LOGS || [];
 
   function $(sel, root) { return (root || document).querySelector(sel); }
   function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
@@ -173,9 +174,15 @@
     return (p.links || []).filter(function (l) { return /github/i.test(l.label) || /github\.com/i.test(l.url); })[0] || null;
   }
 
+  function repoFromUrl(url) {
+    var m = /github\.com\/([^/]+)\/([^/?#]+)/.exec(url || "");
+    return m ? m[1] + "/" + m[2].replace(/\.git$/, "") : null;
+  }
+
   function cardHtml(p, i) {
     var tech = (p.tech || []).slice(0, 3).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
     var gh = githubLink(p);
+    var repo = gh ? repoFromUrl(gh.url) : null;
     var flag = p.featured ? '<span class="card-flag">主力</span>' : "";
     return '<article class="project-card reveal' + (p.featured ? " card-featured" : "") + '" style="transition-delay:' + (i % 6) * 60 + 'ms" data-id="' + esc(p.id) + '" tabindex="0" role="button" aria-label="查看项目：' + esc(p.name) + '">' +
       '<div class="card-top">' +
@@ -186,6 +193,7 @@
       '<h3 class="card-name">' + esc(p.name) + "</h3>" +
       '<p class="card-summary">' + esc(p.summary) + "</p>" +
       (tech ? '<div class="card-tech">' + tech + "</div>" : "") +
+      (repo ? '<div class="card-auto" data-repo="' + esc(repo) + '"><span class="gh-stars">★ <b data-stars>--</b></span><span class="gh-ver">v<b data-ver>--</b></span></div>' : "") +
       (p.lastUpdate ? '<div class="card-update">' + CLOCK_ICON + '<span>' + esc(p.lastUpdate) + "</span></div>" : "") +
       '<div class="card-foot">' +
         (gh ? '<a class="card-gh" href="' + esc(gh.url) + '" target="_blank" rel="noopener noreferrer" title="GitHub 仓库" aria-label="GitHub 仓库">' + SOCIAL_DEFS.github.icon + "<span>GitHub</span></a>" : "") +
@@ -230,11 +238,31 @@
       return;
     }
     if (head) head.classList.remove("hidden");
+    var gh = githubLink(p);
+    var repo = gh ? repoFromUrl(gh.url) : null;
     var tech = (p.tech || []).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
     var highlights = (p.highlights || []).map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("");
     var links = (p.links || []).map(function (l) {
       return '<a class="btn btn-primary btn-sm" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + " ↗</a>";
     }).join("");
+    var shots = (p.screenshots || []).map(function (s, i) {
+      return '<button class="thumb' + (i === 0 ? " active" : "") + '" type="button" data-src="' + esc(s.src) + '" data-caption="' + esc(s.caption || "") + '" aria-label="' + esc(s.caption || "") + '"><img src="' + esc(s.src) + '" alt="' + esc(s.caption || "") + '" loading="lazy"></button>';
+    }).join("");
+    var first = (p.screenshots && p.screenshots[0]) || null;
+    var show =
+      first
+        ? '<div class="showcase">' +
+            '<div class="showcase-bar"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span><span class="showcase-url">github.com/' + esc(repo || "") + '</span></div>' +
+            '<div class="showcase-stage"><img class="showcase-img" id="showcaseImg" src="' + esc(first.src) + '" alt="' + esc(first.caption || "") + '"></div>' +
+            '<div class="showcase-thumbs">' + shots + "</div>" +
+          "</div>"
+        : '<div class="glass-ball">' +
+            '<span class="ring ring-1"></span><span class="ring ring-2"></span><span class="ring ring-3"></span>' +
+            '<span class="ball-core"><img src="assets/agentfloat-icon.png" alt="AgentFloat 图标"></span>' +
+            '<span class="badge badge-api">API 余额监控</span>' +
+            '<span class="badge badge-news">AI 快报</span>' +
+            '<span class="badge badge-skills">Skills 辅助</span>' +
+          "</div>";
     panel.innerHTML =
       '<div class="featured-main">' +
         '<div class="featured-meta">' +
@@ -251,27 +279,62 @@
           '<button class="btn btn-ghost btn-sm" type="button" data-featured-detail>查看详情</button>' +
         "</div>" +
       "</div>" +
-      '<div class="featured-show" aria-hidden="true">' +
-        '<div class="glass-ball">' +
-          '<span class="ring ring-1"></span>' +
-          '<span class="ring ring-2"></span>' +
-          '<span class="ring ring-3"></span>' +
-          '<span class="ball-core"><img src="assets/agentfloat-icon.png" alt="AgentFloat 图标"></span>' +
-          '<span class="badge badge-api">API 余额监控</span>' +
-          '<span class="badge badge-news">AI 快报</span>' +
-          '<span class="badge badge-skills">Skills 辅助</span>' +
-        "</div>" +
+      '<div class="featured-show">' + show +
+        (repo ? '<div class="featured-stats" data-repo="' + esc(repo) + '"><span class="stat-chip">★ <b data-stars>--</b> Stars</span><span class="stat-chip">最新 <b data-ver>--</b></span></div>' : "") +
       "</div>";
+    $$(".thumb", panel).forEach(function (t) {
+      t.addEventListener("click", function () {
+        var stageImg = $("#showcaseImg", panel);
+        if (stageImg) {
+          stageImg.style.opacity = "0";
+          window.setTimeout(function () {
+            stageImg.src = t.getAttribute("data-src");
+            stageImg.alt = t.getAttribute("data-caption") || "";
+            stageImg.style.opacity = "1";
+          }, 220);
+        }
+        $$(".thumb", panel).forEach(function (x) { x.classList.toggle("active", x === t); });
+      });
+    });
     var detailBtn = panel.querySelector("[data-featured-detail]");
     if (detailBtn) detailBtn.addEventListener("click", function () { openModal(p); });
+  }
+
+  function bindModalShots(panel) {
+    $$(".mshot", panel).forEach(function (t) {
+      t.addEventListener("click", function () {
+        var img = $("#mshotImg", panel);
+        var cap = $("#mshotCaption", panel);
+        if (img) img.src = t.getAttribute("data-src");
+        if (cap) cap.textContent = t.getAttribute("data-caption") || "";
+        $$(".mshot", panel).forEach(function (x) { x.classList.toggle("active", x === t); });
+      });
+    });
   }
 
   function openModal(p) {
     var tech = (p.tech || []).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
     var highlights = (p.highlights || []).map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("");
+    var gh = githubLink(p);
+    var repo = gh ? repoFromUrl(gh.url) : null;
     var links = (p.links || []).map(function (l) {
       return '<a class="btn btn-primary btn-sm" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + " ↗</a>";
     }).join("");
+    var shotsHtml = "";
+    if (p.screenshots && p.screenshots.length) {
+      var firstShot = p.screenshots[0];
+      var thumbs = p.screenshots.map(function (s, i) {
+        return '<button class="mshot' + (i === 0 ? " active" : "") + '" type="button" data-src="' + esc(s.src) + '" data-caption="' + esc(s.caption || "") + '"><img src="' + esc(s.src) + '" alt="' + esc(s.caption || "") + '"></button>';
+      }).join("");
+      shotsHtml =
+        '<div class="modal-block"><h4>界面预览</h4>' +
+          '<div class="mshot-main"><img id="mshotImg" src="' + esc(firstShot.src) + '" alt="' + esc(firstShot.caption || "") + '"><span class="mshot-caption" id="mshotCaption">' + esc(firstShot.caption || "") + "</span></div>" +
+          '<div class="mshot-thumbs">' + thumbs + "</div>" +
+        "</div>";
+    }
+    var repoLine = repo
+      ? '<div class="modal-repo" data-repo="' + esc(repo) + '"><span class="gh-stars">★ <b data-stars>--</b></span><span class="gh-ver">最新发布 <b data-ver>--</b></span></div>'
+      : "";
     $("#modalContent").innerHTML =
       '<div class="modal-head">' +
         '<span class="card-icon type-' + esc(p.type) + '">' + typeIcon(p.type) + "</span>" +
@@ -283,7 +346,15 @@
       (p.lastUpdate ? '<div class="modal-block"><h4>最近更新</h4><p class="modal-update">' + esc(p.lastUpdate) + "</p></div>" : "") +
       (highlights ? '<div class="modal-block"><h4>项目亮点</h4><ul class="modal-list">' + highlights + "</ul></div>" : "") +
       (tech ? '<div class="modal-block"><h4>技术栈</h4><div class="modal-tech">' + tech + "</div></div>" : "") +
+      shotsHtml +
+      repoLine +
       (links ? '<div class="modal-links">' + links + "</div>" : "");
+    bindModalShots($("#modalContent"));
+    if (repo) {
+      var cachedRepo = ghCacheGet()[repo];
+      if (cachedRepo) { fillRepoInfo(repo, cachedRepo.d); }
+      else { fetchRepoInfo(repo, function (info) { fillRepoInfo(repo, info); }); }
+    }
     lastFocus = document.activeElement;
     modal.classList.add("open");
     modal.setAttribute("aria-hidden", "false");
@@ -308,9 +379,87 @@
     if (e.key === "Escape") closeModal();
   });
 
+  function logHtml(l, i) {
+    var tags = (l.tags || []).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
+    var paras = String(l.content || "").split(/\n+/).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("");
+    return '<details class="log-item reveal" style="transition-delay:' + (i % 6) * 60 + 'ms">' +
+      "<summary>" +
+        '<span class="log-date">' + esc(l.date) + "</span>" +
+        '<span class="log-title">' + esc(l.title) + "</span>" +
+      "</summary>" +
+      '<div class="log-body">' + paras + (tags ? '<div class="log-tags">' + tags + "</div>" : "") + "</div>" +
+    "</details>";
+  }
+
+  function renderLogs() {
+    var el = $("#logsList");
+    if (!el) return;
+    el.innerHTML = logs.length ? logs.map(logHtml).join("") : '<p class="empty">暂无日志，去 data/logs.js 添加吧。</p>';
+    observeReveals(el);
+  }
+
+  function renderGuestbook() {
+    var box = $("#guestbookBox");
+    if (!box) return;
+    var g = site.giscus || {};
+    if (g.enabled && g.repoId && g.categoryId) {
+      box.innerHTML = '<div class="giscus"></div>';
+      var s = document.createElement("script");
+      s.src = "https://giscus.app/client.js";
+      s.async = true;
+      s.crossOrigin = "anonymous";
+      s.setAttribute("data-repo", g.repo || "");
+      s.setAttribute("data-repo-id", g.repoId);
+      s.setAttribute("data-category", g.category || "General");
+      s.setAttribute("data-category-id", g.categoryId);
+      s.setAttribute("data-mapping", "pathname");
+      s.setAttribute("data-strict", "0");
+      s.setAttribute("data-reactions-enabled", "1");
+      s.setAttribute("data-emit-metadata", "0");
+      s.setAttribute("data-input-position", "bottom");
+      s.setAttribute("data-theme", document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
+      s.setAttribute("data-lang", "zh-CN");
+      s.setAttribute("data-loading", "lazy");
+      box.appendChild(s);
+    } else {
+      box.innerHTML = '<div class="guestbook-pending">💬 留言板即将开放，敬请期待 ✨</div>';
+    }
+  }
+
+  function initCounter() {
+    var pv = $("#busuanzi_value_site_pv");
+    if (!pv) return;
+    window.setTimeout(function () {
+      if (!window.busuanzi) {
+        var line = pv.closest ? pv.closest(".guestbook-visits") : null;
+        if (line) line.classList.add("hidden");
+      }
+    }, 7000);
+  }
+
   var header = $("#siteHeader");
   var navToggle = $("#navToggle");
   var navLinksEl = $("#navLinks");
+  var themeBtn = $("#themeToggle");
+
+  function syncGiscusTheme(t) {
+    var frame = document.querySelector("iframe.giscus-frame");
+    if (!frame || !frame.contentWindow) return;
+    try {
+      frame.contentWindow.postMessage({ giscus: { setConfig: { theme: t === "dark" ? "dark" : "light" } } }, "https://giscus.app");
+    } catch (e) {}
+  }
+
+  if (themeBtn) {
+    themeBtn.setAttribute("aria-pressed", String(document.documentElement.getAttribute("data-theme") === "dark"));
+    themeBtn.addEventListener("click", function () {
+      var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("site-theme", next); } catch (e) {}
+      syncGiscusTheme(next);
+      themeBtn.setAttribute("aria-pressed", String(next === "dark"));
+    });
+  }
 
   navToggle.addEventListener("click", function () {
     var open = navLinksEl.classList.toggle("open");
@@ -336,7 +485,7 @@
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
 
-  ["home", "about", "featured", "projects", "contact"].forEach(function (id) {
+  ["home", "about", "featured", "projects", "logs", "guestbook", "contact"].forEach(function (id) {
     var sec = document.getElementById(id);
     if (sec) sectionObserver.observe(sec);
   });
@@ -347,9 +496,61 @@
 
   $("#footerText").textContent = "© " + new Date().getFullYear() + " " + name + " · 用心做的小网站";
 
+  // ---------- GitHub 自动数据 ----------
+
+  var GH_CACHE = "gh-data-v1";
+
+  function ghCacheGet() { try { return JSON.parse(localStorage.getItem(GH_CACHE) || "null") || {}; } catch (e) { return {}; } }
+  function ghCacheSet(c) { try { localStorage.setItem(GH_CACHE, JSON.stringify(c)); } catch (e) {} }
+
+  function fetchRepoInfo(repo, cb) {
+    var cache = ghCacheGet();
+    var hit = cache[repo];
+    if (hit && Date.now() - hit.t < 30 * 60 * 1000) { cb(hit.d); return; }
+    fetch("https://api.github.com/repos/" + repo)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d) { cb(null); return; }
+        var info = { stars: d.stargazers_count || 0 };
+        return fetch("https://api.github.com/repos/" + repo + "/releases?per_page=1")
+          .then(function (r2) { return r2.ok ? r2.json() : null; })
+          .then(function (rels) {
+            var rel = (rels && rels.length) ? rels[0] : null;
+            if (rel) { info.version = rel.tag_name; info.releaseDate = rel.published_at; info.releaseUrl = rel.html_url; }
+            cache[repo] = { t: Date.now(), d: info };
+            ghCacheSet(cache);
+            cb(info);
+          });
+      })
+      .catch(function () { cb(null); });
+  }
+
+  function fillRepoInfo(repo, info) {
+    $$("[data-repo='" + repo + "']").forEach(function (el) {
+      var stars = el.querySelector("[data-stars]");
+      var ver = el.querySelector("[data-ver]");
+      if (stars) stars.textContent = info ? String(info.stars) : "—";
+      if (ver) ver.textContent = info && info.version ? info.version.replace(/^v/i, "") : "—";
+    });
+  }
+
+  function initAutoData() {
+    var seen = {};
+    $$("[data-repo]").forEach(function (el) {
+      var repo = el.getAttribute("data-repo");
+      if (!repo || seen[repo]) return;
+      seen[repo] = true;
+      fetchRepoInfo(repo, function (info) { fillRepoInfo(repo, info); });
+    });
+  }
+
   renderFilters();
   renderGrid();
   renderFeatured();
+  renderLogs();
+  renderGuestbook();
+  initAutoData();
+  initCounter();
 
   if (!("IntersectionObserver" in window)) {
     $$(".reveal").forEach(function (el) { el.classList.add("in"); });
