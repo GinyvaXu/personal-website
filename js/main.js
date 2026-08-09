@@ -51,10 +51,42 @@
   }
 
   var name = site.name || "个人网站";
+  var names = (site.names && site.names.length) ? site.names.slice() : [name];
+  var nameIdx = 0;
   document.title = name + " · 个人网站";
   $("#brandName").textContent = name;
-  $("#heroName").textContent = name;
+  $("#heroNameText").textContent = name;
   $("#heroTagline").textContent = site.tagline || "";
+
+  function applyName(next) {
+    var heroEl = $("#heroNameText");
+    var brandEl = $("#brandName");
+    [heroEl, brandEl].forEach(function (el) {
+      if (!el) return;
+      el.style.opacity = "0";
+      el.style.transform = "translateY(8px)";
+    });
+    window.setTimeout(function () {
+      [heroEl, brandEl].forEach(function (el) { if (el) el.textContent = next; });
+      document.title = next + " · 个人网站";
+      var footerEl = $("#footerText");
+      if (footerEl) footerEl.textContent = "© " + new Date().getFullYear() + " " + next + " · 用心做的小网站";
+      window.requestAnimationFrame(function () {
+        [heroEl, brandEl].forEach(function (el) {
+          if (!el) return;
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+        });
+      });
+    }, 280);
+  }
+
+  if (names.length > 1) {
+    window.setInterval(function () {
+      nameIdx = (nameIdx + 1) % names.length;
+      applyName(names[nameIdx]);
+    }, 4200);
+  }
 
   var avatarWrap = $("#heroAvatar");
   if (site.avatar) {
@@ -137,18 +169,28 @@
     });
   }
 
+  function githubLink(p) {
+    return (p.links || []).filter(function (l) { return /github/i.test(l.label) || /github\.com/i.test(l.url); })[0] || null;
+  }
+
   function cardHtml(p, i) {
     var tech = (p.tech || []).slice(0, 3).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
-    return '<article class="project-card reveal" style="transition-delay:' + (i % 6) * 60 + 'ms" data-id="' + esc(p.id) + '" tabindex="0" role="button" aria-label="查看项目：' + esc(p.name) + '">' +
+    var gh = githubLink(p);
+    var flag = p.featured ? '<span class="card-flag">主力</span>' : "";
+    return '<article class="project-card reveal' + (p.featured ? " card-featured" : "") + '" style="transition-delay:' + (i % 6) * 60 + 'ms" data-id="' + esc(p.id) + '" tabindex="0" role="button" aria-label="查看项目：' + esc(p.name) + '">' +
       '<div class="card-top">' +
         '<span class="card-icon type-' + esc(p.type) + '">' + typeIcon(p.type) + "</span>" +
+        flag +
         '<span class="status ' + statusClass(p.status) + '">' + esc(p.status) + "</span>" +
       "</div>" +
       '<h3 class="card-name">' + esc(p.name) + "</h3>" +
       '<p class="card-summary">' + esc(p.summary) + "</p>" +
       (tech ? '<div class="card-tech">' + tech + "</div>" : "") +
       (p.lastUpdate ? '<div class="card-update">' + CLOCK_ICON + '<span>' + esc(p.lastUpdate) + "</span></div>" : "") +
-      '<span class="card-more">查看详情 →</span>' +
+      '<div class="card-foot">' +
+        (gh ? '<a class="card-gh" href="' + esc(gh.url) + '" target="_blank" rel="noopener noreferrer" title="GitHub 仓库" aria-label="GitHub 仓库">' + SOCIAL_DEFS.github.icon + "<span>GitHub</span></a>" : "") +
+        '<span class="card-more">查看详情 →</span>' +
+      "</div>" +
     "</article>";
   }
 
@@ -171,7 +213,57 @@
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
       });
     });
+    $$(".card-gh", grid).forEach(function (a) {
+      a.addEventListener("click", function (e) { e.stopPropagation(); });
+    });
     observeReveals(grid);
+  }
+
+  function renderFeatured() {
+    var panel = $("#featuredPanel");
+    if (!panel) return;
+    var p = projects.filter(function (x) { return x.featured; })[0];
+    var head = $(".featured-head");
+    if (!p) {
+      panel.innerHTML = "";
+      if (head) head.classList.add("hidden");
+      return;
+    }
+    if (head) head.classList.remove("hidden");
+    var tech = (p.tech || []).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
+    var highlights = (p.highlights || []).map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("");
+    var links = (p.links || []).map(function (l) {
+      return '<a class="btn btn-primary btn-sm" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + " ↗</a>";
+    }).join("");
+    panel.innerHTML =
+      '<div class="featured-main">' +
+        '<div class="featured-meta">' +
+          '<span class="featured-flag">★ 当前主力项目</span>' +
+          '<span class="status ' + statusClass(p.status) + '">' + esc(p.status) + "</span>" +
+        "</div>" +
+        '<h3 class="featured-name">' + esc(p.name) + "</h3>" +
+        '<p class="featured-summary">' + esc(p.summary) + "</p>" +
+        (p.detail ? '<p class="featured-detail">' + esc(p.detail) + "</p>" : "") +
+        (highlights ? '<ul class="featured-list">' + highlights + "</ul>" : "") +
+        (tech ? '<div class="featured-tech">' + tech + "</div>" : "") +
+        (p.lastUpdate ? '<div class="featured-update">' + CLOCK_ICON + "<span>" + esc(p.lastUpdate) + "</span></div>" : "") +
+        '<div class="featured-actions">' + links +
+          '<button class="btn btn-ghost btn-sm" type="button" data-featured-detail>查看详情</button>' +
+        "</div>" +
+      "</div>" +
+      '<div class="featured-show" aria-hidden="true">' +
+        '<div class="glass-ball">' +
+          '<span class="ring ring-1"></span>' +
+          '<span class="ring ring-2"></span>' +
+          '<span class="ring ring-3"></span>' +
+          '<span class="ball-core"><img src="assets/agentfloat-icon.png" alt="AgentFloat 图标"></span>' +
+          '<span class="badge badge-api">API 余额监控</span>' +
+          '<span class="badge badge-news">AI 快报</span>' +
+          '<span class="badge badge-skills">Skills 辅助</span>' +
+        "</div>" +
+      "</div>";
+    var detailBtn = panel.querySelector("[data-featured-detail]");
+    if (detailBtn) detailBtn.addEventListener("click", function () { openModal(p); });
   }
 
   function openModal(p) {
@@ -244,7 +336,7 @@
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
 
-  ["home", "about", "projects", "contact"].forEach(function (id) {
+  ["home", "about", "featured", "projects", "contact"].forEach(function (id) {
     var sec = document.getElementById(id);
     if (sec) sectionObserver.observe(sec);
   });
@@ -257,6 +349,7 @@
 
   renderFilters();
   renderGrid();
+  renderFeatured();
 
   if (!("IntersectionObserver" in window)) {
     $$(".reveal").forEach(function (el) { el.classList.add("in"); });
