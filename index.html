@@ -40,7 +40,6 @@
       <li><a class="nav-link" href="#featured">主力项目</a></li>
       <li><a class="nav-link" href="#projects">我的项目</a></li>
       <li><a class="nav-link" href="#logs">日志</a></li>
-      <li><a class="nav-link" href="#guestbook">留言</a></li>
       <li><a class="nav-link" href="#contact">联系</a></li>
     </ul>
   </nav>
@@ -53,6 +52,7 @@
       <span class="blob blob-2"></span>
       <span class="blob blob-3"></span>
     </div>
+    <div class="danmaku-layer" id="danmakuLayer" aria-hidden="true"></div>
     <div class="container hero-inner">
       <div class="hero-avatar-wrap" id="heroAvatar"></div>
       <h1 class="hero-name" id="heroName"><span id="heroNameText"></span></h1>
@@ -62,6 +62,7 @@
         <a class="btn btn-primary" href="#featured">看看主力项目</a>
         <a class="btn btn-ghost" href="#projects">浏览全部项目</a>
       </div>
+      <div class="danmaku-composer" id="danmakuComposer"></div>
     </div>
   </section>
 
@@ -103,15 +104,6 @@
     </div>
   </section>
 
-  <section class="section section-alt" id="guestbook">
-    <div class="container guestbook-inner">
-      <h2 class="section-title reveal">留言板</h2>
-      <p class="section-sub reveal">欢迎留下你的想法 —— 评论需要 GitHub 账号登录。</p>
-      <div class="guestbook-box reveal" id="guestbookBox"></div>
-      <p class="section-sub guestbook-visits reveal">本站累计访问 <span id="busuanzi_value_site_pv">--</span> 次 · 访客 <span id="busuanzi_value_site_uv">--</span> 人</p>
-    </div>
-  </section>
-
   <section class="section" id="contact">
     <div class="container contact-inner">
       <h2 class="section-title reveal">联系我</h2>
@@ -124,6 +116,7 @@
 <footer class="site-footer">
   <div class="container">
     <p id="footerText"></p>
+    <p class="site-visits">本站累计访问 <span id="busuanzi_value_site_pv">--</span> 次 · 访客 <span id="busuanzi_value_site_uv">--</span> 人</p>
   </div>
 </footer>
 

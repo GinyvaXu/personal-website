@@ -14,7 +14,7 @@
 - 自动数据：卡片、弹窗、主力模块自动显示 GitHub star 数与最新发布版本（本地缓存 30 分钟，断网/失败自动降级）
 - 项目以「卡片 + 点击弹出详情」的形式逐一展示，每个项目都带 GitHub 仓库链接与界面截图（如有）
 - 「开发日志」区块：记录迭代与踩坑（数据在 `data/logs.js`）
-- 「留言板」：giscus 评论（需 GitHub 登录）+ 访问计数
+- 「访客弹幕」：首页名字 / 头像旁漂浮访客留言（可匿名或带昵称，站长可管理）+ 访问计数
 - 数据驱动：新增项目只需在 `data/projects.js` 里加一条记录
 - 社交链接：GitHub、Steam 必显示，微信 / QQ / 邮箱 / B 站 / 微博 / 抖音 选填（留空自动隐藏）
 - 手机 / 平板 / 电脑自适应
@@ -67,13 +67,52 @@ README.md         本文档
 
 右上角 ☀/☾ 按钮一键切换，偏好保存在浏览器里；首次访问跟随系统深浅色。
 
-## 留言板（giscus，约 3 分钟）
+## 访客弹幕（Supabase 免费，约 10 分钟）
 
-1. 打开仓库 `GinyvaXu/personal-website` → `Settings` → 勾选 `Discussions` 启用
-2. 访问 https://github.com/apps/giscus 安装到该仓库
-3. 打开 https://giscus.app 按提示选择仓库与分类，把生成的 `data-repo-id` 和 `data-category-id` 填到 `data/site.js` 的 `giscus` 配置里，并把 `enabled` 改为 `true`
+首页的访客互动是「弹幕」：访客可以在你的名字 / 头像旁边发射一条漂浮的留言，
+可以留昵称也可以匿名，无需登录。当前是**演示模式**（自动漂浮几条示例弹幕、不显示输入框），
+配置好下面的步骤后就变成真实可发、真实管理。
 
-开启后留言板自动出现；评论数据存在仓库的 Discussions 里，你可以随时在 GitHub 上管理或删除。
+1. 打开 https://supabase.com 并注册（用 GitHub 账号一键登录即可）。
+2. 点 `New project` 创建一个免费项目（名字随意，地区选 Singapore 或 Tokyo）。
+3. 进入项目 → 左侧 `SQL Editor` → `New query`，粘贴下面 SQL 并点 `Run`：
+
+   ```sql
+   create table if not exists danmaku (
+     id uuid primary key default gen_random_uuid(),
+     text text not null,
+     nickname text,
+     hidden boolean default false,
+     created_at timestamptz default now()
+   );
+
+   alter table danmaku enable row level security;
+
+   create policy "匿名可发弹幕" on danmaku
+     for insert to anon with check (char_length(text) between 1 and 60);
+
+   create policy "公开可看弹幕" on danmaku
+     for select to anon using (hidden = false);
+   ```
+
+4. 左侧 `Settings` → `API`：复制 `Project URL` 和 `anon public` key，
+   填到 `data/site.js` 的 `danmaku` 配置里，并把 `enabled` 改为 `true`：
+
+   ```js
+   "danmaku": {
+     "enabled": true,
+     "demo": true,             // 留 true 作为兜底演示，不影响真实弹幕
+     "supabaseUrl": "https://你的项目.supabase.co",
+     "supabaseAnonKey": "eyJhbGciOi...",
+     "pollMs": 15000,          // 每 15 秒拉取一次新弹幕
+     "maxVisible": 20          // 屏幕上最多同时显示的弹幕数
+   }
+   ```
+
+5. 重新打开网页：输入框出现，访客即可发射弹幕（无需登录、可匿名）。
+
+**管理弹幕**：登录 Supabase → 左侧 `Table Editor` → 打开 `danmaku` 表，
+直接删除某条留言即可；想「软隐藏」就勾选该行的 `hidden` 为 `true`（网页自动不再显示）。
 
 ## 部署到 GitHub Pages（第一次）
 

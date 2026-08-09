@@ -38,6 +38,12 @@
   };
   var SOCIAL_ORDER = ["github", "steam", "email", "wechat", "qq", "bilibili", "weibo", "douyin"];
 
+  var danmakuLayer = $("#danmakuLayer");
+  var danmakuComposer = $("#danmakuComposer");
+  var danmakuCfg = site.danmaku || {};
+  var activeDanmaku = [];
+  var lastDanmakuAt = null;
+
   var revealObserver = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
@@ -398,40 +404,12 @@
     observeReveals(el);
   }
 
-  function renderGuestbook() {
-    var box = $("#guestbookBox");
-    if (!box) return;
-    var g = site.giscus || {};
-    if (g.enabled && g.repoId && g.categoryId) {
-      box.innerHTML = '<div class="giscus"></div>';
-      var s = document.createElement("script");
-      s.src = "https://giscus.app/client.js";
-      s.async = true;
-      s.crossOrigin = "anonymous";
-      s.setAttribute("data-repo", g.repo || "");
-      s.setAttribute("data-repo-id", g.repoId);
-      s.setAttribute("data-category", g.category || "General");
-      s.setAttribute("data-category-id", g.categoryId);
-      s.setAttribute("data-mapping", "pathname");
-      s.setAttribute("data-strict", "0");
-      s.setAttribute("data-reactions-enabled", "1");
-      s.setAttribute("data-emit-metadata", "0");
-      s.setAttribute("data-input-position", "bottom");
-      s.setAttribute("data-theme", document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
-      s.setAttribute("data-lang", "zh-CN");
-      s.setAttribute("data-loading", "lazy");
-      box.appendChild(s);
-    } else {
-      box.innerHTML = '<div class="guestbook-pending">💬 留言板即将开放，敬请期待 ✨</div>';
-    }
-  }
-
   function initCounter() {
     var pv = $("#busuanzi_value_site_pv");
     if (!pv) return;
     window.setTimeout(function () {
       if (!window.busuanzi) {
-        var line = pv.closest ? pv.closest(".guestbook-visits") : null;
+        var line = pv.closest ? pv.closest(".site-visits") : null;
         if (line) line.classList.add("hidden");
       }
     }, 7000);
@@ -442,21 +420,12 @@
   var navLinksEl = $("#navLinks");
   var themeBtn = $("#themeToggle");
 
-  function syncGiscusTheme(t) {
-    var frame = document.querySelector("iframe.giscus-frame");
-    if (!frame || !frame.contentWindow) return;
-    try {
-      frame.contentWindow.postMessage({ giscus: { setConfig: { theme: t === "dark" ? "dark" : "light" } } }, "https://giscus.app");
-    } catch (e) {}
-  }
-
   if (themeBtn) {
     themeBtn.setAttribute("aria-pressed", String(document.documentElement.getAttribute("data-theme") === "dark"));
     themeBtn.addEventListener("click", function () {
       var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next);
       try { localStorage.setItem("site-theme", next); } catch (e) {}
-      syncGiscusTheme(next);
       themeBtn.setAttribute("aria-pressed", String(next === "dark"));
     });
   }
@@ -485,7 +454,7 @@
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
 
-  ["home", "about", "featured", "projects", "logs", "guestbook", "contact"].forEach(function (id) {
+  ["home", "about", "featured", "projects", "logs", "contact"].forEach(function (id) {
     var sec = document.getElementById(id);
     if (sec) sectionObserver.observe(sec);
   });
@@ -495,6 +464,137 @@
   }, { passive: true });
 
   $("#footerText").textContent = "© " + new Date().getFullYear() + " " + name + " · 用心做的小网站";
+
+
+  // ---------- 首页弹幕 ----------
+
+  var DEMO_DANMAKU = [
+    { text: "欢迎光临我的小站～", nick: "" },
+    { text: "AgentFloat 太酷了！", nick: "路人甲" },
+    { text: "无尽界限，好名字", nick: "" },
+    { text: "求 AgentFloat 下载链接", nick: "摸鱼选手" },
+    { text: "这个弹幕会飘哦 ✨", nick: "" },
+    { text: "前排围观", nick: "夜猫子" },
+    { text: "支持作者！", nick: "GitHub 友军" },
+    { text: "毛玻璃小球好可爱", nick: "" }
+  ];
+
+  function toast(msg) {
+    var el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = msg;
+    document.body.appendChild(el);
+    window.requestAnimationFrame(function () { el.classList.add("show"); });
+    window.setTimeout(function () {
+      el.classList.remove("show");
+      window.setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 350);
+    }, 2600);
+  }
+
+  function spawnDanmaku(text, nick) {
+    if (!danmakuLayer || !text) return;
+    var el = document.createElement("div");
+    el.className = "danmaku";
+    el.innerHTML = (nick ? '<span class="d-nick">' + esc(nick) + "</span>" : "") + esc(text);
+    var h = danmakuLayer.clientHeight || window.innerHeight;
+    el.style.top = Math.round(h * (0.08 + Math.random() * 0.6)) + "px";
+    el.style.setProperty("--dur", (11 + Math.random() * 7).toFixed(1) + "s");
+    danmakuLayer.appendChild(el);
+    activeDanmaku.push(el);
+    if (activeDanmaku.length > (danmakuCfg.maxVisible || 20)) {
+      var old = activeDanmaku.shift();
+      if (old && old.parentNode) old.parentNode.removeChild(old);
+    }
+    el.addEventListener("animationend", function () {
+      if (el.parentNode) el.parentNode.removeChild(el);
+      var i = activeDanmaku.indexOf(el);
+      if (i > -1) activeDanmaku.splice(i, 1);
+    });
+  }
+
+  function sendDanmaku() {
+    var input = $("#dInput");
+    var nameEl = $("#dName");
+    var btn = $("#dSend");
+    var text = (input && input.value || "").trim();
+    if (!text) { toast("写点什么再发射～"); return; }
+    if (text.length > 60) { toast("最多 60 个字哦"); return; }
+    var nick = (nameEl && nameEl.value || "").trim().slice(0, 12);
+    if (btn) btn.disabled = true;
+    fetch(danmakuCfg.supabaseUrl + "/rest/v1/danmaku", {
+      method: "POST",
+      headers: {
+        "apikey": danmakuCfg.supabaseAnonKey,
+        "Authorization": "Bearer " + danmakuCfg.supabaseAnonKey,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify({ text: text, nickname: nick || null })
+    }).then(function (r) {
+      if (btn) btn.disabled = false;
+      if (r.ok) {
+        spawnDanmaku(text, nick);
+        if (input) input.value = "";
+        toast("发射成功 🎉");
+      } else {
+        toast("发送失败，请稍后再试");
+      }
+    }).catch(function () {
+      if (btn) btn.disabled = false;
+      toast("网络开小差了，发送失败");
+    });
+  }
+
+  function fetchRecentDanmaku() {
+    var url = danmakuCfg.supabaseUrl + "/rest/v1/danmaku?select=id,text,nickname,created_at&order=created_at.desc&limit=30&hidden=eq.false";
+    fetch(url, { headers: { "apikey": danmakuCfg.supabaseAnonKey, "Authorization": "Bearer " + danmakuCfg.supabaseAnonKey } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (rows) {
+        if (!rows || !rows.length) return;
+        var newest = rows[0].created_at || "";
+        rows = rows.slice(0, 10).reverse();
+        rows.forEach(function (row) {
+          var at = row.created_at || "";
+          if (lastDanmakuAt && at && at <= lastDanmakuAt) return;
+          window.setTimeout(function () { spawnDanmaku(row.text, row.nickname || ""); }, Math.random() * 2000);
+        });
+        if (newest && (!lastDanmakuAt || newest > lastDanmakuAt)) lastDanmakuAt = newest;
+      })
+      .catch(function () {});
+  }
+
+  function initDanmaku() {
+    if (!danmakuLayer) return;
+    var enabled = danmakuCfg.enabled && danmakuCfg.supabaseUrl && danmakuCfg.supabaseAnonKey;
+    if (enabled) {
+      if (danmakuComposer) {
+        danmakuComposer.innerHTML =
+          '<input class="d-input" id="dInput" type="text" maxlength="60" placeholder="发条弹幕…" aria-label="弹幕内容">' +
+          '<input class="d-name" id="dName" type="text" maxlength="12" placeholder="昵称（选填）" aria-label="昵称（选填）">' +
+          '<button class="btn btn-primary btn-sm" id="dSend" type="button">发射</button>' +
+          '<p class="danmaku-hint">💬 欢迎留下你的弹幕，无需登录（可匿名）</p>';
+        var send = $("#dSend");
+        var input = $("#dInput");
+        if (send) send.addEventListener("click", sendDanmaku);
+        if (input) input.addEventListener("keydown", function (e) { if (e.key === "Enter") sendDanmaku(); });
+      }
+      fetchRecentDanmaku();
+      window.setInterval(fetchRecentDanmaku, danmakuCfg.pollMs || 15000);
+      return;
+    }
+    if (danmakuCfg.demo) {
+      var demoIdx = 0;
+      spawnDanmaku("欢迎光临我的小站～", "");
+      window.setInterval(function () {
+        var d = DEMO_DANMAKU[demoIdx % DEMO_DANMAKU.length];
+        demoIdx++;
+        spawnDanmaku(d.text, d.nick || "");
+      }, 3600);
+    } else {
+      if (danmakuComposer) danmakuComposer.classList.add("hidden");
+      if (danmakuLayer) danmakuLayer.classList.add("hidden");
+    }
+  }
 
   // ---------- GitHub 自动数据 ----------
 
@@ -548,7 +648,7 @@
   renderGrid();
   renderFeatured();
   renderLogs();
-  renderGuestbook();
+  initDanmaku();
   initAutoData();
   initCounter();
 
