@@ -22,11 +22,30 @@
  * ============================================================ */
 window.PROJECTS = [
   {
+    "id": "project-dock",
+    "name": "ProjectDock · 项目坞",
+    "type": "软件",
+    "status": "进行中",
+    "featured": true,
+    "screenshots": [
+      {"src": "assets/projectdock/main.png", "caption": "ProjectDock 主界面"}
+    ],
+    "summary": "本地项目文件管理器 · iOS 风格 · 内置 AI 项目助手 · 全自动版本与归档管理",
+    "detail": "把你的所有项目文件夹收进一个清爽的 iOS 风格界面，统一创建、初始化、管理版本与构建产物，并让 AI agent 直接帮你干活——先备份，再执行，后报告。内置 软件/网站/游戏/PPT/文稿/脚本/其他 7 类项目预设，一键初始化骨架（README/VERSION/CHANGELOG/.gitignore/AGENTS.md）+ git init + 首次提交，可选自动创建并推送 GitHub 仓库；每个项目可一键生成 iOS 风格图标或上传自定义图片；SQLite 索引 + 磁盘扫描双轨管理，读取 VERSION/CHANGELOG/versions 直接呈现版本迭代、更新日志与构建产物；发布向导一条龙（版本号 → 更新日志 → 构建 → git tag → 提交）；内置 AI 助手（pi / Claude Code 可切换），流式回显 + 任务前自动备份 + 任务后 Git 报告；每个项目独立 AI 操作日志时间线；备份一键快照/恢复（路径穿越防护）；工具只创建与归档，永不擅自删除。",
+    "tech": ["Python 3.12", "FastAPI", "SQLite", "pywebview", "HTML/CSS/JS", "PyInstaller", "Inno Setup"],
+    "highlights": ["iOS 风格毛玻璃 UI", "7 类项目预设一键初始化", "图标生成管线", "版本与构建管理", "发布向导", "内置 AI 助手（自动备份+Git 报告）", "备份恢复", "合规化检查"],
+    "links": [
+      {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/ProjectDock"},
+      {"label": "发布页", "url": "https://github.com/GinyvaXu/ProjectDock/releases"}
+    ],
+    "lastUpdate": "v1.0.0 · 2026-08-12 — 正式版：项目置顶、图标生成管线、全量合规化、自动更新全链路激活（140 测试通过 / 覆盖率 86.8%）"
+  },
+  {
     "id": "agent-float",
     "name": "AgentFloat · AI Agent 桌面悬浮助手",
     "type": "软件",
     "status": "进行中",
-    "featured": true,
+    "featured": false,
     "screenshots": [
       {"src": "assets/agentfloat/about.png", "caption": "设置页 · 关于"},
       {"src": "assets/agentfloat/api-light.png", "caption": "API 用量 · 浅色"},
