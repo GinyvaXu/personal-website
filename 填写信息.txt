@@ -33,14 +33,18 @@
 13. 抖音主页（选填）：______（不填不展示）
 
 【三、当前主力项目】（会显示在主页「主力项目」模块，置顶隆重展示）
-   当前主力：AgentFloat · AI Agent 桌面悬浮助手
-   GitHub 仓库：https://github.com/GinyvaXu/AgentFloat
+   当前主力：ProjectDock · 项目坞（本地项目文件管理器 + AI 项目助手）
+   GitHub 仓库：https://github.com/GinyvaXu/ProjectDock
    想换主力项目时，直接说「把 X 设为主力」即可。
 
 【四、项目信息】（以下是网站当前展示的 5 个项目；新增项目也可写在这里）
    注意：网页上每个项目都会显示 GitHub 链接与最新一次更新日志。
 
-项目1（主力）：AgentFloat · AI Agent 桌面悬浮助手
+项目1（主力）：ProjectDock · 项目坞
+  仓库：https://github.com/GinyvaXu/ProjectDock
+  补充 / 修改：______
+
+项目2：AgentFloat · AI Agent 桌面悬浮助手（上一任主力）
   仓库：https://github.com/GinyvaXu/AgentFloat
   补充 / 修改：______
 
