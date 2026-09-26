@@ -1,0 +1,10 @@
+# 缓存与临时文件
+__pycache__/
+*.pyc
+.DS_Store
+.idea/
+.vscode/
+
+# 本地管理产物（ProjectDock 的 AI 日志与备份，不发布到线上仓库）
+logs/
+versions/
