@@ -3,24 +3,449 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AgentFloat · AI Agent 桌面悬浮助手 — 下载与介绍 | Ginyva</title>
-<meta name="description" content="AgentFloat：通用多能 AI Agent 桌面悬浮助手（毛玻璃浮窗 / 环绕菜单 / API 用量监控 / AI 快报），Windows 安装包国内高速下载。">
+<title>AgentFloat · AI Agent 桌面悬浮助手 — 一颗浮球，唤醒整个 AI 工作流</title>
+<meta name="description" content="毛玻璃浮窗 × 环绕菜单 × 多 Agent 一键就位：Claude Code、Codex、Pi、DeepSeek Harness，都在一颗球里。Windows 免费下载。">
 <link rel="canonical" href="https://agentfloat.ginyva.site/">
-<script>
-  (function () {
-    var t; try { t = localStorage.getItem("site-theme"); } catch (e) {}
-    if (t === "dark" || (!t && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches)) {
-      document.documentElement.setAttribute("data-theme", "dark");
-    }
-  })();
-</script>
-<link rel="stylesheet" href="../../css/style.css">
-<link rel="stylesheet" href="../../css/project-page.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AgentFloat · 一颗浮球，唤醒整个 AI 工作流">
+<meta property="og:description" content="毛玻璃浮窗 × 环绕菜单 × 多 Agent 一键就位。">
+<meta property="og:image" content="https://www.ginyva.site/assets/agentfloat/api-dark.png">
+<link rel="icon" href="../../assets/agentfloat-icon.png">
+<link rel="stylesheet" href="landing.css">
 </head>
-<body class="pp" data-project="agent-float">
-  <main class="pp-wrap" id="ppRoot"><p class="pp-loading">加载中…</p></main>
-  <script src="../../data/site.js"></script>
-  <script src="../../data/projects.js"></script>
-  <script src="../../js/project-page.js"></script>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="nav-brand" href="#top">
+      <img src="../../assets/agentfloat-icon.png" alt="" width="26" height="26">
+      <span>AgentFloat</span>
+    </a>
+    <div class="nav-links">
+      <a href="#demo">演示</a>
+      <a href="#features">功能</a>
+      <a href="#gallery">界面</a>
+      <a href="#changelog">更新</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-ghost btn-sm" href="https://github.com/GinyvaXu/AgentFloat" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a class="btn btn-primary btn-sm" href="#download">下载</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="hero-glow" id="heroGlow" aria-hidden="true"></div>
+  <div class="container hero-inner">
+    <div class="hero-badges reveal in">
+      <span class="chip chip-accent">稳定版 v<span data-version>2.2.0</span></span>
+      <span class="chip">Windows 10 / 11</span>
+      <span class="chip">免费使用</span>
+    </div>
+    <h1 class="hero-title reveal in">一颗浮球<br><em>唤醒整个 AI 工作流</em></h1>
+    <p class="hero-sub reveal in">毛玻璃浮窗 × 环绕菜单 × 多 Agent 一键就位：Claude Code、Codex、Pi、DeepSeek Harness——都在一颗球里。</p>
+    <div class="hero-cta reveal in">
+      <a class="btn btn-primary btn-lg" href="#download">⬇ 下载 Windows 版<span class="btn-sub">v<span data-version>2.2.0</span> · <span data-size>158 MB</span></span></a>
+      <a class="btn btn-ghost btn-lg" href="#demo">▶ 先看演示</a>
+    </div>
+    <ul class="hero-trust reveal in">
+      <li>本地运行</li>
+      <li>密钥存本机</li>
+      <li>免费使用</li>
+      <li>持续更新</li>
+    </ul>
+
+    <figure class="hero-orb reveal in">
+      <div class="orb-stage" aria-hidden="true">
+        <div class="orb-glow"></div>
+        <div class="orb-ring"></div>
+        <div class="orb-sectors">
+          <span class="sector" style="--i:0"><b>⚡</b></span>
+          <span class="sector" style="--i:1"><b>🌐</b></span>
+          <span class="sector" style="--i:2"><b>💬</b></span>
+          <span class="sector" style="--i:3"><b>📋</b></span>
+          <span class="sector" style="--i:4"><b>🧠</b></span>
+          <span class="sector" style="--i:5"><b>📈</b></span>
+          <span class="sector" style="--i:6"><b>🧩</b></span>
+          <span class="sector" style="--i:7"><b>🎛</b></span>
+        </div>
+        <div class="orb-core"><img src="../../assets/agentfloat-icon.png" alt="AgentFloat 浮球"></div>
+      </div>
+      <span class="orb-fly orb-fly-l">📊 API 余额 · 实时监控</span>
+      <span class="orb-fly orb-fly-r">📰 AI 快报 · 多源聚合</span>
+      <figcaption class="orb-chips">
+        <span class="chip">环绕菜单 · 4 / 6 / 8 扇区</span>
+        <span class="chip">全局热键 Ctrl+Alt+C</span>
+        <span class="chip">贴边吸附 · 系统托盘</span>
+      </figcaption>
+    </figure>
+  </div>
+</header>
+
+<main>
+
+  <!-- ========== 演示 ========== -->
+  <section class="section" id="demo">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="kicker">DEMO</p>
+        <h2>30 秒看懂 AgentFloat</h2>
+        <p class="section-sub">从唤醒、启动到监控，三个日常瞬间。</p>
+      </div>
+      <div class="demo reveal">
+        <div class="demo-tabs" role="tablist">
+          <button class="demo-tab active" role="tab" data-pane="p1">① 环绕菜单</button>
+          <button class="demo-tab" role="tab" data-pane="p2">② Agent 一键就位</button>
+          <button class="demo-tab" role="tab" data-pane="p3">③ 用量与快报</button>
+        </div>
+        <div class="demo-stage">
+          <div class="demo-pane active" id="p1">
+            <div class="demo-orb">
+              <div class="orb-stage orb-small" aria-hidden="true">
+                <div class="orb-glow"></div>
+                <div class="orb-ring"></div>
+                <div class="orb-sectors">
+                  <span class="sector" style="--i:0"><b>⚡</b></span>
+                  <span class="sector" style="--i:1"><b>🌐</b></span>
+                  <span class="sector" style="--i:2"><b>💬</b></span>
+                  <span class="sector" style="--i:3"><b>📋</b></span>
+                  <span class="sector" style="--i:4"><b>🧠</b></span>
+                  <span class="sector" style="--i:5"><b>📈</b></span>
+                  <span class="sector" style="--i:6"><b>🧩</b></span>
+                  <span class="sector" style="--i:7"><b>🎛</b></span>
+                </div>
+                <div class="orb-core"><img src="../../assets/agentfloat-icon.png" alt=""></div>
+              </div>
+            </div>
+            <p class="demo-cap">悬停或长按唤出环形菜单：4 / 6 / 8 扇区随心分配动作。</p>
+          </div>
+          <div class="demo-pane" id="p2">
+            <figure class="ph ph-lg" data-ph="Agent 安装界面（待补拍）"></figure>
+            <p class="demo-cap">Claude Code / Codex / Pi / DeepSeek Harness：一键安装、升级、卸载，国内镜像优先、官方源自动回退。</p>
+          </div>
+          <div class="demo-pane" id="p3">
+            <figure class="window window-flat">
+              <img src="../../assets/agentfloat/api-dark.png" alt="API 用量监控（深色）">
+            </figure>
+            <p class="demo-cap">通用 JSONPath 的 API 余额监控 + 多源聚合的 AI 快报。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 功能网格 ========== -->
+  <section class="section section-alt" id="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="kicker">FEATURES</p>
+        <h2>一颗球里装了什么</h2>
+        <p class="section-sub">六件事，覆盖你每天打开 AI 工具的所有动作。</p>
+      </div>
+      <div class="grid grid-3">
+        <article class="card reveal">
+          <span class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2"/></svg>
+          </span>
+          <h3>毛玻璃浮窗 · 双主题</h3>
+          <p>亮 / 暗双主题，自由拖拽、贴边吸附、系统托盘、开机自启。</p>
+        </article>
+        <article class="card reveal">
+          <span class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="4.8" r="1.6"/><circle cx="12" cy="19.2" r="1.6"/><circle cx="4.8" cy="12" r="1.6"/><circle cx="19.2" cy="12" r="1.6"/></svg>
+          </span>
+          <h3>环绕菜单 · 扇区自选</h3>
+          <p>4 / 6 / 8 扇区随心配，悬停或长按唤出，动作自己定义。</p>
+        </article>
+        <article class="card reveal">
+          <span class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4.2 2 6.5 5.4 6.5 9.5 0 2.4-.8 4.6-2.3 6.5-1.3-1.4-2.7-2.1-4.2-2.1s-2.9.7-4.2 2.1A10.3 10.3 0 0 1 5.5 12.5C5.5 8.4 7.8 5 12 3Z"/><circle cx="12" cy="10" r="1.7"/></svg>
+          </span>
+          <h3>统一多 Agent 启动</h3>
+          <p>Claude Code、Codex CLI、Pi、DeepSeek Harness，一个入口全启动。</p>
+        </article>
+        <article class="card reveal">
+          <span class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10"/><path d="m8 10 4 4 4-4"/><path d="M5 18.5h14"/></svg>
+          </span>
+          <h3>Agent 一键装 · 升 · 卸</h3>
+          <p>npm 全局安装，国内镜像优先、官方源自动回退，进度实时可见。</p>
+        </article>
+        <article class="card reveal">
+          <span class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><rect x="7" y="12" width="3" height="5" rx="1"/><rect x="12" y="8" width="3" height="9" rx="1"/><rect x="17" y="5" width="3" height="12" rx="1"/></svg>
+          </span>
+          <h3>API 余额监控</h3>
+          <p>通用 JSONPath 解析，低余额自动变色预警，一眼看清用量。</p>
+        </article>
+        <article class="card reveal">
+          <span class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 19 17H9l-4 3v-3H5a1.5 1.5 0 0 1-1.5-1.5v-9A1.5 1.5 0 0 1 5 5Z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
+          </span>
+          <h3>AI 快报聚合</h3>
+          <p>Hacker News、GitHub Trending、少数派、量子位、arXiv + 本地摘要。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 深度展示 ========== -->
+  <section class="section" id="deep">
+    <div class="container">
+
+      <div class="deep reveal">
+        <div class="deep-media">
+          <figure class="window window-flat">
+            <img src="../../assets/agentfloat/about.png" alt="AgentFloat 设置页 · 关于">
+          </figure>
+        </div>
+        <div class="deep-body">
+          <p class="kicker">FLOAT</p>
+          <h3>一颗球，收纳整个 AI 工作流</h3>
+          <p>点击浮球即可启动你常用的 Agent；悬停或长按唤出环绕菜单；自由拖拽、贴边吸附、系统托盘常驻、开机自启，全局热键 <code>Ctrl+Alt+C</code> 随时唤醒——桌面整洁与效率可以兼得。</p>
+          <ul class="tick">
+            <li>点击 / 悬停 / 长按，三种交互方式</li>
+            <li>贴边吸附，不挡视野不打扰</li>
+            <li>开机自启 + 托盘常驻</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="deep rev reveal">
+        <div class="deep-media">
+          <figure class="ph" data-ph="环绕菜单实拍特写（待补拍）"></figure>
+        </div>
+        <div class="deep-body">
+          <p class="kicker">MENU</p>
+          <h3>环绕菜单：动作自己定义</h3>
+          <p>菜单以 4 / 6 / 8 扇区展开，每个扇区可分配一个动作：启动某个 Agent、打开链接、调用命令……扇区数量随你的习惯调整，肌肉记忆形成后就再也回不去了。</p>
+          <ul class="tick">
+            <li>4 / 6 / 8 扇区可选</li>
+            <li>悬停或长按唤出</li>
+            <li>每个扇区自由绑定动作</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="deep reveal">
+        <div class="deep-media">
+          <figure class="ph" data-ph="Agent 安装 / 升级界面（待补拍）"></figure>
+        </div>
+        <div class="deep-body">
+          <p class="kicker">AGENTS</p>
+          <h3>Agent 全家桶，一键就位</h3>
+          <p>统一启动器支持 Claude Code、Codex CLI、Pi、DeepSeek Harness（Web UI 模式自动就绪并打开浏览器）；Web 设置里的「Agent 安装」模块负责一键安装、升级、卸载——npm 全局安装，国内镜像优先、官方源自动回退。</p>
+          <ul class="tick">
+            <li>多 Agent 统一入口</li>
+            <li>一键安装 / 升级 / 卸载</li>
+            <li>国内网络友好：镜像优先</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="deep rev reveal">
+        <div class="deep-media">
+          <figure class="window window-flat">
+            <img src="../../assets/agentfloat/api-light.png" alt="API 用量监控（浅色主题）">
+          </figure>
+        </div>
+        <div class="deep-body">
+          <p class="kicker">INSIGHT</p>
+          <h3>用量看得见，快报听得懂</h3>
+          <p>通用 JSONPath 的 <strong>API 余额监控</strong>：任意服务都能接，低余额自动变色警告；<strong>AI 快报</strong>聚合 Hacker News、GitHub Trending、少数派、量子位、arXiv，并可用本地 Agent 生成摘要；还有 Skills 辅助窗（本机 skills 扫描 + 中英对照）与剪贴板历史、自定义命令面板。</p>
+          <ul class="tick">
+            <li>通用 JSONPath · 低余额预警</li>
+            <li>多源聚合 · 本地摘要</li>
+            <li>Skills 辅助窗 · 剪贴板历史</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== 画廊 ========== -->
+  <section class="section section-alt" id="gallery">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="kicker">SCREENS</p>
+        <h2>界面画廊</h2>
+        <p class="section-sub">点击查看大图（部分截图正在补拍中）。</p>
+      </div>
+      <div class="gallery">
+        <button class="gallery-item zoom reveal" data-full="../../assets/agentfloat/api-dark.png" data-cap="API 用量 · 深色主题">
+          <img src="../../assets/agentfloat/api-dark.png" alt="API 用量 · 深色主题">
+          <span class="gallery-cap">API 用量 · 深色</span>
+        </button>
+        <button class="gallery-item zoom reveal" data-full="../../assets/agentfloat/api-light.png" data-cap="API 用量 · 浅色主题">
+          <img src="../../assets/agentfloat/api-light.png" alt="API 用量 · 浅色主题">
+          <span class="gallery-cap">API 用量 · 浅色</span>
+        </button>
+        <button class="gallery-item zoom reveal" data-full="../../assets/agentfloat/about.png" data-cap="设置页 · 关于">
+          <img src="../../assets/agentfloat/about.png" alt="设置页 · 关于">
+          <span class="gallery-cap">设置页 · 关于</span>
+        </button>
+        <div class="gallery-item ph ph-sm reveal" data-ph="环绕菜单"></div>
+        <div class="gallery-item ph ph-sm reveal" data-ph="Agent 安装 / 升级"></div>
+        <div class="gallery-item ph ph-sm reveal" data-ph="AI 快报"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 更新日志 ========== -->
+  <section class="section" id="changelog">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="kicker">CHANGELOG</p>
+        <h2>一直在更新</h2>
+        <p class="section-sub">完整日志见 GitHub Releases。</p>
+      </div>
+      <div class="timeline reveal">
+        <article class="tl-item">
+          <span class="tl-ver">v3.0.0-beta <em class="tl-tag">预发布</em></span>
+          <div class="tl-body">
+            <h3>重构预览：更快、更顺、更小</h3>
+            <p>交互内核重写（弹簧展开 / 磁吸选中 / 按压微光）；启动速度提升约 7–10 倍；安装包从 151MB 瘦身到 45.3MB。预发布版不进入自动更新链，稳定版用户不受影响。</p>
+          </div>
+        </article>
+        <article class="tl-item">
+          <span class="tl-ver">v2.2.0</span>
+          <div class="tl-body">
+            <h3>「Agent 安装」模块上线</h3>
+            <p>Claude Code / Codex CLI / Pi / DeepSeek Harness 一键安装、升级、卸载（npm 全局安装，国内镜像优先、官方源自动回退）；Web 套壳后端稳定性修复。</p>
+          </div>
+        </article>
+        <article class="tl-item">
+          <span class="tl-ver">v2.x</span>
+          <div class="tl-body">
+            <h3>Web 套壳设置界面</h3>
+            <p>设置 / API 用量 / AI 快报整体迁移为 Web 界面（FastAPI + pywebview，SSE 实时推送）；统一 Agent 启动器新增 DeepSeek Harness。</p>
+          </div>
+        </article>
+        <article class="tl-item">
+          <span class="tl-ver">v1.x</span>
+          <div class="tl-body">
+            <h3>初版</h3>
+            <p>毛玻璃浮球、环绕菜单、Skills 辅助窗、API 余额监控、AI 快报、剪贴板历史与自定义命令面板。</p>
+          </div>
+        </article>
+      </div>
+      <p class="center reveal"><a class="btn btn-ghost btn-sm" href="https://github.com/GinyvaXu/AgentFloat/releases" target="_blank" rel="noopener noreferrer">查看完整更新日志 →</a></p>
+    </div>
+  </section>
+
+  <!-- ========== 下载 ========== -->
+  <section class="section section-alt" id="download">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="kicker">DOWNLOAD</p>
+        <h2>下载 AgentFloat</h2>
+        <p class="section-sub">免费使用 · 本地运行 · 密钥存本机</p>
+      </div>
+      <div class="dl-card reveal">
+        <div class="dl-meta">
+          <span class="chip chip-accent">稳定版 v<span data-version>2.2.0</span></span>
+          <span class="chip">Windows 10 / 11（64 位）</span>
+          <span class="chip"><span data-size>158 MB</span></span>
+          <span class="chip">更新于 <span data-date>2026-08-16</span></span>
+        </div>
+        <a class="btn btn-primary btn-lg dl-btn" href="https://github.com/GinyvaXu/AgentFloat/releases/latest" target="_blank" rel="noopener noreferrer">⬇ 下载稳定版安装包</a>
+        <p class="dl-beta" data-beta-row hidden>
+          想尝鲜？<a data-beta-link href="https://github.com/GinyvaXu/AgentFloat/releases/tag/v3.0.0-beta" target="_blank" rel="noopener noreferrer">v<span data-beta-version>3.0.0-beta</span> 重构预览版</a>（预发布 · 不进入自动更新链）
+        </p>
+        <p class="dl-note">国内高速镜像（Cloudflare R2）筹备中，上线后此按钮将自动切换；也可前往 <a href="https://github.com/GinyvaXu/AgentFloat/releases" target="_blank" rel="noopener noreferrer">GitHub Releases</a> 获取。</p>
+        <ul class="dl-req">
+          <li>系统：Windows 10 / 11（64 位）</li>
+          <li>Node.js：使用「Agent 安装」模块时需要（用于 npm 安装 Agent）<sup>*</sup></li>
+          <li>运行库：WebView2（Windows 11 已内置；Windows 10 一般随 Edge 提供）</li>
+          <li>安装：下载安装包 → 双击 → 按用户级安装；覆盖安装即可升级，配置保留</li>
+        </ul>
+        <p class="dl-tiny"><sup>*</sup> 已手动装好 Agent 的用户，不装 Node.js 也能直接启动使用。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FAQ ========== -->
+  <section class="section" id="faq">
+    <div class="container container-narrow">
+      <div class="section-head reveal">
+        <p class="kicker">FAQ</p>
+        <h2>常见问题</h2>
+      </div>
+      <div class="faq reveal">
+        <details>
+          <summary>免费吗？</summary>
+          <p>当前完全免费使用；未来如有变化会提前公告，已发布的版本不受影响。</p>
+        </details>
+        <details>
+          <summary>它和 ClaudeFloat 是什么关系？</summary>
+          <p>ClaudeFloat 是它的前身——只面向 Claude Code 的极简启动器；AgentFloat 把启动器升级为多 Agent 工作台，加入环绕菜单、API 余额监控与 AI 快报等整套工作流。</p>
+        </details>
+        <details>
+          <summary>需要提前安装 Agent 吗？</summary>
+          <p>不强制。内置「Agent 安装」模块可一键安装 Claude Code / Codex CLI / Pi / DeepSeek Harness（走 npm，需要本机有 Node.js）；已经装好的 Agent 也会被自动识别并启动。</p>
+        </details>
+        <details>
+          <summary>我的 API Key 安全吗？</summary>
+          <p>配置与密钥只保存在本机 <code>config.json</code>，不会上传到任何服务器。</p>
+        </details>
+        <details>
+          <summary>需要联网吗？</summary>
+          <p>浮球与本地 Agent 启动完全离线可用；只有「API 余额监控」与「AI 快报」需要网络。</p>
+        </details>
+        <details>
+          <summary>支持哪些系统？</summary>
+          <p>目前是 Windows 10 / 11（64 位）。</p>
+        </details>
+        <details>
+          <summary>怎么升级和卸载？</summary>
+          <p>覆盖安装即可升级（配置保留）；在控制面板可完整卸载，便携版本直接删除即可。</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 打赏 ========== -->
+  <section class="section section-alt" id="support">
+    <div class="container container-narrow">
+      <div class="support-card reveal">
+        <h2>如果它帮你省下了时间</h2>
+        <p>AgentFloat 会一直免费做下去。如果你想支持它，可以请作者喝杯咖啡。</p>
+        <div class="support-actions">
+          <div class="qr-ph">赞赏码<br>筹备中</div>
+          <a class="btn btn-ghost" href="https://github.com/GinyvaXu/AgentFloat" target="_blank" rel="noopener noreferrer">⭐ 去 GitHub 点个 Star</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <strong>AgentFloat · AI Agent 桌面悬浮助手</strong>
+      <p>由 <a href="https://www.ginyva.site/">Ginyva</a> 独立开发并维护。</p>
+    </div>
+    <div class="footer-links">
+      <a href="https://www.ginyva.site/">个人主页</a>
+      <a href="https://github.com/GinyvaXu/AgentFloat" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://github.com/GinyvaXu/AgentFloat/releases" target="_blank" rel="noopener noreferrer">更新日志</a>
+    </div>
+    <p class="footer-copy">© 2026 Ginyva</p>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-close" aria-label="关闭">×</button>
+  <figure>
+    <img id="lightboxImg" src="" alt="">
+    <figcaption id="lightboxCap"></figcaption>
+  </figure>
+</div>
+
+<script src="landing.js"></script>
 </body>
 </html>
