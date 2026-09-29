@@ -1,0 +1,55 @@
+/* ============================================================
+ * 独立项目页样式（配合 js/project-page.js）
+ * 复用 style.css 里的 :root 变量，自动跟随深浅色主题。
+ * ============================================================ */
+
+.pp { margin: 0; background: var(--bg); color: var(--text); }
+.pp a { color: var(--accent); }
+
+.pp-wrap { max-width: 860px; margin: 0 auto; padding: 24px 20px 80px; }
+
+.pp-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0 30px; }
+.pp-back { text-decoration: none; font-size: 14px; }
+.pp-back:hover { text-decoration: underline; }
+
+.pp-badges { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.pp-badge { font-size: 12px; padding: 3px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.pp-badge.pp-status { background: var(--green-bg); color: var(--green); }
+
+.pp h1 { font-size: 30px; line-height: 1.3; margin: 6px 0 14px; }
+.pp-summary { font-size: 16px; line-height: 1.8; opacity: .88; margin: 0 0 14px; }
+.pp-detail { font-size: 14px; line-height: 1.95; opacity: .72; margin: 0 0 8px; }
+
+.pp-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 22px;
+  margin: 18px 0;
+}
+.pp-block h2 { font-size: 17px; margin: 0 0 14px; }
+
+.pp-list { margin: 0; padding-left: 20px; line-height: 2; font-size: 14px; }
+
+.pp-tech { display: flex; flex-wrap: wrap; gap: 8px; }
+.pp-tech span { font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg); }
+
+.pp-update { font-size: 14px; line-height: 1.9; opacity: .85; margin: 0; }
+
+.pp-shots { display: grid; gap: 16px; }
+.pp-shot { margin: 0; }
+.pp-shot img { width: 100%; border-radius: 12px; border: 1px solid var(--border); display: block; }
+.pp-shot figcaption { font-size: 12px; opacity: .62; text-align: center; margin-top: 6px; }
+
+.pp-dls { display: grid; gap: 10px; }
+.pp-dl { display: flex; justify-content: space-between; align-items: center; gap: 12px; text-decoration: none; }
+[data-theme="dark"] .pp-dl { color: #12142b; }              /* 深色模式下浅紫底改用深色字，保证可读 */
+[data-theme="dark"] .pp-dl:hover { color: #12142b; }
+.pp-dl em.pp-dl-note { font-style: normal; font-size: 12px; opacity: .7; }
+.pp-dl-size { font-size: 12px; opacity: .8; white-space: nowrap; }
+
+.pp-note { font-size: 12px; opacity: .62; margin: 12px 0 0; line-height: 1.8; }
+
+.pp-foot { margin-top: 44px; font-size: 13px; opacity: .6; text-align: center; }
+.pp-loading { padding: 70px 0; text-align: center; opacity: .6; }

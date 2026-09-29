@@ -281,7 +281,8 @@
         (highlights ? '<ul class="featured-list">' + highlights + "</ul>" : "") +
         (tech ? '<div class="featured-tech">' + tech + "</div>" : "") +
         (p.lastUpdate ? '<div class="featured-update">' + CLOCK_ICON + "<span>" + esc(p.lastUpdate) + "</span></div>" : "") +
-        '<div class="featured-actions">' + links +
+        '<div class="featured-actions">' +
+          (p.page ? '<a class="btn btn-ghost btn-sm" href="' + esc(p.page) + '">独立页面 →</a>' : "") + links +
           '<button class="btn btn-ghost btn-sm" type="button" data-featured-detail>查看详情</button>' +
         "</div>" +
       "</div>" +
@@ -326,6 +327,10 @@
     var links = (p.links || []).map(function (l) {
       return '<a class="btn btn-primary btn-sm" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + " ↗</a>";
     }).join("");
+    var dl = (p.downloads || []).map(function (d) {
+      return '<a class="btn btn-primary btn-sm" href="' + esc(d.url) + '" target="_blank" rel="noopener noreferrer">' + esc(d.label) + (d.size ? " · " + esc(d.size) : "") + " ↓</a>";
+    }).join("");
+    var pageBtn = p.page ? '<a class="btn btn-ghost btn-sm" href="' + esc(p.page) + '">独立页面 →</a>' : "";
     var shotsHtml = "";
     if (p.screenshots && p.screenshots.length) {
       var firstShot = p.screenshots[0];
@@ -354,7 +359,7 @@
       (tech ? '<div class="modal-block"><h4>技术栈</h4><div class="modal-tech">' + tech + "</div></div>" : "") +
       shotsHtml +
       repoLine +
-      (links ? '<div class="modal-links">' + links + "</div>" : "");
+      (dl || pageBtn || links ? '<div class="modal-links">' + dl + pageBtn + links + "</div>" : "");
     bindModalShots($("#modalContent"));
     if (repo) {
       var cachedRepo = ghCacheGet()[repo];
