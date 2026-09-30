@@ -14,8 +14,8 @@ window.RELEASES = {
   },
   "agentfloat": {
     "project": "agentfloat",
-    "tag": "v3.0.0-beta",
-    "updatedAt": "2026-09-30T10:25:11Z",
+    "tag": "v3.0.0",
+    "updatedAt": "2026-09-30T13:31:40Z",
     "base": "https://dl.ginyva.site/releases/agentfloat/latest/",
     "files": [
       {
