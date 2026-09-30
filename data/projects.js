@@ -57,18 +57,18 @@ window.PROJECTS = [
       {"src": "assets/agentfloat/api-dark.png", "caption": "API 用量 · 深色"}
     ],
     "summary": "通用多能 AI Agent 桌面悬浮助手：毛玻璃浮窗 + 双通道环绕菜单 + Web 套壳设置 + Agent 一键安装 + API 用量监控 + AI 快报，一个浮窗唤醒整个 AI 工作流。",
-    "detail": "一颗毛玻璃小球收纳你的整个 AI 工作流：点击即启动任意 Agent（Claude Code / Codex CLI / Pi / DeepSeek Harness 可切换），悬停或长按唤出环形菜单，4/6/8 扇区随心分配动作；内置 Skills 辅助窗（本机 skills 扫描 + 中英对照）、通用 JSONPath 的 API 余额监控（低余额变色警告）、多源聚合的 AI 快报（Hacker News / GitHub Trending / 少数派 / 量子位 / arXiv + 本地 Agent 摘要）、剪贴板历史与自定义命令面板。支持亮/暗双主题、自由拖拽、贴边吸附、系统托盘、开机自启与全局热键 Ctrl+Alt+C。v2.x 大升级：设置 / API 用量 / AI 快报整体迁移为 Web 套壳界面（FastAPI + pywebview，Apple 风格侧边栏 + SSE 实时推送）；统一 Agent 启动器新增 DeepSeek Harness（dsh，Web UI 模式自动就绪并打开浏览器）；Web 设置新增「Agent 安装」模块，一键安装 / 升级 / 卸载（npm 全局安装，国内镜像优先自动回退官方源）。",
+    "detail": "一颗毛玻璃小球收纳你的整个 AI 工作流：点击即启动任意 Agent（Claude Code / Codex CLI / Pi / DeepSeek Harness 可切换），悬停或长按唤出环形菜单，4/6/8 扇区随心分配动作；内置 Skills 辅助窗（本机 skills 扫描 + 中英对照）、通用 JSONPath 的 API 余额监控（低余额变色警告）、多源聚合的 AI 快报（Hacker News / GitHub Trending / 少数派 / 量子位 / arXiv + 本地 Agent 摘要）、剪贴板历史与自定义命令面板。支持亮/暗双主题、自由拖拽、贴边吸附、系统托盘、开机自启与全局热键 Ctrl+Alt+C。v2.x 大升级：设置 / API 用量 / AI 快报整体迁移为 Web 套壳界面（FastAPI + pywebview，Apple 风格侧边栏 + SSE 实时推送）；统一 Agent 启动器新增 DeepSeek Harness（dsh，Web UI 模式自动就绪并打开浏览器）；Web 设置新增「Agent 安装」模块，一键安装 / 升级 / 卸载（npm 全局安装，国内镜像优先自动回退官方源）。v3.x 大版本：交互内核重写（启动提速约 7–10 倍、体量大幅瘦身），全流程弹簧动效与游戏式手势、环形菜单重做；新增 Agent 进程面板、API 用量页重构（手动拉取 / 多平台预设）、本地账户与 API Key 保险箱（加密托管 + 配置导出导入）、启动动画，并随附 Inno Setup 正式安装包（按用户安装、自带卸载）。",
     "tech": ["Python", "PyQt5", "FastAPI", "pywebview", "JSONPath", "PyInstaller", "Inno Setup"],
-    "highlights": ["毛玻璃浮窗 · 双主题", "环绕菜单扇区自选", "统一多 Agent 启动（含 dsh）", "Agent 一键安装 / 升级", "Web 套壳设置界面", "Skills 辅助窗", "API 余额监控", "AI 快报聚合"],
+    "highlights": ["毛玻璃浮窗 · 双主题", "全流程弹簧动效 + 游戏式手势", "统一多 Agent 启动（含 dsh）", "本地账户 + API Key 保险箱", "Agent 进程面板", "Agent 一键安装 / 升级", "API 余额监控", "AI 快报聚合", "启动动画与正式安装包"],
     "page": "projects/agentfloat/",
     "downloads": [
-      {"label": "Windows 安装包（beta）", "url": "https://github.com/GinyvaXu/AgentFloat/releases/download/v3.0.0-beta/AgentFloat-Setup-3.0.0.exe", "size": "45.2 MB"}
+      {"label": "Windows 安装包", "url": "https://github.com/GinyvaXu/AgentFloat/releases/download/v3.6.2/AgentFloat-Setup-3.6.2.exe", "size": "38.1 MB"}
     ],
     "links": [
       {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/AgentFloat"},
       {"label": "发布页", "url": "https://github.com/GinyvaXu/AgentFloat/releases"}
     ],
-    "lastUpdate": "v2.2.0 · 2026-08-16 — Web 设置新增 Agent 安装模块（Claude Code / Codex / Pi / DeepSeek Harness 一键装升卸）；Web 套壳界面与多项稳定性修复"
+    "lastUpdate": "v3.6.2 · 2026-09-30 — 启动动画（含合成音效、可开关）+ Inno Setup 正式安装包；代码审查与结构清理；v3.x 系列带来本地账户 / API Key 保险箱 / Agent 进程面板 / API 用量页重构 / 全流程动效"
   },
   {
     "id": "ginyscreen",
