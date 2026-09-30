@@ -161,17 +161,24 @@
       })
       .catch(function () { /* 静默降级：保留页面静态版本号 */ });
   }
-  /* ---------- 7. 优先使用镜像管线数据（data/releases.js）：尝鲜版走国内镜像 ---------- */
+  /* ---------- 7. 镜像管线数据（data/releases.js）：按发布通道自动呈现 ---------- */
   (function applyMirror() {
     var rel = (window.RELEASES || {})["agentfloat"];
     if (!rel || !rel.files || !rel.files.length) return;
-    var link = document.querySelector("[data-beta-link]");
-    if (link) {
-      link.href = rel.base + encodeURIComponent(rel.files[0].name);
-      link.title = "国内高速镜像（Cloudflare R2）";
-    }
+    var isPre = /beta|alpha|rc/i.test(rel.tag || "");
+    var url = rel.base + encodeURIComponent(rel.files[0].name);
     var row = document.querySelector("[data-beta-row]");
-    if (row) row.hidden = false;
+    if (isPre) {
+      /* 预览版：主按钮保持稳定版，尝鲜入口指向国内镜像 */
+      var link = document.querySelector("[data-beta-link]");
+      if (link) { link.href = url; link.title = "国内高速镜像（Cloudflare R2）"; }
+      if (row) row.hidden = false;
+    } else {
+      /* 正式版：主按钮直接指向国内镜像，隐藏尝鲜入口 */
+      if (row) row.hidden = true;
+      var btn = document.getElementById("dlBtn");
+      if (btn) btn.href = url;
+    }
   })();
 
   fetchReleases();
