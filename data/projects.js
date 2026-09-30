@@ -37,7 +37,7 @@ window.PROJECTS = [
     "highlights": ["iOS 风格毛玻璃 UI", "7 类项目预设一键初始化", "图标生成管线", "GitHub 仓库管理", "版本与构建管理", "发布向导", "AI 助手对话 + 决策卡片", "技术栈文档 TECHSTACK", "备份恢复", "合规化检查"],
     "page": "projects/projectdock/",
     "downloads": [
-      {"label": "Windows 安装包", "url": "https://dl.ginyva.site/releases/projectdock/latest/ProjectDock_Setup_v1.3.1.exe", "size": "18.5 MB"}
+      {"label": "Windows 安装包", "url": "https://github.com/GinyvaXu/ProjectDock/releases/download/v1.3.1/ProjectDock_Setup_v1.3.1.exe", "size": "18.5 MB"}
     ],
     "links": [
       {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/ProjectDock"},
@@ -62,7 +62,7 @@ window.PROJECTS = [
     "highlights": ["毛玻璃浮窗 · 双主题", "环绕菜单扇区自选", "统一多 Agent 启动（含 dsh）", "Agent 一键安装 / 升级", "Web 套壳设置界面", "Skills 辅助窗", "API 余额监控", "AI 快报聚合"],
     "page": "projects/agentfloat/",
     "downloads": [
-      {"label": "Windows 安装包（beta）", "url": "https://dl.ginyva.site/releases/agentfloat/latest/AgentFloat-Setup-3.0.0.exe", "size": "45.2 MB"}
+      {"label": "Windows 安装包（beta）", "url": "https://github.com/GinyvaXu/AgentFloat/releases/download/v3.0.0-beta/AgentFloat-Setup-3.0.0.exe", "size": "45.2 MB"}
     ],
     "links": [
       {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/AgentFloat"},
@@ -86,9 +86,9 @@ window.PROJECTS = [
     "highlights": ["屏幕共享（含系统声音）", "内置语音 + AEC 回声消除", "Radmin VPN 内嵌联机", "全屏 / 系统级画中画", "房间聊天", "多镜像自动更新"],
     "page": "projects/ginyscreen/",
     "downloads": [
-      {"label": "Windows 安装包", "url": "https://dl.ginyva.site/releases/ginyscreen/latest/GinyScreen-Setup-v1.5.1.exe", "size": "130 MB"},
-      {"label": "便携版", "url": "https://dl.ginyva.site/releases/ginyscreen/latest/GinyScreen-Portable-v1.5.1.exe", "size": "129.8 MB"},
-      {"label": "Debug 版", "url": "https://dl.ginyva.site/releases/ginyscreen/latest/GinyScreen-Debug-v1.5.1.exe", "size": "129.8 MB"}
+      {"label": "Windows 安装包", "url": "https://github.com/GinyvaXu/GinyScreen/releases/download/v1.5.1/GinyScreen-Setup-v1.5.1.exe", "size": "130 MB"},
+      {"label": "便携版", "url": "https://github.com/GinyvaXu/GinyScreen/releases/download/v1.5.1/GinyScreen-Portable-v1.5.1.exe", "size": "129.8 MB"},
+      {"label": "Debug 版", "url": "https://github.com/GinyvaXu/GinyScreen/releases/download/v1.5.1/GinyScreen-Debug-v1.5.1.exe", "size": "129.8 MB"}
     ],
     "links": [
       {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/GinyScreen"},
@@ -112,7 +112,7 @@ window.PROJECTS = [
     "highlights": ["S3 兼容（R2 / OSS / COS / MinIO）", "文件夹自动同步 + 冲突双份", "上传下载实时进度", "便携单文件免安装", "GitHub Releases 自动更新"],
     "page": "projects/cloudbox/",
     "downloads": [
-      {"label": "Windows 便携版（debug）", "url": "https://dl.ginyva.site/releases/cloudbox/latest/CloudBox_debug_v0.1.0.exe", "size": "158 MB"}
+      {"label": "Windows 便携版（debug）", "url": "https://github.com/GinyvaXu/cloudbox-portable/releases/download/v0.1.0/CloudBox_debug_v0.1.0.exe", "size": "158 MB"}
     ],
     "links": [
       {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/cloudbox-portable"},
@@ -156,7 +156,7 @@ window.PROJECTS = [
     "highlights": ["六边形战棋", "士气 / 溃散 / 光环", "地形克制与概率伤害", "城镇经济与建筑占领", "地图 / 兵种编辑器", "多镜像自动更新"],
     "page": "projects/hexwar/",
     "downloads": [
-      {"label": "Windows 安装包", "url": "https://dl.ginyva.site/releases/hexwar/latest/HexWarDemo-Setup-1.1.1.exe", "size": "17.6 MB"}
+      {"label": "Windows 安装包", "url": "https://github.com/GinyvaXu/HexWarDemo/releases/download/v1.1.1/HexWarDemo-Setup-1.1.1.exe", "size": "17.6 MB"}
     ],
     "links": [
       {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/HexWarDemo"},
@@ -176,7 +176,7 @@ window.PROJECTS = [
     "highlights": ["完整企画书", "吹牛贿赂玩法", "联机架构设计", "动效与界面打磨"],
     "page": "projects/nottingham/",
     "downloads": [
-      {"label": "Windows 安装包", "url": "https://dl.ginyva.site/releases/nottingham/latest/SheriffOfNottingham-Setup-1.7.5.exe", "size": "32.6 MB"}
+      {"label": "Windows 安装包", "url": "https://github.com/GinyvaXu/SheriffOfNottingham---Ultimate/releases/download/v1.7.5/SheriffOfNottingham-Setup-1.7.5.exe", "size": "32.6 MB"}
     ],
     "links": [
       {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/SheriffOfNottingham---Ultimate"},
@@ -195,9 +195,9 @@ window.PROJECTS = [
     "highlights": ["毛玻璃双主题", "API 余额监控", "自动更新", "安装包 + 便携版"],
     "page": "projects/claudefloat/",
     "downloads": [
-      {"label": "安装包", "url": "https://dl.ginyva.site/releases/claudefloat/latest/ClaudeFloat_Setup.exe", "size": "62.9 MB"},
-      {"label": "便携版", "url": "https://dl.ginyva.site/releases/claudefloat/latest/ClaudeFloat.exe", "size": "52.5 MB"},
-      {"label": "Debug 版", "url": "https://dl.ginyva.site/releases/claudefloat/latest/ClaudeFloat_debug.exe", "size": "52.5 MB"}
+      {"label": "安装包", "url": "https://github.com/GinyvaXu/ClaudeFloat/releases/download/v2.0.0/ClaudeFloat_Setup.exe", "size": "62.9 MB"},
+      {"label": "便携版", "url": "https://github.com/GinyvaXu/ClaudeFloat/releases/download/v2.0.0/ClaudeFloat.exe", "size": "52.5 MB"},
+      {"label": "Debug 版", "url": "https://github.com/GinyvaXu/ClaudeFloat/releases/download/v2.0.0/ClaudeFloat_debug.exe", "size": "52.5 MB"}
     ],
     "links": [
       {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/ClaudeFloat"},
