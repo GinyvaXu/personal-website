@@ -1,0 +1,24 @@
+# ============================================================
+# Cloudflare Pages 项目配置（绑定随仓库版本化）
+# 项目：personal-website（Ginyva 工具站）
+# ============================================================
+
+name = "personal-website"
+pages_build_output_dir = "."
+compatibility_date = "2026-09-29"
+
+# ---------- D1 数据库（社区反馈） ----------
+[[d1_databases]]
+binding = "DB"
+database_name = "ginyva-feedback"
+database_id = "2fbffe88-e8fb-45eb-a5e2-b10818f69c5e"
+
+# ---------- KV 命名空间（文件仓库 · 免信用卡方案） ----------
+[[kv_namespaces]]
+binding = "FILES_KV"
+id = "9ab7c93a5f544972970795fa772f9c08"
+
+# ---------- R2 桶（文件仓库 · 需开通 R2 后启用，代码会自动优先使用） ----------
+# [[r2_buckets]]
+# binding = "FILES"
+# bucket_name = "ginyva-files"
