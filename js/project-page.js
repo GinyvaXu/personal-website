@@ -5,6 +5,7 @@
  * 同一份页面既支持 www.ginyva.site/projects/<id>/ 直接访问，
  * 也可被子域名（如 projectdock.ginyva.site）通过 functions/_middleware.js
  * 重写到根路径展示。
+ * 本页同时承担「使用教程」角色（位于 /guide/ 时顶部显示教程徽章与快捷导航）。
  * ============================================================ */
 (function () {
   var HOME = "https://www.ginyva.site/"; // 主站地址（换域名时改这里）
@@ -30,7 +31,8 @@
     return;
   }
 
-  document.title = p.name + " — 下载与介绍 | " + (site.name || "个人网站");
+  var inGuide = /\/guide\/?$/.test(location.pathname); // 本页是否为「使用教程」页
+  document.title = p.name + (inGuide ? " — 使用教程" : " — 下载与介绍") + " | " + (site.name || "个人网站");
 
   var ghPage = (p.links || []).filter(function (l) { return /github\.com\//i.test(l.url); })[0] || null;
   var ghReleases = ghPage ? ghPage.url.replace(/\/+$/, "") + "/releases" : "";
@@ -44,6 +46,14 @@
     return m ? m[1] : id;
   })();
   var docs = (window.DOCS || {})[id] || null;
+
+  /* ---------- 「使用教程」醒目入口：区块快捷导航（哪个区块存在就显示哪个） ---------- */
+  var quicknav = [];
+  if (docs && docs.features) quicknav.push('<a href="#ppFeat">📖 功能介绍</a>');
+  if (docs && docs.usage) quicknav.push('<a href="#ppHow">🧭 使用方法</a>');
+  if (docs && docs.changelog) quicknav.push('<a href="#ppVer">🕘 版本历史</a>');
+  if (docs && docs.faq) quicknav.push('<a href="#ppFaq">❓ 常见问题</a>');
+  var quicknavHtml = quicknav.length ? '<nav class="pp-quicknav" aria-label="使用教程导航">' + quicknav.join("") + "</nav>" : "";
 
   function setVersionChip(tag) {
     var el = document.getElementById("ppVer");
@@ -88,7 +98,7 @@
   /* ---------- 体系化文档（数据来自 data/docs.js，从仓库 README/CHANGELOG 提炼） ---------- */
   var featuresHtml = "";
   if (docs && docs.features && docs.features.length) {
-    featuresHtml = '<div class="pp-block"><h2>功能介绍</h2>' +
+    featuresHtml = '<div class="pp-block" id="ppFeat"><h2>功能介绍</h2>' +
       (docs.intro ? '<p class="pp-detail pp-intro">' + esc(docs.intro) + "</p>" : "") +
       docs.features.map(function (g) {
         return '<div class="pp-feat"><h3>' + esc(g.title) + '</h3><ul class="pp-list">' +
@@ -97,14 +107,14 @@
   }
   var usageHtml = "";
   if (docs && docs.usage && docs.usage.length) {
-    usageHtml = '<div class="pp-block"><h2>使用方法</h2>' + docs.usage.map(function (g) {
+    usageHtml = '<div class="pp-block" id="ppHow"><h2>使用方法</h2>' + docs.usage.map(function (g) {
       return '<div class="pp-feat"><h3>' + esc(g.title) + '</h3><ol class="pp-steps">' +
         (g.steps || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ol></div>";
     }).join("") + "</div>";
   }
   var changelogHtml = "";
   if (docs && docs.changelog && docs.changelog.length) {
-    changelogHtml = '<div class="pp-block"><h2>版本历史</h2><div class="pp-vers">' + docs.changelog.map(function (v) {
+    changelogHtml = '<div class="pp-block" id="ppVer"><h2>版本历史</h2><div class="pp-vers">' + docs.changelog.map(function (v) {
       return '<div class="pp-ver"><div class="pp-ver-head"><b>' + esc(v.version) + "</b>" +
         (v.date ? "<time>" + esc(v.date) + "</time>" : "") + "</div>" +
         '<ul class="pp-list">' + (v.items || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul></div>";
@@ -112,7 +122,7 @@
   }
   var faqHtml = "";
   if (docs && docs.faq && docs.faq.length) {
-    faqHtml = '<div class="pp-block"><h2>常见问题</h2><div class="pp-faq">' + docs.faq.map(function (f) {
+    faqHtml = '<div class="pp-block" id="ppFaq"><h2>常见问题</h2><div class="pp-faq">' + docs.faq.map(function (f) {
       return "<details><summary>" + esc(f.q) + "</summary><p>" + esc(f.a) + "</p></details>";
     }).join("") + "</div></div>";
   }
@@ -120,18 +130,24 @@
   var highlights = (p.highlights || []).map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("");
   var tech = (p.tech || []).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
 
+  /* 顶部返回目标：教程页 → 对应软件主页；其余 → 主站首页 */
+  var backHref = inGuide ? (PP + (p.page || "")) : HOME;
+  var backText = inGuide ? "← 软件主页" : "← 返回首页";
+
   root.innerHTML =
     '<header class="pp-top">' +
-      '<a class="pp-back" href="' + HOME + '">← 返回首页</a>' +
+      '<a class="pp-back" href="' + backHref + '">' + backText + "</a>" +
       '<button class="btn btn-ghost btn-sm" id="ppTheme" type="button">切换主题</button>' +
     "</header>" +
     '<div class="pp-badges">' +
+      (inGuide ? '<span class="pp-badge pp-guide">📖 使用教程</span>' : "") +
       '<span class="pp-badge">' + esc(p.type) + "</span>" +
       '<span class="pp-badge pp-status">' + esc(p.status) + "</span>" +
       '<span class="pp-badge" id="ppVer">最新版 --</span>' +
     "</div>" +
-    "<h1>" + esc(p.name) + "</h1>" +
+    "<h1>" + esc(p.name) + (inGuide ? " · 使用教程" : "") + "</h1>" +
     '<p class="pp-summary">' + esc(p.summary) + "</p>" +
+    quicknavHtml +
     (p.detail ? '<p class="pp-detail">' + esc(p.detail) + "</p>" : "") +
     (dls
       ? '<div class="pp-block"><h2>⬇ 下载</h2><div class="pp-dls">' + dls + "</div>" +

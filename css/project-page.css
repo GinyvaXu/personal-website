@@ -73,3 +73,15 @@
 .pp-faq summary::after { content: "+"; position: absolute; right: 16px; color: var(--accent); font-size: 17px; transition: transform .25s ease; }
 .pp-faq details[open] summary::after { transform: rotate(45deg); }
 .pp-faq details p { margin: 0; padding: 0 16px 15px; opacity: .75; font-size: 13.5px; line-height: 1.85; }
+
+/* ---------- 使用教程：醒目入口 ---------- */
+.pp-badge.pp-guide { font-weight: 700; box-shadow: inset 0 0 0 1px var(--accent); }
+.pp-quicknav { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 16px; }
+.pp-quicknav a {
+  font-size: 13.5px; padding: 7px 15px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  text-decoration: none; transition: border-color .2s ease, color .2s ease, transform .2s ease;
+}
+.pp-quicknav a:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+.pp-block:target h2 { color: var(--accent); }
+

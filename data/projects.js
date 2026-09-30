@@ -77,6 +77,7 @@ window.PROJECTS = [
     "status": "进行中",
     "featured": false,
     "screenshots": [
+      {"src": "assets/ginyscreen/demo.gif", "caption": "动图演示 · 房间语音与屏幕共享"},
       {"src": "assets/ginyscreen/login.png", "caption": "首页 · 输入昵称即可建房"},
       {"src": "assets/ginyscreen/room.png", "caption": "房间 · 语音与屏幕共享"}
     ],
@@ -103,6 +104,7 @@ window.PROJECTS = [
     "status": "进行中",
     "featured": false,
     "screenshots": [
+      {"src": "assets/cloudbox/demo.gif", "caption": "动图演示 · 文件夹自动同步"},
       {"src": "assets/cloudbox/welcome.png", "caption": "欢迎页 · 首次使用向导"},
       {"src": "assets/cloudbox/settings.png", "caption": "设置 · 云存储配置向导"}
     ],
@@ -170,6 +172,11 @@ window.PROJECTS = [
     "type": "游戏",
     "status": "进行中",
     "featured": false,
+    "screenshots": [
+      {"src": "assets/nottingham/demo.gif", "caption": "动图演示 · 市场装袋与查验"},
+      {"src": "assets/nottingham/board.png", "caption": "市场与装袋 · 挑选过境货物"},
+      {"src": "assets/nottingham/bribe.png", "caption": "宣布与查验 · 警长的抉择"}
+    ],
     "summary": "把《诺丁汉警长》吹牛贿赂桌游做成 3–5 人联机派对游戏，Godot 4 开发中。",
     "detail": "桌游电子化企画：将《诺丁汉警长》的吹牛、贿赂、检查心理博弈搬上屏幕，目标支持 3–5 人联机（可补 AI 商人）；采用 Godot 4 引擎，已产出完整企画书与初期资源、构建产物。v1.7.x 完成局内界面重做与动效打磨（按钮手感 / 面板层次 / 暖色渐变背景 / 转场动画可关），地图与模组体系同步迭代。",
     "tech": ["Godot 4", "GDScript", "多人联机"],
@@ -189,6 +196,10 @@ window.PROJECTS = [
     "name": "ClaudeFloat 桌面浮窗启动器",
     "type": "软件",
     "status": "已完成",
+    "screenshots": [
+      {"src": "assets/claudefloat/demo.gif", "caption": "动图演示 · 一键启动"},
+      {"src": "assets/claudefloat/ball.png", "caption": "悬浮球外观 · 毛玻璃双主题"}
+    ],
     "summary": "AgentFloat 的前身：一键启动 Claude Code 的毛玻璃桌面悬浮启动器。",
     "detail": "AgentFloat 的前身作品。精致的 Windows 桌面悬浮按钮，一键启动 Claude Code；iOS 风格毛玻璃外观，支持亮色/暗色双主题、自由拖拽、边缘吸附、系统托盘、开机自启；内置 API 用量余额监控与 GitHub Releases 自动更新，提供安装包与便携版两种分发方式。",
     "tech": ["Python", "PyQt", "PyInstaller", "GitHub Releases"],

@@ -153,6 +153,7 @@
       (tech ? '<div class="hub-tech">' + tech + "</div>" : "") +
       '<div class="hub-links">' +
         (p.page ? '<a class="btn btn-primary btn-sm" href="' + esc(p.page) + '">查看详情</a>' : "") +
+        (p.page ? '<a class="link-plain" href="' + esc(p.page) + 'guide/">📖 教程</a>' : "") +
         (dl
           ? '<a class="btn btn-ghost btn-sm" href="' + esc(dl.url) + '" target="_blank" rel="noopener noreferrer" title="' + (dl.mirrored ? "国内高速镜像（Cloudflare R2）" : "GitHub Releases") + '">⬇ 下载' + (dl.size ? " · " + esc(dl.size) : "") + "</a>"
           : (rel ? '<a class="btn btn-ghost btn-sm" href="' + esc(rel.url) + '" target="_blank" rel="noopener noreferrer">发布页</a>' : "")) +
@@ -166,7 +167,7 @@
     var grid = $("#projectGrid");
     if (!grid) return;
     var sub = $("#projectsSub");
-    if (sub) sub.textContent = "共 " + PROJECTS.length + " 个项目，点击「查看详情」进入各自的独立主页。";
+    if (sub) sub.textContent = "共 " + PROJECTS.length + " 个项目 · 每个都有独立主页、界面预览与图文教程。";
     grid.innerHTML = PROJECTS.map(cardHtml).join("");
   }
 
