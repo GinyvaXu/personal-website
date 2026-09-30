@@ -31,14 +31,18 @@ export async function onRequest(context) {
     return Response.redirect("https://" + WWW + url.pathname + url.search, 301);
   }
 
-  // 子域名根路径 → 对应的软件独立页；/guide/ → 该软件的完整说明页
+  // 子域名：项目本地路径（首页 / landing.css / landing.js / guide/）重写到项目目录；
+  // 其余路径（/assets、/data、/js、/css 等共享资源）原样透传。
   const target = HOST_ROUTES[host];
-  if (target && (url.pathname === "/" || url.pathname === "/guide" || url.pathname.startsWith("/guide/"))) {
-    let sub = url.pathname === "/" ? "" : url.pathname.replace(/^\//, "");
+  if (target) {
+    let sub = url.pathname.replace(/^\//, "");
     if (sub === "guide") sub = "guide/";
-    const rewritten = new URL(url);
-    rewritten.pathname = target + sub;
-    return context.env.ASSETS.fetch(new Request(rewritten.toString(), context.request));
+    const isLocal = sub === "" || sub === "landing.css" || sub === "landing.js" || sub.startsWith("guide/");
+    if (isLocal) {
+      const rewritten = new URL(url);
+      rewritten.pathname = target + sub;
+      return context.env.ASSETS.fetch(new Request(rewritten.toString(), context.request));
+    }
   }
 
   return context.next();
