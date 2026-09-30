@@ -47,7 +47,8 @@
   }
   function downloadList(p) {
     var R = window.RELEASES || {};
-    var rel = R[p.id];
+    var m = /^projects\/([^/]+)\/?$/.exec(p.page || "");
+    var rel = R[m ? m[1] : p.id];
     if (rel && rel.files && rel.files.length) {
       return rel.files.map(function (f) {
         return { label: labelForFile(f.name), url: rel.base + encodeURIComponent(f.name), size: fmtMb(f.size), note: "R2 镜像" };

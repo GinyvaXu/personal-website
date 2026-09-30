@@ -105,9 +105,14 @@
     if (!bytes) return "";
     return (bytes / 1048576).toFixed(1).replace(/\.0$/, "") + " MB";
   }
+  /* 镜像键 = 页面目录名（projects/<slug>/），与 releases.js 的键一致 */
+  function mirrorKey(p) {
+    var m = /^projects\/([^/]+)\/?$/.exec(p.page || "");
+    return m ? m[1] : p.id;
+  }
   function downloadInfo(p) {
     var R = window.RELEASES || {};
-    var rel = R[p.id];
+    var rel = R[mirrorKey(p)];
     if (rel && rel.files && rel.files.length) {
       var f = pickSetup(rel.files);
       if (f) return { url: rel.base + encodeURIComponent(f.name), size: fmtMb(f.size), mirrored: true };
