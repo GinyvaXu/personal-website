@@ -1,0 +1,94 @@
+# ============================================================
+# 下载镜像管线：GitHub Releases → Cloudflare R2（ginyva-downloads）
+# 触发：手动 / 每天定时 / repository_dispatch(release-published)
+# 行为：
+#   1. 读取各仓库最新 Release（含预发布）
+#   2. 若与 R2 上 latest.json 的 tag 相同则跳过
+#   3. 否则：下载资产 → 删除旧版文件 → 上传新版 → 更新 latest.json
+# 访问：https://dl.ginyva.site/releases/<项目>/latest/<文件名>
+# ============================================================
+name: Mirror releases to R2
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 20 * * *"          # 每天 UTC 20:17（北京时间 04:17）
+  repository_dispatch:
+    types: [release-published]
+
+permissions:
+  contents: read
+
+env:
+  BUCKET: ginyva-downloads
+  BASE_URL: https://dl.ginyva.site
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Install wrangler
+        run: npm install -g wrangler
+
+      - name: Mirror all projects
+        run: |
+          set -euo pipefail
+
+          mirror() {
+            pid="$1"; repo="$2"
+            echo "=========== $pid ($repo) ==========="
+            tag=$(gh api "repos/$repo/releases?per_page=1" --jq '.[0].tag_name // empty')
+            if [ -z "$tag" ]; then echo "  无 Release，跳过"; return 0; fi
+
+            rm -rf work; mkdir -p work/dist
+            old_tag=""
+            if wrangler r2 object get "$BUCKET/releases/$pid/latest.json" --file work/old.json --remote >/dev/null 2>&1; then
+              old_tag=$(jq -r '.tag // empty' work/old.json || true)
+            fi
+            if [ "$old_tag" = "$tag" ]; then echo "  已是最新（$tag），跳过"; return 0; fi
+            echo "  更新：${old_tag:-<无>} → $tag"
+
+            gh release download "$tag" -R "$repo" -D work/dist
+            ls -lh work/dist
+
+            # 删除旧版本文件（按旧 latest.json 清单）
+            if [ -f work/old.json ]; then
+              while read -r n; do
+                [ -n "$n" ] && wrangler r2 object delete "$BUCKET/releases/$pid/latest/$n" --remote || true
+              done < <(jq -r '.files[]?.name // empty' work/old.json)
+            fi
+
+            # 上传新文件
+            for f in work/dist/*; do
+              name=$(basename "$f")
+              wrangler r2 object put "$BUCKET/releases/$pid/latest/$name" --file "$f" --remote
+            done
+
+            # 生成 latest.json
+            jq -n --arg pid "$pid" --arg tag "$tag" --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              --arg base "$BASE_URL/releases/$pid/latest/" \
+              '{project:$pid, tag:$tag, updatedAt:$ts, base:$base, files:[]}' > work/latest.json
+            for f in work/dist/*; do
+              name=$(basename "$f"); size=$(stat -c%s "$f")
+              jq --arg n "$name" --argjson s "$size" '.files += [{"name":$n,"size":$s}]' work/latest.json > work/tmp.json
+              mv work/tmp.json work/latest.json
+            done
+            cat work/latest.json
+            wrangler r2 object put "$BUCKET/releases/$pid/latest.json" --file work/latest.json --remote \
+              --content-type "application/json; charset=utf-8"
+            echo "  ✅ $pid 完成"
+          }
+
+          mirror projectdock  GinyvaXu/ProjectDock
+          mirror agentfloat   GinyvaXu/AgentFloat
+          mirror cloudbox     GinyvaXu/cloudbox-portable
+          mirror ginyscreen   GinyvaXu/GinyScreen
+          mirror nottingham   GinyvaXu/SheriffOfNottingham---Ultimate
+          mirror claudefloat  GinyvaXu/ClaudeFloat
+          mirror hexwar       GinyvaXu/HexWarDemo
+
+          echo "全部完成"
