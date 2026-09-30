@@ -319,6 +319,7 @@ code {
 }
 .dl-meta { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
 .dl-btn { min-width: 280px; }
+.dl-sub { margin-top: 14px; }
 .dl-beta { font-size: 13px; color: var(--muted); margin: 14px 0 0; }
 .dl-beta[hidden] { display: none; }
 .dl-note { color: var(--muted); font-size: 13px; margin: 16px 0 26px; }

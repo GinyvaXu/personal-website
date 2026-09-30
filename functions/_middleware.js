@@ -31,11 +31,13 @@ export async function onRequest(context) {
     return Response.redirect("https://" + WWW + url.pathname + url.search, 301);
   }
 
-  // 子域名根路径 → 对应的软件独立页
+  // 子域名根路径 → 对应的软件独立页；/guide/ → 该软件的完整说明页
   const target = HOST_ROUTES[host];
-  if (target && url.pathname === "/") {
+  if (target && (url.pathname === "/" || url.pathname === "/guide" || url.pathname.startsWith("/guide/"))) {
+    let sub = url.pathname === "/" ? "" : url.pathname.replace(/^\//, "");
+    if (sub === "guide") sub = "guide/";
     const rewritten = new URL(url);
-    rewritten.pathname = target;
+    rewritten.pathname = target + sub;
     return context.env.ASSETS.fetch(new Request(rewritten.toString(), context.request));
   }
 

@@ -123,12 +123,24 @@
     }
     return null;
   }
+  /* 最近更新：优先使用镜像管线数据（tag + 时间），回退手工文案 */
+  function latestInfo(p) {
+    var R = window.RELEASES || {};
+    var rel = R[mirrorKey(p)];
+    if (rel && rel.tag) {
+      var d = rel.updatedAt ? new Date(rel.updatedAt) : null;
+      var ds = d && !isNaN(d.getTime()) ? " · " + d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0") : "";
+      return String(rel.tag) + ds;
+    }
+    return p.lastUpdate || "";
+  }
 
   function cardHtml(p) {
     var gh = githubLink(p);
     var repo = gh ? repoFromUrl(gh.url) : null;
     var rel = releaseLink(p);
     var dl = downloadInfo(p);
+    var upd = latestInfo(p);
     var tech = (p.tech || []).slice(0, 4).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
     return '<article class="hub-card reveal">' +
       '<div class="hub-card-head">' +
@@ -146,7 +158,7 @@
           : (rel ? '<a class="btn btn-ghost btn-sm" href="' + esc(rel.url) + '" target="_blank" rel="noopener noreferrer">发布页</a>' : "")) +
         (gh ? '<a class="link-plain" href="' + esc(gh.url) + '" target="_blank" rel="noopener noreferrer">GitHub ↗</a>' : "") +
       "</div>" +
-      (p.lastUpdate ? '<p class="hub-update">最近更新：' + esc(p.lastUpdate) + "</p>" : "") +
+      (upd ? '<p class="hub-update">最近更新：' + esc(upd) + "</p>" : "") +
     "</article>";
   }
 

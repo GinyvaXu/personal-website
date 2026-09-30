@@ -53,3 +53,23 @@
 
 .pp-foot { margin-top: 44px; font-size: 13px; opacity: .6; text-align: center; }
 .pp-loading { padding: 70px 0; text-align: center; opacity: .6; }
+
+/* ---------- 体系化文档区块（功能介绍 / 使用方法 / 版本历史 / FAQ） ---------- */
+.pp-intro { margin-top: -4px; }
+.pp-feat { margin-bottom: 20px; }
+.pp-feat:last-child { margin-bottom: 4px; }
+.pp-feat h3 { font-size: 14.5px; margin: 0 0 8px; color: var(--accent); }
+.pp-steps { margin: 0; padding-left: 22px; line-height: 2; font-size: 14px; }
+.pp-steps li::marker { color: var(--accent); font-weight: 700; }
+.pp-vers { display: grid; gap: 14px; }
+.pp-ver { border-left: 2px solid var(--border); padding-left: 14px; }
+.pp-ver-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.pp-ver-head b { font-size: 14.5px; color: var(--accent); }
+.pp-ver-head time { font-size: 12px; opacity: .5; }
+.pp-ver .pp-list { font-size: 13.5px; }
+.pp-faq details { border: 1px solid var(--border); border-radius: 12px; background: var(--bg); margin-bottom: 10px; overflow: hidden; }
+.pp-faq summary { cursor: pointer; list-style: none; padding: 13px 16px; font-weight: 600; font-size: 14px; position: relative; }
+.pp-faq summary::-webkit-details-marker { display: none; }
+.pp-faq summary::after { content: "+"; position: absolute; right: 16px; color: var(--accent); font-size: 17px; transition: transform .25s ease; }
+.pp-faq details[open] summary::after { transform: rotate(45deg); }
+.pp-faq details p { margin: 0; padding: 0 16px 15px; opacity: .75; font-size: 13.5px; line-height: 1.85; }

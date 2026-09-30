@@ -35,6 +35,23 @@
   var ghPage = (p.links || []).filter(function (l) { return /github\.com\//i.test(l.url); })[0] || null;
   var ghReleases = ghPage ? ghPage.url.replace(/\/+$/, "") + "/releases" : "";
 
+  /* 资源相对前缀：兼容 /projects/<id>/（2 层）、/projects/<id>/guide/（3 层）与子域名重写后的 /guide/（1 层） */
+  var SEG = location.pathname.split("/").filter(Boolean).length;
+  var PP = new Array(SEG + 1).join("../");
+  /* 镜像键 = 页面目录名（与 data/releases.js 的键一致） */
+  var mirrorKey = (function () {
+    var m = /^projects\/([^\/]+)\/?$/.exec(p.page || "");
+    return m ? m[1] : id;
+  })();
+  var docs = (window.DOCS || {})[id] || null;
+
+  function setVersionChip(tag) {
+    var el = document.getElementById("ppVer");
+    if (!el || !tag) return;
+    var t = String(tag).replace(/^v/i, "");
+    el.textContent = (/beta|alpha|rc/i.test(tag) ? "最新预览版 v" : "最新正式版 v") + t;
+  }
+
   function fmtMb(bytes) {
     if (!bytes) return "";
     return (bytes / 1048576).toFixed(1).replace(/\.0$/, "") + " MB";
@@ -64,9 +81,41 @@
   }).join("");
 
   var shots = (p.screenshots || []).map(function (s) {
-    return '<figure class="pp-shot"><img src="../../' + esc(s.src) + '" alt="' + esc(s.caption || p.name) + '" loading="lazy">' +
+    return '<figure class="pp-shot"><img src="' + PP + esc(s.src) + '" alt="' + esc(s.caption || p.name) + '" loading="lazy">' +
       (s.caption ? "<figcaption>" + esc(s.caption) + "</figcaption>" : "") + "</figure>";
   }).join("");
+
+  /* ---------- 体系化文档（数据来自 data/docs.js，从仓库 README/CHANGELOG 提炼） ---------- */
+  var featuresHtml = "";
+  if (docs && docs.features && docs.features.length) {
+    featuresHtml = '<div class="pp-block"><h2>功能介绍</h2>' +
+      (docs.intro ? '<p class="pp-detail pp-intro">' + esc(docs.intro) + "</p>" : "") +
+      docs.features.map(function (g) {
+        return '<div class="pp-feat"><h3>' + esc(g.title) + '</h3><ul class="pp-list">' +
+          (g.items || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul></div>";
+      }).join("") + "</div>";
+  }
+  var usageHtml = "";
+  if (docs && docs.usage && docs.usage.length) {
+    usageHtml = '<div class="pp-block"><h2>使用方法</h2>' + docs.usage.map(function (g) {
+      return '<div class="pp-feat"><h3>' + esc(g.title) + '</h3><ol class="pp-steps">' +
+        (g.steps || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ol></div>";
+    }).join("") + "</div>";
+  }
+  var changelogHtml = "";
+  if (docs && docs.changelog && docs.changelog.length) {
+    changelogHtml = '<div class="pp-block"><h2>版本历史</h2><div class="pp-vers">' + docs.changelog.map(function (v) {
+      return '<div class="pp-ver"><div class="pp-ver-head"><b>' + esc(v.version) + "</b>" +
+        (v.date ? "<time>" + esc(v.date) + "</time>" : "") + "</div>" +
+        '<ul class="pp-list">' + (v.items || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul></div>";
+    }).join("") + "</div></div>";
+  }
+  var faqHtml = "";
+  if (docs && docs.faq && docs.faq.length) {
+    faqHtml = '<div class="pp-block"><h2>常见问题</h2><div class="pp-faq">' + docs.faq.map(function (f) {
+      return "<details><summary>" + esc(f.q) + "</summary><p>" + esc(f.a) + "</p></details>";
+    }).join("") + "</div></div>";
+  }
 
   var highlights = (p.highlights || []).map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("");
   var tech = (p.tech || []).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
@@ -90,9 +139,13 @@
         (ghReleases ? '；也可在 <a href="' + esc(ghReleases) + '" target="_blank" rel="noopener noreferrer">GitHub Releases</a> 获取官方原件' : "") +
         "。</p></div>"
       : "") +
+    featuresHtml +
+    usageHtml +
+    changelogHtml +
+    faqHtml +
     (highlights ? '<div class="pp-block"><h2>项目亮点</h2><ul class="pp-list">' + highlights + "</ul></div>" : "") +
     (tech ? '<div class="pp-block"><h2>技术栈</h2><div class="pp-tech">' + tech + "</div></div>" : "") +
-    (p.lastUpdate ? '<div class="pp-block"><h2>最近更新</h2><p class="pp-update">' + esc(p.lastUpdate) + "</p></div>" : "") +
+    (!docs && p.lastUpdate ? '<div class="pp-block"><h2>最近更新</h2><p class="pp-update">' + esc(p.lastUpdate) + "</p></div>" : "") +
     (shots ? '<div class="pp-block"><h2>界面预览</h2><div class="pp-shots">' + shots + "</div></div>" : "") +
     '<p class="pp-foot">' + esc(site.name || "") + ' · <a href="' + HOME + '">返回首页</a></p>';
 
@@ -105,7 +158,9 @@
     try { localStorage.setItem("site-theme", dark ? "light" : "dark"); } catch (e) {}
   });
 
-  // 可选：从 GitHub API 拉最新版本号（失败自动忽略，保持 --）
+  // 版本号：优先用镜像管线的 RELEASES 数据（与下载链接一致），失败再退回 GitHub API
+  var relM = (window.RELEASES || {})[mirrorKey];
+  if (relM && relM.tag) setVersionChip(relM.tag);
   if (ghPage) {
     var m = /github\.com\/([^\/]+)\/([^\/?#]+)/.exec(ghPage.url);
     if (m) {
@@ -113,8 +168,7 @@
       fetch("https://api.github.com/repos/" + repo + "/releases?per_page=1")
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (rels) {
-          var el = document.getElementById("ppVer");
-          if (el && rels && rels.length) el.textContent = "最新版 " + String(rels[0].tag_name).replace(/^v/i, "");
+          if (rels && rels.length) setVersionChip(rels[0].tag_name);
         })
         .catch(function () {});
     }
