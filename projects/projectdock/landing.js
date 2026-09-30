@@ -132,5 +132,28 @@
       })
       .catch(function () { /* 静默降级：保留静态版本号 */ });
   }
+  /* ---------- 7. 优先使用镜像管线数据（data/releases.js） ---------- */
+  function setAllText(sel, text) {
+    if (!text) return;
+    Array.prototype.forEach.call(document.querySelectorAll(sel), function (el) { el.textContent = text; });
+  }
+  (function applyMirror() {
+    var rel = (window.RELEASES || {})["projectdock"];
+    if (!rel || !rel.files || !rel.files.length) return;
+    setAllText("[data-version]", String(rel.tag || "").replace(/^v/i, ""));
+    var f = null;
+    for (var i = 0; i < rel.files.length; i++) { if (/setup|install/i.test(rel.files[i].name)) { f = rel.files[i]; break; } }
+    if (!f) f = rel.files[0];
+    if (f) {
+      setAllText("[data-size]", (f.size / 1048576).toFixed(1).replace(/\.0$/, "") + " MB");
+      var btn = document.getElementById("dlBtn");
+      if (btn) btn.href = rel.base + encodeURIComponent(f.name);
+    }
+    if (rel.updatedAt) {
+      var d = new Date(rel.updatedAt);
+      setAllText("[data-date]", d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"));
+    }
+  })();
+
   fetchRelease();
 })();

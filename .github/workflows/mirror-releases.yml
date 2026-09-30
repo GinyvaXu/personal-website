@@ -1,10 +1,9 @@
 # ============================================================
-# 下载镜像管线：GitHub Releases → Cloudflare R2（ginyva-downloads）
+# 下载镜像 + 发布信息同步管线
+#   GitHub Releases → Cloudflare R2（ginyva-downloads）
+#   同时生成 data/releases.js 并提交回本仓库（网站自动读取最新下载地址）
+#
 # 触发：手动 / 每天定时 / repository_dispatch(release-published)
-# 行为：
-#   1. 读取各仓库最新 Release（含预发布）
-#   2. 若与 R2 上 latest.json 的 tag 相同则跳过
-#   3. 否则：下载资产 → 删除旧版文件 → 上传新版 → 更新 latest.json
 # 访问：https://dl.ginyva.site/releases/<项目>/latest/<文件名>
 # ============================================================
 name: Mirror releases to R2
@@ -17,7 +16,7 @@ on:
     types: [release-published]
 
 permissions:
-  contents: read
+  contents: write                  # 需要提交 data/releases.js
 
 env:
   BUCKET: ginyva-downloads
@@ -31,6 +30,8 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       GH_TOKEN: ${{ github.token }}
     steps:
+      - uses: actions/checkout@v4
+
       - name: Install wrangler
         run: npm install -g wrangler
 
@@ -68,7 +69,7 @@ jobs:
               wrangler r2 object put "$BUCKET/releases/$pid/latest/$name" --file "$f" --remote
             done
 
-            # 生成 latest.json
+            # 生成并上传 latest.json
             jq -n --arg pid "$pid" --arg tag "$tag" --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
               --arg base "$BASE_URL/releases/$pid/latest/" \
               '{project:$pid, tag:$tag, updatedAt:$ts, base:$base, files:[]}' > work/latest.json
@@ -91,4 +92,43 @@ jobs:
           mirror claudefloat  GinyvaXu/ClaudeFloat
           mirror hexwar       GinyvaXu/HexWarDemo
 
-          echo "全部完成"
+          echo "镜像全部完成"
+
+      - name: Generate data/releases.js
+        run: |
+          set -euo pipefail
+          mkdir -p work/all
+          cat > work/gen.cjs <<'NODE'
+          const { execSync } = require("child_process");
+          const fs = require("fs");
+          const ids = ["projectdock","agentfloat","cloudbox","ginyscreen","nottingham","claudefloat","hexwar"];
+          const out = {};
+          for (const id of ids) {
+            try {
+              execSync(`wrangler r2 object get ${process.env.BUCKET}/releases/${id}/latest.json --file work/all/${id}.json --remote`, { stdio: "ignore" });
+              out[id] = JSON.parse(fs.readFileSync(`work/all/${id}.json`, "utf8"));
+            } catch (e) {
+              console.log("skip " + id + ": " + String(e).slice(0, 120));
+            }
+          }
+          fs.mkdirSync("data", { recursive: true });
+          fs.writeFileSync("data/releases.js",
+            "/* 由镜像管线自动生成（GitHub Actions），请勿手改 */\nwindow.RELEASES = " +
+            JSON.stringify(out, null, 2) + ";\n");
+          console.log("releases.js 已更新: " + Object.keys(out).join(", "));
+          NODE
+          node work/gen.cjs
+
+      - name: Commit releases.js
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/releases.js
+          if git diff --cached --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git commit -m "chore: 自动更新发布信息（releases.js）"
+            git push
+            echo "已提交并推送"
+          fi

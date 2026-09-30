@@ -95,12 +95,35 @@
     var m = /github\.com\/([^\/]+)\/([^\/?#]+)/.exec(url || "");
     return m ? m[1] + "/" + m[2].replace(/\.git$/, "") : null;
   }
+  /* ---------- 下载信息：优先用镜像管线生成的 RELEASES，回退到 projects.js 手写链接 ---------- */
+  function pickSetup(files) {
+    if (!files || !files.length) return null;
+    for (var i = 0; i < files.length; i++) { if (/setup|install/i.test(files[i].name)) return files[i]; }
+    return files[0];
+  }
+  function fmtMb(bytes) {
+    if (!bytes) return "";
+    return (bytes / 1048576).toFixed(1).replace(/\.0$/, "") + " MB";
+  }
+  function downloadInfo(p) {
+    var R = window.RELEASES || {};
+    var rel = R[p.id];
+    if (rel && rel.files && rel.files.length) {
+      var f = pickSetup(rel.files);
+      if (f) return { url: rel.base + encodeURIComponent(f.name), size: fmtMb(f.size), mirrored: true };
+    }
+    if (p.downloads && p.downloads[0]) {
+      var d = p.downloads[0];
+      return { url: d.url, size: d.size || "", mirrored: false };
+    }
+    return null;
+  }
 
   function cardHtml(p) {
     var gh = githubLink(p);
     var repo = gh ? repoFromUrl(gh.url) : null;
     var rel = releaseLink(p);
-    var dl = (p.downloads && p.downloads[0]) || null;
+    var dl = downloadInfo(p);
     var tech = (p.tech || []).slice(0, 4).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("");
     return '<article class="hub-card reveal">' +
       '<div class="hub-card-head">' +
@@ -114,7 +137,7 @@
       '<div class="hub-links">' +
         (p.page ? '<a class="btn btn-primary btn-sm" href="' + esc(p.page) + '">查看详情</a>' : "") +
         (dl
-          ? '<a class="btn btn-ghost btn-sm" href="' + esc(dl.url) + '" target="_blank" rel="noopener noreferrer">⬇ 下载' + (dl.size ? " · " + esc(dl.size) : "") + "</a>"
+          ? '<a class="btn btn-ghost btn-sm" href="' + esc(dl.url) + '" target="_blank" rel="noopener noreferrer" title="' + (dl.mirrored ? "国内高速镜像（Cloudflare R2）" : "GitHub Releases") + '">⬇ 下载' + (dl.size ? " · " + esc(dl.size) : "") + "</a>"
           : (rel ? '<a class="btn btn-ghost btn-sm" href="' + esc(rel.url) + '" target="_blank" rel="noopener noreferrer">发布页</a>' : "")) +
         (gh ? '<a class="link-plain" href="' + esc(gh.url) + '" target="_blank" rel="noopener noreferrer">GitHub ↗</a>' : "") +
       "</div>" +

@@ -35,7 +35,27 @@
   var ghPage = (p.links || []).filter(function (l) { return /github\.com\//i.test(l.url); })[0] || null;
   var ghReleases = ghPage ? ghPage.url.replace(/\/+$/, "") + "/releases" : "";
 
-  var dls = (p.downloads || []).map(function (d) {
+  function fmtMb(bytes) {
+    if (!bytes) return "";
+    return (bytes / 1048576).toFixed(1).replace(/\.0$/, "") + " MB";
+  }
+  function labelForFile(name) {
+    if (/debug/i.test(name)) return "Debug 版";
+    if (/portable/i.test(name)) return "便携版";
+    if (/setup|install/i.test(name)) return "安装包";
+    return String(name).replace(/\.[^.]+$/, "");
+  }
+  function downloadList(p) {
+    var R = window.RELEASES || {};
+    var rel = R[p.id];
+    if (rel && rel.files && rel.files.length) {
+      return rel.files.map(function (f) {
+        return { label: labelForFile(f.name), url: rel.base + encodeURIComponent(f.name), size: fmtMb(f.size), note: "R2 镜像" };
+      });
+    }
+    return (p.downloads || []).map(function (d) { return { label: d.label, url: d.url, size: d.size, note: d.note }; });
+  }
+  var dls = downloadList(p).map(function (d) {
     return '<a class="btn btn-primary pp-dl" href="' + esc(d.url) + '" target="_blank" rel="noopener noreferrer">' +
       "<span>" + esc(d.label) + (d.note ? ' <em class="pp-dl-note">' + esc(d.note) + "</em>" : "") + "</span>" +
       (d.size ? '<span class="pp-dl-size">' + esc(d.size) + " ↓</span>" : "<span>↓</span>") +

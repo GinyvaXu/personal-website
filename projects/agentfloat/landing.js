@@ -161,5 +161,18 @@
       })
       .catch(function () { /* 静默降级：保留页面静态版本号 */ });
   }
+  /* ---------- 7. 优先使用镜像管线数据（data/releases.js）：尝鲜版走国内镜像 ---------- */
+  (function applyMirror() {
+    var rel = (window.RELEASES || {})["agentfloat"];
+    if (!rel || !rel.files || !rel.files.length) return;
+    var link = document.querySelector("[data-beta-link]");
+    if (link) {
+      link.href = rel.base + encodeURIComponent(rel.files[0].name);
+      link.title = "国内高速镜像（Cloudflare R2）";
+    }
+    var row = document.querySelector("[data-beta-row]");
+    if (row) row.hidden = false;
+  })();
+
   fetchReleases();
 })();
