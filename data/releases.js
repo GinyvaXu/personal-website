@@ -14,13 +14,13 @@ window.RELEASES = {
   },
   "agentfloat": {
     "project": "agentfloat",
-    "tag": "v3.6.2",
-    "updatedAt": "2026-09-30T14:23:57Z",
+    "tag": "v3.7.0",
+    "updatedAt": "2026-10-01T05:50:15Z",
     "base": "https://dl.ginyva.site/releases/agentfloat/latest/",
     "files": [
       {
-        "name": "AgentFloat-Setup-3.6.2.exe",
-        "size": 39904830
+        "name": "AgentFloat-Setup-3.7.0.exe",
+        "size": 42770562
       }
     ]
   },
