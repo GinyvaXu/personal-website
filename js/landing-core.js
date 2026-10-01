@@ -49,6 +49,11 @@
   var dlUrl = dlFile ? rel.base + encodeURIComponent(dlFile.name) : (ghReleases ? ghReleases + "/latest" : "#");
   if (L.dlUrl) dlUrl = L.dlUrl;          // 无 Release 的项目（如开源源码包）可自定义下载地址
   var dlLabel = L.dlLabel || "下载安装包";
+  if (/^https:\/\/dl\.ginyva\.site\//.test(dlUrl)) {   // R2 镜像下载走 /api/dl（统计 + 302）
+    var fn = (/\/latest\/([^\/?#]+)$/.exec(dlUrl) || [])[1] || "";
+    try { fn = decodeURIComponent(fn); } catch (e) {}
+    dlUrl = "/api/dl?p=" + encodeURIComponent(mk) + "&f=" + encodeURIComponent(fn);
+  }
   var verTag = rel && rel.tag ? String(rel.tag) : "";
   var verText = verTag ? (isPre ? "最新预览版 " : "最新正式版 ") + verTag.replace(/^v/i, "") : "";
 

@@ -35,7 +35,7 @@
   <!-- 登录 -->
   <section id="loginView" class="admin-login" hidden>
     <h1>管理员登录</h1>
-    <p class="admin-sub">仅站长本人使用。登录后可以管理社区反馈与文件仓库。</p>
+    <p class="admin-sub">仅站长本人使用。登录后可管理：站点运营（公告 / 排序）、统计、社区反馈与文件仓库。</p>
     <form id="loginForm" autocomplete="on">
       <input type="password" id="loginPass" placeholder="管理密码" autocomplete="current-password" required>
       <button class="btn btn-primary" id="loginBtn" type="submit">登录</button>
@@ -45,29 +45,135 @@
 
   <!-- 控制台 -->
   <section id="dashView" hidden>
-    <div class="admin-block">
-      <div class="admin-block-head">
-        <h2>💬 反馈管理</h2>
-        <button class="btn btn-ghost btn-sm" id="fbReload" type="button">刷新</button>
-      </div>
-      <div id="adminFbList" class="admin-fb-list"><p class="admin-empty">加载中…</p></div>
-    </div>
 
-    <div class="admin-block">
-      <div class="admin-block-head">
-        <h2>📁 文件仓库 <small>私有存储 · 单文件 ≤ 24MB</small></h2>
+    <nav class="admin-tabs" id="adminTabs">
+      <button type="button" data-tab="ops" class="active">📢 站点运营</button>
+      <button type="button" data-tab="stats">📊 统计</button>
+      <button type="button" data-tab="fb">💬 反馈</button>
+      <button type="button" data-tab="files">📁 文件</button>
+    </nav>
+
+    <!-- ================= 站点运营 ================= -->
+    <section class="admin-tabpane" id="tab-ops">
+
+      <div class="admin-block">
+        <div class="admin-block-head">
+          <h2>📢 全站公告条 <small>KV 实时生效 · 约 1 分钟全站可见</small></h2>
+          <label class="admin-switch"><input type="checkbox" id="annEnabled"><span class="track"></span>启用</label>
+        </div>
+        <div class="admin-form">
+          <label>公告文案（≤300 字）
+            <textarea id="annText" rows="2" maxlength="300" placeholder="例如：AgentFloat v3.7.0 已发布：全新品牌图标 + 启动动画 →"></textarea>
+          </label>
+          <div class="admin-row2">
+            <label>链接（可选）
+              <input type="text" id="annLink" placeholder="/projects/agentfloat/ 或 https://…">
+            </label>
+            <label>样式
+              <select id="annType">
+                <option value="info">信息（紫）</option>
+                <option value="promo">推广（蓝）</option>
+                <option value="warn">提醒（橙）</option>
+              </select>
+            </label>
+          </div>
+          <div class="admin-actions">
+            <button class="btn btn-primary btn-sm" type="button" id="annSave">保存公告</button>
+            <span class="admin-hint" id="annStatus"></span>
+          </div>
+        </div>
       </div>
-      <form id="uploadForm" class="admin-upload">
-        <input type="file" id="uploadFile">
-        <button class="btn btn-primary btn-sm" id="uploadBtn" type="submit">上传</button>
-        <span class="admin-hint" id="uploadStatus"></span>
-      </form>
-      <div id="adminFileList" class="admin-file-list"><p class="admin-empty">加载中…</p></div>
-    </div>
+
+      <div class="admin-block">
+        <div class="admin-block-head">
+          <h2>📌 项目排序 / 隐藏 <small>首页项目墙顺序，实时生效</small></h2>
+          <button class="btn btn-ghost btn-sm" type="button" id="orderReset">恢复默认</button>
+        </div>
+        <div id="orderList" class="admin-order"><p class="admin-empty">加载中…</p></div>
+        <div class="admin-actions">
+          <button class="btn btn-primary btn-sm" type="button" id="orderSave">保存排序</button>
+          <span class="admin-hint" id="orderStatus"></span>
+        </div>
+      </div>
+
+      <div class="admin-block">
+        <div class="admin-block-head">
+          <h2>🔄 下载镜像同步 <small>GitHub Releases → R2（每日自动 + 手动触发）</small></h2>
+          <button class="btn btn-primary btn-sm" type="button" id="mirrorRun">立即同步</button>
+        </div>
+        <div id="mirrorRuns" class="admin-runs"><p class="admin-empty">加载中…</p></div>
+        <div class="admin-token" id="mirrorTokenBox" hidden>
+          <p class="admin-hint">首次使用需要粘贴一个 GitHub Token（Fine-grained，权限：本仓库 Actions 读写 + Contents 读 / 或经典 token 的 repo+workflow）。只保存在你自己的 KV 里，不会回显。</p>
+          <div class="admin-actions">
+            <input type="password" id="mirrorToken" placeholder="ghp_… / github_pat_…">
+            <button class="btn btn-ghost btn-sm" type="button" id="mirrorTokenSave">保存 Token</button>
+            <button class="btn btn-ghost btn-sm" type="button" id="mirrorTokenClear">清除</button>
+            <span class="admin-hint" id="mirrorTokenStatus"></span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= 统计 ================= -->
+    <section class="admin-tabpane" id="tab-stats" hidden>
+      <div class="admin-block">
+        <div class="admin-block-head">
+          <h2>📊 访问与下载统计 <small>D1 · 无 Cookie · 日级去重</small></h2>
+          <button class="btn btn-ghost btn-sm" type="button" id="statsReload">刷新</button>
+        </div>
+        <div class="admin-stats-grid" id="statsCards"></div>
+
+        <h3 class="admin-h3">近 14 天访问（PV）</h3>
+        <div class="admin-chart" id="statsTrend"><p class="admin-empty">加载中…</p></div>
+
+        <div class="admin-two-col">
+          <div>
+            <h3 class="admin-h3">热门页面（30 天）</h3>
+            <div id="statsPaths" class="admin-ranks"></div>
+          </div>
+          <div>
+            <h3 class="admin-h3">下载排行（全部）</h3>
+            <div id="statsDl" class="admin-ranks"></div>
+          </div>
+        </div>
+
+        <h3 class="admin-h3">访问来源子域（30 天）</h3>
+        <div id="statsHosts" class="admin-ranks"></div>
+      </div>
+    </section>
+
+    <!-- ================= 反馈 ================= -->
+    <section class="admin-tabpane" id="tab-fb" hidden>
+      <div class="admin-block">
+        <div class="admin-block-head">
+          <h2>💬 反馈管理</h2>
+          <button class="btn btn-ghost btn-sm" id="fbReload" type="button">刷新</button>
+        </div>
+        <div id="adminFbList" class="admin-fb-list"><p class="admin-empty">加载中…</p></div>
+      </div>
+    </section>
+
+    <!-- ================= 文件 ================= -->
+    <section class="admin-tabpane" id="tab-files" hidden>
+      <div class="admin-block">
+        <div class="admin-block-head">
+          <h2>📁 文件仓库 <small>私有存储 · 单文件 ≤ 24MB</small></h2>
+        </div>
+        <form id="uploadForm" class="admin-upload">
+          <input type="file" id="uploadFile">
+          <button class="btn btn-primary btn-sm" id="uploadBtn" type="submit">上传</button>
+          <span class="admin-hint" id="uploadStatus"></span>
+        </form>
+        <div id="adminFileList" class="admin-file-list"><p class="admin-empty">加载中…</p></div>
+      </div>
+    </section>
+
   </section>
 
 </main>
 
+<script src="../data/projects.js"></script>
 <script src="admin.js"></script>
 </body>
 </html>

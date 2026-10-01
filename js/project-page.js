@@ -77,8 +77,9 @@
     var m = /^projects\/([^/]+)\/?$/.exec(p.page || "");
     var rel = R[m ? m[1] : p.id];
     if (rel && rel.files && rel.files.length) {
+      var key = m ? m[1] : p.id;
       return rel.files.map(function (f) {
-        return { label: labelForFile(f.name), url: rel.base + encodeURIComponent(f.name), size: fmtMb(f.size), note: "R2 镜像" };
+        return { label: labelForFile(f.name), url: "/api/dl?p=" + encodeURIComponent(key) + "&f=" + encodeURIComponent(f.name), size: fmtMb(f.size), note: "R2 镜像" };
       });
     }
     return (p.downloads || []).map(function (d) { return { label: d.label, url: d.url, size: d.size, note: d.note }; });

@@ -135,6 +135,18 @@
     return p.lastUpdate || "";
   }
 
+  /* ---------- 站点运营配置（公告由中间件注入；这里管排序 / 隐藏） ---------- */
+  var SITE_CFG = null;
+
+  /* ---------- R2 镜像下载统一走 /api/dl（统计 + 302 跳转） ---------- */
+  function mirrorHref(url) {
+    var m = /^https:\/\/dl\.ginyva\.site\/releases\/([^\/]+)\/latest\/([^\/?#]+)$/.exec(String(url || ""));
+    if (!m) return url;
+    var f = m[2];
+    try { f = decodeURIComponent(f); } catch (e) {}
+    return "/api/dl?p=" + encodeURIComponent(m[1]) + "&f=" + encodeURIComponent(f);
+  }
+
   function cardHtml(p) {
     var gh = githubLink(p);
     var repo = gh ? repoFromUrl(gh.url) : null;
@@ -155,7 +167,7 @@
         (p.page ? '<a class="btn btn-primary btn-sm" href="' + esc(p.page) + '">查看详情</a>' : "") +
         (p.page ? '<a class="link-plain" href="' + esc(p.page) + 'guide/">📖 教程</a>' : "") +
         (dl
-          ? '<a class="btn btn-ghost btn-sm" href="' + esc(dl.url) + '" target="_blank" rel="noopener noreferrer" title="' + (dl.mirrored ? "国内高速镜像（Cloudflare R2）" : "GitHub Releases") + '">⬇ 下载' + (dl.size ? " · " + esc(dl.size) : "") + "</a>"
+          ? '<a class="btn btn-ghost btn-sm" href="' + esc(mirrorHref(dl.url)) + '" target="_blank" rel="noopener noreferrer" title="' + (dl.mirrored ? "国内高速镜像（Cloudflare R2）" : "GitHub Releases") + '">⬇ 下载' + (dl.size ? " · " + esc(dl.size) : "") + "</a>"
           : (rel ? '<a class="btn btn-ghost btn-sm" href="' + esc(rel.url) + '" target="_blank" rel="noopener noreferrer">发布页</a>' : "")) +
         (gh ? '<a class="link-plain" href="' + esc(gh.url) + '" target="_blank" rel="noopener noreferrer">GitHub ↗</a>' : "") +
       "</div>" +
@@ -166,9 +178,25 @@
   function renderProjects() {
     var grid = $("#projectGrid");
     if (!grid) return;
+    /* 应用运营配置：隐藏 + 排序 */
+    var list = PROJECTS.slice();
+    if (SITE_CFG) {
+      if (SITE_CFG.hidden && SITE_CFG.hidden.length) {
+        list = list.filter(function (p) { return SITE_CFG.hidden.indexOf(p.id) < 0; });
+      }
+      if (SITE_CFG.order && SITE_CFG.order.length) {
+        var idx = {};
+        SITE_CFG.order.forEach(function (id, i) { idx[id] = i; });
+        list.sort(function (a, b) {
+          var ia = Object.prototype.hasOwnProperty.call(idx, a.id) ? idx[a.id] : 999;
+          var ib = Object.prototype.hasOwnProperty.call(idx, b.id) ? idx[b.id] : 999;
+          return ia - ib;
+        });
+      }
+    }
     var sub = $("#projectsSub");
-    if (sub) sub.textContent = "共 " + PROJECTS.length + " 个项目 · 每个都有独立主页、界面预览与图文教程。";
-    grid.innerHTML = PROJECTS.map(cardHtml).join("");
+    if (sub) sub.textContent = "共 " + list.length + " 个项目 · 每个都有独立主页、界面预览与图文教程。";
+    grid.innerHTML = list.map(cardHtml).join("");
   }
 
   /* ---------- GitHub 自动数据（star / 最新版本） ---------- */
@@ -362,12 +390,24 @@
 
   /* ---------- 启动 ---------- */
   renderStats();
-  renderProjects();
   renderFooter();
   initFeedback();
-  initAutoData();
   observeReveals(document);
 
   var grid = $("#projectGrid");
   if (grid) observeReveals(grid);
+
+  function bootProjects() {
+    renderProjects();
+    initAutoData();
+  }
+
+  /* 先取运营配置（排序 / 隐藏），再渲染项目墙，最后拉 GitHub 数据 */
+  fetch("/api/site-config")
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (d && d.ok && ((d.order && d.order.length) || (d.hidden && d.hidden.length))) SITE_CFG = d;
+    })
+    .catch(function () {})
+    .then(bootProjects);
 })();
