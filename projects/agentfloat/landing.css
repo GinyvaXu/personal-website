@@ -182,7 +182,7 @@ code {
     0 24px 60px rgba(0, 0, 0, .55);
   display: flex; align-items: center; justify-content: center;
 }
-.orb-core img { width: 56%; height: 56%; border-radius: 22%; box-shadow: 0 12px 30px rgba(0, 0, 0, .5); }
+.orb-core img { width: 68%; height: 68%; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .5)); }
 .orb-fly {
   position: absolute; top: 36%;
   font-size: 12.5px; color: var(--muted);

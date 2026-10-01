@@ -80,11 +80,12 @@ window.LANDINGS = {
     heroTitle: "几千张图，<em>也能一眼找到</em>",
     heroSub: "本地优先的动漫 / 插画图库管理器：标注按图片内容指纹记录，改名、移动、换目录都不丢；标签包含 / 排除筛选、画布视图、可选 AI 自动打标。",
     trust: ["零 npm 依赖", "Windows 双击即用", "内容指纹标注", "自动备份"],
-    heroMedia: "../../assets/gallery-manager/grid.png",
+    heroMedia: "../../assets/gallery-manager/demo.gif",
     demoSub: "浏览、标注、筛选，一条键盘流搞定。",
     demo: [
-      { label: "① 图库与筛选", src: "../../assets/gallery-manager/grid.png", caption: "标签包含 / 排除组合筛选 + 5 档星级。" },
-      { label: "② 缩略图与信息", src: "../../assets/gallery-manager/cards.png", caption: "文件名与标注信息一目了然，画布视图可拖拽缩放。" }
+      { label: "① 键盘流标注（动图）", src: "../../assets/gallery-manager/demo.gif", caption: "选图 → 打星 → 收藏，全程键盘流完成。" },
+      { label: "② 图库与筛选", src: "../../assets/gallery-manager/grid.png", caption: "标签包含 / 排除组合筛选 + 5 档星级。" },
+      { label: "③ 缩略图与信息", src: "../../assets/gallery-manager/cards.png", caption: "文件名与标注信息一目了然，画布视图可拖拽缩放。" }
     ],
     featuresTitle: "为「不会丢的标注」而设计",
     featuresSub: "图库工具的痛点不是看图，而是管理。",
@@ -119,7 +120,8 @@ window.LANDINGS = {
     demoSub: "部署、开打、编辑——一局战棋的全部。",
     demo: [
       { label: "① 战前部署", src: "../../assets/hexwar/deploy.png", caption: "兵营部署 · 兵种与出生点。" },
-      { label: "② 战局全览", src: "../../assets/hexwar/battle.png", caption: "26×16 六边形战场，地形与士气尽收眼底。" }
+      { label: "② 战局全览", src: "../../assets/hexwar/battle.png", caption: "26×16 六边形战场，地形与士气尽收眼底。" },
+      { label: "③ 战斗演示（动图）", src: "../../assets/hexwar/demo.gif", caption: "选择骠骑兵 → 行军 → 冲锋 → 敌方溃散撤离。" }
     ],
     featuresTitle: "致敬经典兵棋的六个理由",
     featuresSub: "小巧的体积，完整的战棋回合。",

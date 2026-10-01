@@ -176,6 +176,34 @@
 .ld .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
 .ld .reveal.in { opacity: 1; transform: none; }
 
+/* ---------- 展示动画（让页面更有活力） ---------- */
+.ld .hero .window { animation: ldFloatY 7s ease-in-out infinite; }
+@keyframes ldFloatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.ld .hero-glow { animation: ldGlow 9s ease-in-out infinite alternate; }
+@keyframes ldGlow {
+  0% { transform: translate(-50%, -50%) scale(.96); opacity: .82; }
+  100% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+}
+.ld .btn-primary { position: relative; overflow: hidden; }
+.ld .btn-primary::after {
+  content: ""; position: absolute; top: 0; left: -130%; width: 60%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.38), transparent);
+  transform: skewX(-18deg); pointer-events: none;
+}
+.ld .btn-primary:hover::after { animation: ldSheen .9s ease; }
+@keyframes ldSheen { from { left: -130%; } to { left: 160%; } }
+.ld .card-ico { transition: transform .3s ease; }
+.ld .card:hover .card-ico { transform: scale(1.12) rotate(-4deg); }
+.ld .nav-links a.hot { position: relative; }
+.ld .nav-links a.hot::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px;
+  background: var(--grad); animation: ldHot 2.6s ease-in-out infinite;
+}
+@keyframes ldHot { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 900px) {
   .ld .grid-3 { grid-template-columns: repeat(2, 1fr); }
@@ -193,4 +221,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .ld .reveal { opacity: 1; transform: none; transition: none; }
+  .ld .hero .window, .ld .hero-glow, .ld .nav-links a.hot::after { animation: none; }
+  .ld .btn-primary:hover::after { animation: none; }
 }
