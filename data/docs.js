@@ -6,7 +6,7 @@ window.DOCS = window.DOCS || {};
 
 /* ---------- agent-float ---------- */
 window.DOCS["agent-float"] = {
-  "latest": "v3.7.0",
+  "latest": "v3.8.0",
   "intro": "通用多能 AI Agent 桌面悬浮助手：毛玻璃小球一键启动任意 Agent，环形菜单、余额监控与 AI 快报全部收纳。",
   "features": [
     {
@@ -94,6 +94,17 @@ window.DOCS["agent-float"] = {
     }
   ],
   "changelog": [
+    {
+      "version": "v3.8.0",
+      "date": "2026-10-07",
+      "items": [
+        "安全加固：本地接口强制鉴权（随机访问令牌 + Host 白名单 + 同源校验），网页无法再越权调用本地 API 或读取密钥",
+        "更新包完整性校验：自动更新下载后校验 SHA256（GitHub Release digest / update.json），不匹配立即删除并拒绝安装",
+        "依赖锁版本：requirements 由 >= 改为 ==，构建可复现、规避上游投毒风险；update.json 随发布同步",
+        "体验优化：设计令牌与状态文案统一；显示器热插拔 / 分辨率变化后浮窗自动收回可视区；进程检测提速约 15 倍",
+        "测试扩充至 304 项（接口安全 / 更新完整性 / 设计令牌 / 多屏边界 / 性能回归）"
+      ]
+    },
     {
       "version": "v3.7.0",
       "date": "2026-10-01",
