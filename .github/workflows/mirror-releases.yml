@@ -74,8 +74,9 @@ jobs:
               --arg base "$BASE_URL/releases/$pid/latest/" \
               '{project:$pid, tag:$tag, updatedAt:$ts, base:$base, files:[]}' > work/latest.json
             for f in work/dist/*; do
-              name=$(basename "$f"); size=$(stat -c%s "$f")
-              jq --arg n "$name" --argjson s "$size" '.files += [{"name":$n,"size":$s}]' work/latest.json > work/tmp.json
+              name=$(basename "$f"); size=$(stat -c%s "$f"); hash=$(sha256sum "$f" | cut -d' ' -f1)
+              jq --arg n "$name" --argjson s "$size" --arg h "$hash" \
+                '.files += [{"name":$n,"size":$s,"sha256":$h}]' work/latest.json > work/tmp.json
               mv work/tmp.json work/latest.json
             done
             cat work/latest.json
