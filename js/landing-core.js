@@ -20,6 +20,13 @@
     if (isNaN(d.getTime())) return "";
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
+  /* 项目数据里的截图路径是「站点根相对」（assets/...，供首页使用）；
+     落地页既可能位于子域名根（/）也可能位于主域路径（/projects/<id>/），
+     统一加 ../../ 前缀后两种位置都会解析到站点根，避免主域路径版图片 404 */
+  function assetSrc(s) {
+    s = String(s == null ? "" : s);
+    return /^assets\//.test(s) ? "../../" + s : s;
+  }
 
   var id = document.body.getAttribute("data-project");
   var P = null;
@@ -59,7 +66,7 @@
 
   /* ---------- 组装 ---------- */
   var demoItems = L.demo || [];
-  var heroMedia = L.heroMedia || (demoItems[0] && demoItems[0].src) || ((P.screenshots || [])[0] || {}).src || null;
+  var heroMedia = L.heroMedia || (demoItems[0] && demoItems[0].src) || assetSrc(((P.screenshots || [])[0] || {}).src) || null;
   var heroIsGif = heroMedia && /\.gif$/i.test(heroMedia);
 
   var featuresHtml = (L.features || []).map(function (f) {
@@ -80,8 +87,9 @@
 
   var shots = P.screenshots || [];
   var galleryHtml = shots.concat(L.extraShots || []).map(function (s) {
-    return '<button class="gallery-item reveal" type="button" data-full="' + esc(s.src) + '" data-cap="' + esc(s.caption || P.name) + '">' +
-      '<img src="' + esc(s.src) + '" alt="' + esc(s.caption || P.name) + '" loading="lazy">' +
+    var src = assetSrc(s.src);
+    return '<button class="gallery-item reveal" type="button" data-full="' + esc(src) + '" data-cap="' + esc(s.caption || P.name) + '">' +
+      '<img src="' + esc(src) + '" alt="' + esc(s.caption || P.name) + '" loading="lazy">' +
       '<span class="gallery-cap">' + esc(s.caption || "") + "</span></button>";
   }).join("");
 

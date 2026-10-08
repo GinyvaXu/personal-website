@@ -14,7 +14,7 @@ export async function onRequest(context) {
   if (!env.SESSION_SECRET) {
     return json({ ok: false, error: "服务尚未配置（缺少 SESSION_SECRET）" }, 503);
   }
-  const ok = await verifySession(request, env.SESSION_SECRET);
+  const ok = await verifySession(request, env);
   if (!ok) return json({ ok: false, error: "未登录或登录已过期" }, 401);
 
   return next();

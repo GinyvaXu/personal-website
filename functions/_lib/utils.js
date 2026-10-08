@@ -38,26 +38,80 @@ export function constantTimeEqual(a, b) {
 
 export const SESSION_COOKIE = "gy_admin";
 export const SESSION_DAYS = 7;
+export const SESSION_EPOCH_KEY = "session/epoch";
 
-export async function createSession(secret) {
-  const exp = Date.now() + SESSION_DAYS * 86400000;
-  const payload = String(exp);
-  const sig = await hmacHex(secret, "v1|" + payload);
-  return payload + "." + sig;
+export function randomHex(bytes = 16) {
+  const buf = new Uint8Array(bytes);
+  crypto.getRandomValues(buf);
+  return Array.from(buf).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-export async function verifySession(request, secret) {
+/* v2 token：exp.nonce.epoch.sig（随机 nonce + 支持"登出全部设备"） */
+export async function createSession(secret, epoch = 0) {
+  const exp = Date.now() + SESSION_DAYS * 86400000;
+  const nonce = randomHex(16);
+  const ep = String(epoch || 0);
+  const sig = await hmacHex(secret, "v2|" + exp + "|" + nonce + "|" + ep);
+  return exp + "." + nonce + "." + ep + "." + sig;
+}
+
+/* 会话 epoch（KV 存储；登出全部设备时 +1，旧 token 立即失效）——30 秒内存缓存 */
+let _epochCache = { value: 0, at: 0, kv: null };
+function kvOf(env) {
+  return (env && (env.SITE_KV || env.FILES_KV)) || null;
+}
+export async function getSessionEpoch(env) {
+  const kv = kvOf(env);
+  if (!kv) return 0;
+  const now = Date.now();
+  if (_epochCache.kv === kv && now - _epochCache.at < 30000) return _epochCache.value;
+  let value = 0;
+  try { value = parseInt(await kv.get(SESSION_EPOCH_KEY), 10) || 0; } catch (e) {}
+  _epochCache = { value, at: now, kv };
+  return value;
+}
+export async function bumpSessionEpoch(env) {
+  const kv = kvOf(env);
+  if (!kv) return 0;
+  const cur = parseInt(await kv.get(SESSION_EPOCH_KEY), 10) || 0;
+  const next = cur + 1;
+  await kv.put(SESSION_EPOCH_KEY, String(next));
+  _epochCache = { value: next, at: Date.now(), kv };
+  return next;
+}
+
+export async function verifySession(request, env) {
+  const secret = env && env.SESSION_SECRET;
   if (!secret) return false;
   const raw = getCookie(request, SESSION_COOKIE);
   if (!raw) return false;
-  const idx = raw.lastIndexOf(".");
-  if (idx < 0) return false;
-  const payload = raw.slice(0, idx);
-  const sig = raw.slice(idx + 1);
-  const exp = parseInt(payload, 10);
-  if (!exp || exp < Date.now()) return false;
-  const expect = await hmacHex(secret, "v1|" + payload);
-  return constantTimeEqual(expect, sig);
+  const parts = raw.split(".");
+
+  /* 旧版 v1 token（exp.sig）：过渡期兼容，重新登录后自动升级为 v2 */
+  if (parts.length === 2) {
+    const payload = parts[0];
+    const sig = parts[1];
+    const exp = parseInt(payload, 10);
+    if (!exp || exp < Date.now()) return false;
+    const expect = await hmacHex(secret, "v1|" + payload);
+    return constantTimeEqual(expect, sig);
+  }
+
+  /* v2 token：exp.nonce.epoch.sig */
+  if (parts.length === 4) {
+    const exp = parseInt(parts[0], 10);
+    const nonce = parts[1];
+    const ep = parts[2];
+    const sig = parts[3];
+    if (!exp || exp < Date.now()) return false;
+    if (!/^[0-9a-f]{8,64}$/.test(nonce) || !/^\d{1,10}$/.test(ep)) return false;
+    const current = await getSessionEpoch(env);
+    if (String(current) !== ep) return false; // 已被"登出全部设备"失效
+    const expect = await hmacHex(secret, "v2|" + exp + "|" + nonce + "|" + ep);
+    return constantTimeEqual(expect, sig);
+  }
+
+  return false;
 }
 
 export function getCookie(request, name) {

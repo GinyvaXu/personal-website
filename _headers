@@ -1,0 +1,12 @@
+# ============================================================
+# Cloudflare Pages 安全响应头（作用于静态资源）
+# 注意：_headers 不作用于 Pages Functions 响应 ——
+#       动态响应（HTML 重写 / API）由 functions/_middleware.js 注入同一套头
+# ============================================================
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Content-Security-Policy: default-src 'self'; img-src 'self' data:; media-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://api.github.com https://*.supabase.co; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'

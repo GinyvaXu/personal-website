@@ -1,0 +1,7 @@
+# Ginyva 工具站 · robots.txt
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://www.ginyva.site/sitemap.xml

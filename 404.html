@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 · 页面不存在 — Ginyva 工具站</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234f46e5'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='22' font-size='16' font-family='sans-serif' font-weight='bold' fill='white' text-anchor='middle'%3EG%3C/text%3E%3C/svg%3E">
+<script>
+  (function () {
+    var t; try { t = localStorage.getItem("site-theme"); } catch (e) {}
+    if (t === "dark" || (!t && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches)) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+</script>
+<style>
+  :root {
+    --bg: #f7f7fb; --card: #ffffff; --text: #1c1c22; --muted: #6b6b78;
+    --border: rgba(20, 20, 40, .1); --accent: #4f46e5; --accent2: #a855f7;
+    --shadow: 0 18px 50px rgba(30, 30, 80, .1);
+  }
+  [data-theme="dark"] {
+    --bg: #101014; --card: #17171d; --text: #ececf2; --muted: #9a9aa8;
+    --border: rgba(255, 255, 255, .1); --shadow: 0 18px 50px rgba(0, 0, 0, .5);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+    display: flex; flex-direction: column;
+  }
+  header { padding: 22px 0; }
+  .container { width: min(920px, 92%); margin: 0 auto; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; font-weight: 800; font-size: 16px; }
+  .brand i { width: 14px; height: 14px; border-radius: 5px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: inline-block; }
+  main { flex: 1; display: flex; align-items: center; padding: 30px 0 60px; }
+  .card {
+    width: 100%; background: var(--card); border: 1px solid var(--border);
+    border-radius: 24px; padding: clamp(28px, 5vw, 56px); box-shadow: var(--shadow); text-align: center;
+  }
+  .code {
+    font-size: clamp(72px, 16vw, 128px); font-weight: 900; line-height: 1; letter-spacing: -2px;
+    background: linear-gradient(120deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  h1 { margin: 6px 0 10px; font-size: clamp(20px, 3.4vw, 28px); }
+  p.sub { margin: 0 auto 26px; color: var(--muted); max-width: 52ch; line-height: 1.7; }
+  .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 34px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 999px;
+    font-weight: 700; font-size: 14.5px; text-decoration: none; border: 1px solid transparent; transition: transform .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+  .btn-ghost { border-color: var(--border); color: inherit; }
+  h2.chips-title { font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; margin: 0 0 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .chip {
+    padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border);
+    color: inherit; text-decoration: none; font-size: 13.5px; font-weight: 600; transition: border-color .15s ease, color .15s ease;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  footer { padding: 22px 0 34px; text-align: center; color: var(--muted); font-size: 12.5px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <a class="brand" href="https://www.ginyva.site/"><i></i>Ginyva 工具站</a>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <div class="card">
+      <div class="code">404</div>
+      <h1>这个页面不见了</h1>
+      <p class="sub">你访问的地址可能已移动、改名或从未存在。<br>你可以回首页逛逛，或直接去下面的软件主页。</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://www.ginyva.site/">返回首页</a>
+        <a class="btn btn-ghost" href="https://www.ginyva.site/#feedback">提个反馈</a>
+      </div>
+      <h2 class="chips-title">猜你想找</h2>
+      <nav class="chips" aria-label="软件主页导航">
+        <a class="chip" href="https://projectdock.ginyva.site/">ProjectDock · 项目坞</a>
+        <a class="chip" href="https://agentfloat.ginyva.site/">AgentFloat</a>
+        <a class="chip" href="https://ginyscreen.ginyva.site/">GinyScreen</a>
+        <a class="chip" href="https://cloudbox.ginyva.site/">CloudBox</a>
+        <a class="chip" href="https://gallery.ginyva.site/">图库管理器</a>
+        <a class="chip" href="https://hexwar.ginyva.site/">守望圣山</a>
+        <a class="chip" href="https://nottingham.ginyva.site/">诺丁汉警长</a>
+        <a class="chip" href="https://claudefloat.ginyva.site/">ClaudeFloat</a>
+      </nav>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">© 2026 Ginyva · <a href="https://www.ginyva.site/" style="color:inherit">www.ginyva.site</a></p></div>
+</footer>
+</body>
+</html>
