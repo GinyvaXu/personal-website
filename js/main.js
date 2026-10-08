@@ -175,6 +175,77 @@
     "</article>";
   }
 
+  /* ---------- 项目搜索 / 类型筛选 ---------- */
+  var BASE_LIST = [];
+  var HUB_FILTER = { type: "全部" };
+  var hubToolsInited = false;
+
+  function renderHubGrid() {
+    var grid = $("#projectGrid");
+    if (!grid) return;
+    var input = $("#hubSearch");
+    var q = (input && input.value ? input.value : "").trim().toLowerCase();
+    var list = BASE_LIST.filter(function (p) {
+      if (HUB_FILTER.type !== "全部" && p.type !== HUB_FILTER.type) return false;
+      if (!q) return true;
+      var hay = ((p.name || "") + " " + (p.summary || "") + " " + (p.detail || "") + " " + (p.type || "") + " " + ((p.tech || []).join(" "))).toLowerCase();
+      return hay.indexOf(q) > -1;
+    });
+    grid.innerHTML = list.map(cardHtml).join("");
+    var empty = $("#hubEmpty");
+    if (empty) empty.hidden = list.length > 0;
+    var sub = $("#projectsSub");
+    if (sub) {
+      sub.textContent = (q || HUB_FILTER.type !== "全部")
+        ? "筛选出 " + list.length + " / " + BASE_LIST.length + " 个项目"
+        : "共 " + list.length + " 个项目 · 每个都有独立主页、界面预览与图文教程。";
+    }
+    observeReveals(grid);
+    initAutoData();
+  }
+
+  function initHubTools() {
+    if (hubToolsInited) return;
+    hubToolsInited = true;
+    var input = $("#hubSearch");
+    var filters = $("#hubFilters");
+
+    if (filters) {
+      var types = ["全部"];
+      PROJECTS.forEach(function (p) { if (p.type && types.indexOf(p.type) < 0) types.push(p.type); });
+      filters.innerHTML = types.map(function (t) {
+        return '<button type="button" class="hub-filter' + (t === "全部" ? " active" : "") + '" data-type="' + esc(t) + '">' + esc(t) + "</button>";
+      }).join("");
+      $$(".hub-filter", filters).forEach(function (b) {
+        b.addEventListener("click", function () {
+          HUB_FILTER.type = b.getAttribute("data-type") || "全部";
+          $$(".hub-filter", filters).forEach(function (x) { x.classList.toggle("active", x === b); });
+          renderHubGrid();
+        });
+      });
+    }
+
+    if (input) {
+      var timer = null;
+      input.addEventListener("input", function () {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(renderHubGrid, 160);
+      });
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") { input.value = ""; renderHubGrid(); input.blur(); }
+      });
+    }
+
+    /* 快捷键：/ 聚焦搜索（输入框内除外） */
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey) return;
+      var t = e.target;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)) return;
+      e.preventDefault();
+      if (input) { input.focus(); input.select(); }
+    });
+  }
+
   function renderProjects() {
     var grid = $("#projectGrid");
     if (!grid) return;
@@ -194,9 +265,9 @@
         });
       }
     }
-    var sub = $("#projectsSub");
-    if (sub) sub.textContent = "共 " + list.length + " 个项目 · 每个都有独立主页、界面预览与图文教程。";
-    grid.innerHTML = list.map(cardHtml).join("");
+    BASE_LIST = list;
+    initHubTools();
+    renderHubGrid();
   }
 
   /* ---------- GitHub 自动数据（star / 最新版本） ---------- */
@@ -281,14 +352,43 @@
     "</article>";
   }
 
-  function renderFeedbackList(items) {
+  var FB_ITEMS = [];
+  var FB_FILTER = "all";
+
+  function renderFbList() {
     var list = $("#fbList");
     if (!list) return;
-    if (!items || !items.length) {
-      list.innerHTML = '<p class="fb-empty">还没有反馈，来抢沙发～</p>';
+    var items = FB_ITEMS.filter(function (it) { return FB_FILTER === "all" || it.status === FB_FILTER; });
+    if (!items.length) {
+      list.innerHTML = '<p class="fb-empty">' + (FB_ITEMS.length ? "这个状态下还没有反馈～" : "还没有反馈，来抢沙发～") + "</p>";
       return;
     }
     list.innerHTML = items.map(fbItemHtml).join("");
+  }
+
+  function renderFbFilters() {
+    var box = $("#fbFilters");
+    if (!box) return;
+    var found = {};
+    FB_ITEMS.forEach(function (it) { found[it.status] = true; });
+    var types = [["all", "全部"]];
+    Object.keys(STATUS_LABEL).forEach(function (k) { types.push([k, STATUS_LABEL[k]]); });
+    box.innerHTML = types.filter(function (t) { return t[0] === "all" || found[t[0]]; }).map(function (t) {
+      return '<button type="button" class="fb-filter' + (FB_FILTER === t[0] ? " active" : "") + '" data-status="' + t[0] + '">' + esc(t[1]) + "</button>";
+    }).join("");
+    $$(".fb-filter", box).forEach(function (b) {
+      b.addEventListener("click", function () {
+        FB_FILTER = b.getAttribute("data-status") || "all";
+        renderFbFilters();
+        renderFbList();
+      });
+    });
+  }
+
+  function renderFeedbackList(items) {
+    FB_ITEMS = items || [];
+    renderFbFilters();
+    renderFbList();
   }
 
   function loadFeedback() {
@@ -320,6 +420,14 @@
     var status = $("#fbStatus");
     var submit = $("#fbSubmit");
 
+    var msgInput = $("#fbMessage");
+    var countEl = $("#fbCount");
+    function updateCount() {
+      if (countEl && msgInput) countEl.textContent = msgInput.value.length + " / 800";
+    }
+    if (msgInput) msgInput.addEventListener("input", updateCount);
+    updateCount();
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var message = $("#fbMessage").value.trim();
@@ -349,13 +457,12 @@
           status.textContent = "✅ 已收到，感谢反馈！（如果填了联系方式，我回复时会用到）";
           $("#fbMessage").value = "";
           $("#fbHp").value = "";
+          updateCount();
           if (res.d.item) {
-            var list = $("#fbList");
-            if (list) {
-              var empty = $(".fb-empty", list);
-              if (empty) list.innerHTML = "";
-              list.insertAdjacentHTML("afterbegin", fbItemHtml(res.d.item));
-            }
+            FB_ITEMS.unshift(res.d.item);
+            FB_FILTER = "all";
+            renderFbFilters();
+            renderFbList();
           }
         })
         .catch(function (err) {

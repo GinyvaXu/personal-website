@@ -17,6 +17,15 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234f46e5'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='22' font-size='16' font-family='sans-serif' font-weight='bold' fill='white' text-anchor='middle'>我</text%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/hub.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ginyva 工具站">
+<meta property="og:title" content="Ginyva 工具站 — 独立开发的软件工具箱">
+<meta property="og:description" content="Ginyva 的软件工具站：收录独立开发的全部软件项目，每个都有独立主页、下载与更新日志；欢迎在社区反馈区提交意见与建议。">
+<meta property="og:url" content="https://www.ginyva.site/">
+<meta property="og:image" content="https://www.ginyva.site/assets/og/home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 
@@ -72,6 +81,15 @@
     <div class="container">
       <h2 class="section-title reveal">项目</h2>
       <p class="section-sub reveal" id="projectsSub"></p>
+      <div class="hub-tools reveal" id="hubTools">
+        <div class="hub-search">
+          <span class="hub-search-ico" aria-hidden="true">🔍</span>
+          <input id="hubSearch" type="search" placeholder="搜索项目（名称 / 简介 / 技术栈）…" aria-label="搜索项目" autocomplete="off">
+          <kbd class="hub-kbd" aria-hidden="true">/</kbd>
+        </div>
+        <div class="hub-filters" id="hubFilters" role="group" aria-label="按类型筛选"></div>
+      </div>
+      <div class="hub-empty" id="hubEmpty" hidden>没有匹配的项目，换个关键词试试。</div>
       <div class="hub-grid" id="projectGrid"></div>
     </div>
   </section>
@@ -104,6 +122,7 @@
           <label class="fb-field">
             <span>反馈内容 *</span>
             <textarea id="fbMessage" name="message" rows="5" maxlength="800" placeholder="遇到的问题 / 想要的功能 / 任何想法…（4–800 字）"></textarea>
+            <span class="fb-count" id="fbCount">0 / 800</span>
           </label>
           <input type="text" id="fbHp" name="_hp" class="fb-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button class="btn btn-primary" id="fbSubmit" type="submit">发送反馈</button>
@@ -115,6 +134,7 @@
             <h3>最新反馈</h3>
             <button class="btn btn-ghost btn-sm" id="fbRefresh" type="button">刷新</button>
           </div>
+          <div class="fb-filters" id="fbFilters" role="group" aria-label="按状态筛选反馈"></div>
           <div class="fb-list" id="fbList">
             <p class="fb-empty">加载中…</p>
           </div>

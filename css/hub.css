@@ -58,6 +58,30 @@
 .hub-links .link-plain:hover { opacity: 1; text-decoration: underline; }
 .hub-update { margin: 14px 0 0; font-size: 12.5px; opacity: .55; line-height: 1.7; }
 
+/* ---------- 项目搜索 / 类型筛选 ---------- */
+.hub-tools { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 2px 0 18px; }
+.hub-search {
+  position: relative; flex: 1; min-width: 240px; display: flex; align-items: center; gap: 9px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 0 12px; box-shadow: var(--shadow-sm);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.hub-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent); }
+.hub-search-ico { font-size: 13.5px; opacity: .55; }
+.hub-search input { flex: 1; border: 0; background: transparent; color: var(--text); font: inherit; font-size: 14px; padding: 11px 0; outline: none; }
+.hub-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.hub-kbd { font-size: 11px; border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; opacity: .5; }
+.hub-search:focus-within .hub-kbd { opacity: 0; }
+.hub-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.hub-filter {
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  font: inherit; font-size: 13px; padding: 8px 16px; border-radius: 999px; cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, color .2s ease; box-shadow: var(--shadow-sm);
+}
+.hub-filter:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+.hub-filter.active { background: linear-gradient(135deg, var(--accent), var(--accent-2, #a855f7)); color: #fff; border-color: transparent; }
+.hub-empty { text-align: center; padding: 44px 0 28px; opacity: .6; font-size: 14.5px; }
+
 /* ---------- 社区反馈 ---------- */
 .fb-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 22px; align-items: start; }
 .fb-form, .fb-list-wrap {
@@ -79,6 +103,7 @@
   outline: none; border-color: var(--accent);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
 }
+.fb-count { display: block; text-align: right; font-size: 12px !important; opacity: .5 !important; margin: 5px 0 0 !important; }
 .fb-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .fb-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .fb-status { margin: 12px 0 0; font-size: 13.5px; min-height: 20px; }
@@ -87,7 +112,15 @@
 [data-theme="dark"] .fb-status.err { color: #f87171; }
 .fb-form .btn[disabled] { opacity: .55; cursor: not-allowed; }
 
-.fb-list-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.fb-list-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.fb-filters { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
+.fb-filter {
+  border: 1px solid var(--border); background: var(--bg); color: var(--text);
+  font: inherit; font-size: 12.5px; padding: 5px 13px; border-radius: 999px; cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+.fb-filter:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+.fb-filter.active { background: var(--accent); border-color: transparent; color: #fff; }
 .fb-list { display: grid; gap: 12px; max-height: 640px; overflow: auto; padding-right: 4px; }
 .fb-item { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; background: var(--bg); }
 .fb-item-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }

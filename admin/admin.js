@@ -42,17 +42,20 @@
   var loginView = $("#loginView");
   var dashView = $("#dashView");
   var logoutBtn = $("#logoutBtn");
+  var logoutAllBtn = $("#logoutAllBtn");
   var loginStatus = $("#loginStatus");
 
   function showLogin() {
     loginView.hidden = false;
     dashView.hidden = true;
     logoutBtn.hidden = true;
+    if (logoutAllBtn) logoutAllBtn.hidden = true;
   }
   function showDash() {
     loginView.hidden = true;
     dashView.hidden = false;
     logoutBtn.hidden = false;
+    if (logoutAllBtn) logoutAllBtn.hidden = false;
     initTabs();
     loadSiteConfig();
     loadMirror();
@@ -96,6 +99,13 @@
   logoutBtn.addEventListener("click", function () {
     fetch("/api/admin/logout", { method: "POST" }).finally(function () { showLogin(); });
   });
+
+  if (logoutAllBtn) {
+    logoutAllBtn.addEventListener("click", function () {
+      if (!confirm("让「所有设备」的登录会话立即失效（包括被窃的 Cookie）？\n当前设备也会退出登录。")) return;
+      fetch("/api/admin/logout-all", { method: "POST" }).finally(function () { showLogin(); });
+    });
+  }
 
   /* ---------- Tab 切换 ---------- */
   function initTabs() {
@@ -216,6 +226,24 @@
       .catch(function (err) { flash($("#annStatus"), "保存失败：" + err.message, true); });
   });
 
+  /* ---------- 公告快捷模板 ---------- */
+  var ANN_TPLS = {
+    release: { text: "XX v0.0.0 已发布：一句话亮点 →", link: "/projects/xx/", type: "promo" },
+    maint:   { text: "官网维护中：部分页面可能短暂不可用，稍后恢复。", link: "", type: "warn" },
+    event:   { text: "新功能上线 / 限时公测：一句话说明 →", link: "#feedback", type: "info" },
+  };
+  $$("#annTpls button[data-tpl]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var t = ANN_TPLS[btn.getAttribute("data-tpl")];
+      if (!t) return;
+      $("#annText").value = t.text;
+      $("#annLink").value = t.link;
+      $("#annType").value = t.type;
+      $("#annEnabled").checked = true;
+      $("#annText").focus();
+    });
+  });
+
   $("#orderSave").addEventListener("click", function () {
     var ids = $$(".admin-order-row").map(function (el) { return el.getAttribute("data-id"); });
     fetch("/api/admin/site-config", {
@@ -234,6 +262,58 @@
     flash($("#orderStatus"), "已恢复默认顺序，点「保存排序」生效");
   });
 
+  /* ---------- 站点配置备份（导出 / 导入） ---------- */
+  $("#cfgExport").addEventListener("click", function () {
+    fetch("/api/admin/site-config")
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.ok) throw new Error(d.error || "读取失败");
+        var data = { exportedAt: new Date().toISOString(), announce: d.announce, order: d.order };
+        var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "ginyva-site-config-" + new Date().toISOString().slice(0, 10) + ".json";
+        document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(a.href);
+        flash($("#cfgStatus"), "✅ 已导出");
+      })
+      .catch(function (err) { flash($("#cfgStatus"), "导出失败：" + err.message, true); });
+  });
+
+  $("#cfgImportFile").addEventListener("change", function () {
+    var f = this.files && this.files[0];
+    this.value = "";
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var data;
+      try { data = JSON.parse(String(reader.result)); }
+      catch (e) { flash($("#cfgStatus"), "JSON 解析失败", true); return; }
+      var body = {};
+      if (data.announce && typeof data.announce === "object") body.announce = data.announce;
+      var ord = (data.order && typeof data.order === "object" && !Array.isArray(data.order)) ? data.order : data;
+      if (Array.isArray(ord.order)) body.order = ord.order;
+      if (Array.isArray(ord.hidden)) body.hidden = ord.hidden;
+      if (!body.announce && body.order === undefined && body.hidden === undefined) {
+        flash($("#cfgStatus"), "文件里没有可导入的配置（announce / order / hidden）", true);
+        return;
+      }
+      fetch("/api/admin/site-config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (d2) {
+          if (!d2.ok) throw new Error(d2.error);
+          flash($("#cfgStatus"), "✅ 已导入（约 1 分钟内全站生效），已自动刷新下方配置");
+          loadSiteConfig();
+        })
+        .catch(function (err) { flash($("#cfgStatus"), "导入失败：" + err.message, true); });
+    };
+    reader.readAsText(f);
+  });
+
   /* ---------- 镜像同步 ---------- */
   var RUN_LABEL = { queued: "排队中", in_progress: "进行中", completed: "已完成", waiting: "等待中" };
   function runState(r) {
@@ -249,6 +329,8 @@
       .then(function (r) { return r.json(); })
       .then(function (d) {
         $("#mirrorTokenBox").hidden = !!d.hasToken;
+        var mu = $("#mirrorUpdated");
+        if (mu) mu.textContent = "最后刷新：" + new Date().toLocaleTimeString("zh-CN", { hour12: false });
         if (!d.ok && d.error) {
           box.innerHTML = '<p class="admin-empty">' + esc(d.error) + "</p>";
           return;
@@ -422,17 +504,99 @@
           }),
         })
           .then(function (r) { return r.json(); })
-          .then(function (d) { if (!d.ok) throw new Error(d.error); flash(el, "✅ 已保存"); })
+          .then(function (d) {
+            if (!d.ok) throw new Error(d.error);
+            var id = parseInt(el.getAttribute("data-id"), 10);
+            FB_ITEMS.forEach(function (it) {
+              if (it.id === id) { it.status = $(".admin-status", el).value; it.reply = $(".admin-reply", el).value; }
+            });
+            flash(el, "✅ 已保存");
+          })
           .catch(function (err) { flash(el, "保存失败：" + err.message, true); });
       });
       $('[data-op="del"]', el).addEventListener("click", function () {
         if (!confirm("确定删除这条反馈吗？")) return;
+        var id = parseInt(el.getAttribute("data-id"), 10);
         fetch("/api/admin/feedback?id=" + encodeURIComponent(el.getAttribute("data-id")), { method: "DELETE" })
           .then(function (r) { return r.json(); })
-          .then(function (d) { if (!d.ok) throw new Error(d.error); el.remove(); })
+          .then(function (d) {
+            if (!d.ok) throw new Error(d.error);
+            FB_ITEMS = FB_ITEMS.filter(function (it) { return it.id !== id; });
+            renderAdminFb();
+          })
           .catch(function (err) { flash(el, "删除失败：" + err.message, true); });
       });
     });
+  }
+
+  /* ============================================================
+   * 反馈管理（搜索 / 筛选 / 导出）
+   * ============================================================ */
+  var FB_ITEMS = [];
+  var fbToolsInited = false;
+
+  function fbStatusLabel(s) {
+    for (var i = 0; i < STATUS_OPTIONS.length; i++) if (STATUS_OPTIONS[i][0] === s) return STATUS_OPTIONS[i][1];
+    return s;
+  }
+
+  function adminFbFiltered() {
+    var q = ($("#fbSearch") ? $("#fbSearch").value : "").trim().toLowerCase();
+    var st = $("#fbStatusSel") ? $("#fbStatusSel").value : "";
+    var pr = $("#fbProjSel") ? $("#fbProjSel").value : "";
+    return FB_ITEMS.filter(function (it) {
+      if (st && it.status !== st) return false;
+      if (pr && String(it.project) !== pr) return false;
+      if (q) {
+        var hay = ((it.message || "") + " " + (it.name || "") + " " + (it.contact || "") + " " + (it.reply || "") + " " + projectName(it.project)).toLowerCase();
+        if (hay.indexOf(q) < 0) return false;
+      }
+      return true;
+    });
+  }
+
+  function renderAdminFb() {
+    var box = $("#adminFbList");
+    if (!box) return;
+    if (!FB_ITEMS.length) { box.innerHTML = '<p class="admin-empty">暂无反馈</p>'; return; }
+    var items = adminFbFiltered();
+    if (!items.length) { box.innerHTML = '<p class="admin-empty">没有匹配的反馈（试试清空筛选）</p>'; return; }
+    box.innerHTML = items.map(fbItemHtml).join("");
+    bindFbItems(box);
+  }
+
+  function exportFbCsv() {
+    var items = adminFbFiltered();
+    if (!items.length) { alert("没有可导出的反馈"); return; }
+    var head = ["id", "项目", "状态", "昵称", "联系方式", "内容", "回复", "提交时间"];
+    var csv = "\uFEFF" + head.join(",") + "\n" + items.map(function (it) {
+      return [it.id, projectName(it.project), fbStatusLabel(it.status), it.name || "", it.contact || "", it.message || "", it.reply || "", it.created_at || ""]
+        .map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(",");
+    }).join("\n");
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "ginyva-feedback-" + new Date().toISOString().slice(0, 10) + ".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function initFbTools() {
+    if (fbToolsInited) return;
+    fbToolsInited = true;
+    var projSel = $("#fbProjSel");
+    if (projSel) {
+      var opts = ['<option value="">全部项目</option>', '<option value="general">综合建议 / 其他</option>'];
+      PROJECTS.forEach(function (p) { opts.push('<option value="' + esc(p.id) + '">' + esc(p.name) + "</option>"); });
+      projSel.innerHTML = opts.join("");
+      projSel.addEventListener("change", renderAdminFb);
+    }
+    var search = $("#fbSearch");
+    if (search) search.addEventListener("input", renderAdminFb);
+    var stSel = $("#fbStatusSel");
+    if (stSel) stSel.addEventListener("change", renderAdminFb);
+    var exp = $("#fbExport");
+    if (exp) exp.addEventListener("click", exportFbCsv);
   }
 
   function loadFeedback() {
@@ -443,9 +607,9 @@
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (!d.ok) throw new Error(d.error || "加载失败");
-        if (!d.items.length) { box.innerHTML = '<p class="admin-empty">暂无反馈</p>'; return; }
-        box.innerHTML = d.items.map(fbItemHtml).join("");
-        bindFbItems(box);
+        FB_ITEMS = d.items || [];
+        initFbTools();
+        renderAdminFb();
       })
       .catch(function (err) {
         box.innerHTML = '<p class="admin-empty">加载失败：' + esc(err.message) + "</p>";

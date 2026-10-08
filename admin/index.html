@@ -25,6 +25,7 @@
     <span class="admin-brand">🔧 Ginyva 控制台</span>
     <span class="admin-top-actions">
       <a class="btn btn-ghost btn-sm" href="../">返回首页</a>
+      <button class="btn btn-ghost btn-sm" id="logoutAllBtn" type="button" hidden title="让所有设备（含被窃 Cookie）立即失效">登出全部设备</button>
       <button class="btn btn-ghost btn-sm" id="logoutBtn" type="button" hidden>退出登录</button>
     </span>
   </div>
@@ -65,6 +66,12 @@
           <label>公告文案（≤300 字）
             <textarea id="annText" rows="2" maxlength="300" placeholder="例如：AgentFloat v3.8.0 已发布：安全加固 + 体验优化 →"></textarea>
           </label>
+          <div class="admin-tpls" id="annTpls">
+            <span class="admin-tpls-label">快捷模板：</span>
+            <button class="btn btn-ghost btn-sm" type="button" data-tpl="release">🚀 发新版</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-tpl="maint">🛠 维护通知</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-tpl="event">🎉 活动 / 公测</button>
+          </div>
           <div class="admin-row2">
             <label>链接（可选）
               <input type="text" id="annLink" placeholder="/projects/agentfloat/ 或 https://…">
@@ -102,6 +109,7 @@
           <button class="btn btn-primary btn-sm" type="button" id="mirrorRun">立即同步</button>
         </div>
         <div id="mirrorRuns" class="admin-runs"><p class="admin-empty">加载中…</p></div>
+        <p class="admin-hint" id="mirrorUpdated"></p>
         <div class="admin-token" id="mirrorTokenBox" hidden>
           <p class="admin-hint">首次使用需要粘贴一个 GitHub Token（Fine-grained，权限：本仓库 Actions 读写 + Contents 读 / 或经典 token 的 repo+workflow）。只保存在你自己的 KV 里，不会回显。</p>
           <div class="admin-actions">
@@ -110,6 +118,18 @@
             <button class="btn btn-ghost btn-sm" type="button" id="mirrorTokenClear">清除</button>
             <span class="admin-hint" id="mirrorTokenStatus"></span>
           </div>
+        </div>
+      </div>
+
+      <div class="admin-block">
+        <div class="admin-block-head">
+          <h2>💾 站点配置备份 <small>公告 / 排序 / 隐藏的导出与导入</small></h2>
+        </div>
+        <div class="admin-actions">
+          <button class="btn btn-ghost btn-sm" type="button" id="cfgExport">⬇ 导出配置 JSON</button>
+          <label class="btn btn-ghost btn-sm" for="cfgImportFile" style="cursor:pointer">⬆ 导入配置…</label>
+          <input type="file" id="cfgImportFile" accept="application/json,.json" hidden>
+          <span class="admin-hint" id="cfgStatus"></span>
         </div>
       </div>
 
@@ -149,6 +169,19 @@
         <div class="admin-block-head">
           <h2>💬 反馈管理</h2>
           <button class="btn btn-ghost btn-sm" id="fbReload" type="button">刷新</button>
+        </div>
+        <div class="admin-fb-tools">
+          <input type="search" id="fbSearch" placeholder="搜索反馈（内容 / 昵称 / 联系方式 / 回复）…" autocomplete="off">
+          <select id="fbStatusSel" aria-label="按状态筛选">
+            <option value="">全部状态</option>
+            <option value="new">待处理</option>
+            <option value="planned">已计划</option>
+            <option value="doing">进行中</option>
+            <option value="done">已完成</option>
+            <option value="hidden">已隐藏</option>
+          </select>
+          <select id="fbProjSel" aria-label="按项目筛选"><option value="">全部项目</option></select>
+          <button class="btn btn-ghost btn-sm" id="fbExport" type="button">⬇ 导出 CSV</button>
         </div>
         <div id="adminFbList" class="admin-fb-list"><p class="admin-empty">加载中…</p></div>
       </div>

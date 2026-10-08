@@ -71,7 +71,7 @@
 
 /* ---------- 窗口框 / 媒体 ---------- */
 .ld .window { background: var(--panel); border: 1px solid var(--border-2); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
-.ld .window img { width: 100%; }
+.ld .window img, .ld .window video.gy-media { width: 100%; display: block; }
 .ld .media-cap { text-align: center; color: var(--muted); margin: 16px auto 0; max-width: 640px; font-size: 14px; }
 
 /* ---------- 章节 ---------- */

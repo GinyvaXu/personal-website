@@ -27,6 +27,37 @@
     s = String(s == null ? "" : s);
     return /^assets\//.test(s) ? "../../" + s : s;
   }
+  /* GIF 动图 → WebM 视频优先（体积约小 70%）；不支持或加载失败自动回退 GIF */
+  function mediaTag(src, alt, lazy) {
+    src = String(src == null ? "" : src);
+    var image = '<img src="' + esc(src) + '" alt="' + esc(alt || "") + '"' + (lazy ? ' loading="lazy"' : "") + ">";
+    if (!/\.gif$/i.test(src)) return image;
+    var webm = src.replace(/\.gif$/i, ".webm");
+    return '<video class="gy-media" autoplay muted loop playsinline preload="auto" data-gif="' + esc(src) + '"' +
+      (lazy ? ' data-lazy="1"' : "") + ' aria-label="' + esc(alt || "") + '">' +
+      '<source src="' + esc(webm) + '" type="video/webm">' + image + "</video>";
+  }
+  function enhanceMedia(scope) {
+    var reduce = false;
+    try { reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+    $$("video.gy-media", scope).forEach(function (v) {
+      var gif = v.getAttribute("data-gif") || "";
+      var alt = v.getAttribute("aria-label") || "";
+      var lazy = v.getAttribute("data-lazy") === "1";
+      var swapped = false;
+      function toImg() {
+        if (swapped) return; swapped = true;
+        var img = document.createElement("img");
+        img.src = gif; img.alt = alt; if (lazy) img.loading = "lazy";
+        if (v.parentNode) v.parentNode.replaceChild(img, v);
+      }
+      if (!v.canPlayType || !v.canPlayType("video/webm")) { toImg(); return; }
+      var s = v.querySelector("source");
+      if (s) s.addEventListener("error", toImg);
+      v.addEventListener("error", toImg);
+      if (reduce) { try { v.pause(); v.removeAttribute("autoplay"); } catch (e) {} }
+    });
+  }
 
   var id = document.body.getAttribute("data-project");
   var P = null;
@@ -77,7 +108,7 @@
   var deepHtml = (L.deep || []).map(function (d, i) {
     return '<div class="deep reveal' + (i % 2 ? " rev" : "") + '">' +
       '<div class="deep-media"><figure class="window">' +
-        (d.media ? (d.media.indexOf(".gif") > -1 ? '<img src="' + esc(d.media) + '" alt="' + esc(d.caption || "") + '">' : '<img src="' + esc(d.media) + '" alt="' + esc(d.caption || "") + '" loading="lazy">') : "") +
+        (d.media ? mediaTag(d.media, d.caption || "", true) : "") +
       "</figure>" + (d.caption ? '<p class="media-cap">' + esc(d.caption) + "</p>" : "") + "</div>" +
       '<div class="deep-body"><p class="kicker">' + esc(d.kicker || "") + "</p><h3>" + esc(d.title) + "</h3>" +
       "<p>" + esc(d.text) + "</p>" +
@@ -127,7 +158,7 @@
         '<a class="btn btn-ghost btn-lg" href="' + guideUrl + '">📖 使用教程</a>' +
       "</div>" +
       '<ul class="hero-trust reveal in">' + (L.trust || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" +
-      (heroMedia ? '<figure class="window reveal in"><img src="' + esc(heroMedia) + '" alt="' + esc(P.name) + '"></figure>' +
+      (heroMedia ? '<figure class="window reveal in">' + mediaTag(heroMedia, P.name) + '</figure>' +
         (heroIsGif ? '<p class="media-cap">动图演示 · 持续循环</p>' : "") : "") +
     "</div></header>" +
     "<main>" +
@@ -137,7 +168,7 @@
       '<div class="demo"><div class="demo-tabs" id="ldTabs">' + demoItems.map(function (d, i) {
         return '<button class="demo-tab' + (i === 0 ? " active" : "") + '" type="button" data-pane="ldp' + i + '">' + esc(d.label) + "</button>";
       }).join("") + "</div><div class=\"demo-stage\">" + demoItems.map(function (d, i) {
-        return '<div class="demo-pane' + (i === 0 ? " active" : "") + '" id="ldp' + i + '"><figure class="window"><img src="' + esc(d.src) + '" alt="' + esc(d.caption || d.label) + '"></figure>' +
+        return '<div class="demo-pane' + (i === 0 ? " active" : "") + '" id="ldp' + i + '"><figure class="window">' + mediaTag(d.src, d.caption || d.label) + '</figure>' +
           (d.caption ? '<p class="media-cap">' + esc(d.caption) + "</p>" : "") + "</div>";
       }).join("") + "</div></div></div></section>" : "") +
     /* 功能 */
@@ -193,6 +224,8 @@
     '<div class="lightbox" id="ldLightbox" hidden><button class="lightbox-close" type="button" aria-label="关闭">×</button>' +
     '<figure><img id="ldLbImg" src="" alt=""><figcaption id="ldLbCap"></figcaption></figure></div>';
 
+  enhanceMedia(root);
+
   /* ---------- 交互 ---------- */
   var nav = $("#ldNav");
   window.addEventListener("scroll", function () { nav.classList.toggle("scrolled", window.scrollY > 8); }, { passive: true });
@@ -206,10 +239,18 @@
   if (tabs.length > 1) {
     var cur = 0, timer = null;
     var panes = $$(".demo-pane");
+    var reduceMotion = false;
+    try { reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
     function go(i) {
       cur = (i + tabs.length) % tabs.length;
       tabs.forEach(function (t, k) { t.classList.toggle("active", k === cur); });
-      panes.forEach(function (p, k) { p.classList.toggle("active", k === cur); });
+      panes.forEach(function (p, k) {
+        var active = k === cur;
+        p.classList.toggle("active", active);
+        $$("video", p).forEach(function (v) {
+          try { active ? (!reduceMotion && v.play()) : v.pause(); } catch (e) {}
+        });
+      });
     }
     function start() { stop(); timer = setInterval(function () { go(cur + 1); }, 6000); }
     function stop() { if (timer) { clearInterval(timer); timer = null; } }
