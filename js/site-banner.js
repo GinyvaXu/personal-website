@@ -29,17 +29,26 @@
       };
       var c = colors[a.type] || colors.info;
 
+      var compact = false;
+      try { compact = !!(window.matchMedia && matchMedia("(max-width: 480px)").matches); } catch (e) {}
+
       var bar = document.createElement("div");
       bar.setAttribute("role", "status");
       bar.style.cssText =
         "position:fixed;top:0;left:0;right:0;z-index:9999;display:flex;align-items:center;" +
-        "justify-content:center;gap:10px;padding:9px 46px 9px 16px;font-size:13.5px;line-height:1.5;" +
+        "justify-content:center;gap:8px;" +
+        (compact
+          ? "padding:7px 44px 7px 12px;font-size:12.5px;line-height:1.45;"
+          : "padding:9px 46px 9px 16px;font-size:13.5px;line-height:1.5;") +
         "color:#fff;background:linear-gradient(90deg," + c[0] + "," + c[1] + ");" +
         "box-shadow:0 4px 18px rgba(0,0,0,.18);" +
         "font-family:-apple-system,'Segoe UI','Microsoft YaHei',sans-serif";
 
       var txt = document.createElement("span");
       txt.textContent = a.text;
+      if (compact) {
+        txt.style.cssText = "display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden";
+      }
       bar.appendChild(txt);
 
       if (a.link) {
@@ -55,8 +64,9 @@
       x.setAttribute("aria-label", "关闭公告");
       x.textContent = "×";
       x.style.cssText =
-        "position:absolute;right:10px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);" +
-        "border:0;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1";
+        "position:absolute;right:8px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);" +
+        "border:0;color:#fff;width:" + (compact ? "30px" : "26px") + ";height:" + (compact ? "30px" : "26px") + ";" +
+        "border-radius:50%;cursor:pointer;font-size:16px;line-height:1";
       x.addEventListener("click", function () {
         try { sessionStorage.setItem(key, "1"); } catch (e) {}
         bar.remove();

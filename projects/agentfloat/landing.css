@@ -52,10 +52,11 @@ code {
   border-radius: 999px; font-weight: 600; cursor: pointer;
   border: 1px solid transparent; text-decoration: none;
   transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease, background .25s ease;
-  font-size: 15px;
+  font-size: 15px; white-space: nowrap;
 }
 .btn-lg { padding: 15px 34px; }
 .btn-sm { padding: 8px 18px; font-size: 13.5px; }
+[hidden] { display: none !important; }
 .btn-primary {
   color: #fff; background: var(--grad);
   box-shadow: 0 10px 30px rgba(10, 132, 255, .35);
@@ -83,7 +84,7 @@ code {
 .nav-links { display: flex; gap: 26px; font-size: 14px; }
 .nav-links a { color: var(--muted); }
 .nav-links a:hover { color: var(--text); }
-.nav-actions { display: flex; gap: 10px; align-items: center; }
+.nav-actions { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
 
 /* ---------- Hero ---------- */
 .hero { position: relative; padding: calc(var(--nav-h) + 66px) 0 40px; overflow: hidden; }
@@ -397,7 +398,20 @@ code {
   .section { padding: 70px 0; }
   .hero { padding-top: calc(var(--nav-h) + 40px); }
   .btn-lg { padding: 13px 26px; font-size: 14px; }
+  .btn-sm { min-height: 38px; }
   .dl-btn { min-width: 0; width: 100%; }
+  /* 环绕菜单：缩小半径，避免扇区被屏幕边缘裁切 */
+  .orb-stage { --r: 128px; --sec: 46px; }
+  .orb-small { --r: 92px; --sec: 36px; }
+}
+@media (max-width: 380px) {
+  .nav-inner { gap: 10px; }
+  .nav-actions { gap: 6px; }
+  .nav-actions .btn { padding: 8px 12px; font-size: 13px; }
+  .nav-brand { font-size: 14px; }
+  .nav-brand img { width: 22px; height: 22px; }
+  .orb-stage { --r: 110px; --sec: 42px; }
+  .orb-small { --r: 82px; --sec: 34px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

@@ -54,7 +54,7 @@
 .pp-foot { margin-top: 44px; font-size: 13px; opacity: .6; text-align: center; }
 .pp-loading { padding: 70px 0; text-align: center; opacity: .6; }
 
-/* ---------- 体系化文档区块（功能介绍 / 使用方法 / 版本历史 / FAQ） ---------- */
+/* ---------- 通用适配修复 ---------- */
 .pp-intro { margin-top: -4px; }
 .pp-feat { margin-bottom: 20px; }
 .pp-feat:last-child { margin-bottom: 4px; }
@@ -74,7 +74,7 @@
 .pp-faq details[open] summary::after { transform: rotate(45deg); }
 .pp-faq details p { margin: 0; padding: 0 16px 15px; opacity: .75; font-size: 13.5px; line-height: 1.85; }
 
-/* ---------- 使用教程：醒目入口 ---------- */
+/* ---------- 通用适配修复 ---------- */
 .pp-badge.pp-guide { font-weight: 700; box-shadow: inset 0 0 0 1px var(--accent); }
 .pp-quicknav { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 16px; }
 .pp-quicknav a {
@@ -85,3 +85,11 @@
 .pp-quicknav a:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
 .pp-block:target h2 { color: var(--accent); }
 
+
+/* ---------- 通用适配修复 ---------- */
+[hidden] { display: none !important; }
+.btn { white-space: nowrap; }
+@media (max-width: 600px) {
+  .btn-sm { min-height: 36px; }
+  .btn-lg { min-height: 46px; }
+}
