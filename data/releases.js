@@ -37,23 +37,26 @@ window.RELEASES = {
       }
     ]
   },
-  "ginyscreen": {
-    "project": "ginyscreen",
+  "gracs": {
+    "project": "gracs",
     "tag": "v1.5.1",
-    "updatedAt": "2026-09-30T10:26:02Z",
-    "base": "https://dl.ginyva.site/releases/ginyscreen/latest/",
+    "updatedAt": "2026-10-11T23:40:01Z",
+    "base": "https://dl.ginyva.site/releases/gracs/latest/",
     "files": [
       {
         "name": "GinyScreen-Debug-v1.5.1.exe",
-        "size": 136192269
+        "size": 136192269,
+        "sha256": "2cf4427ae0243831293553d1cf094a8f9ad3eb9bf07e2b984b0cb57aad0a7915"
       },
       {
         "name": "GinyScreen-Portable-v1.5.1.exe",
-        "size": 136192120
+        "size": 136192120,
+        "sha256": "1763a1a7a556390123c19ec9968ee0875a60d356ea015c8ee5f5dbc873055ae1"
       },
       {
         "name": "GinyScreen-Setup-v1.5.1.exe",
-        "size": 136400343
+        "size": 136400343,
+        "sha256": "ba9a72993519ffb66e3f677042b69161857ed34a4ff03f4a246e933e898b6865"
       }
     ]
   },
