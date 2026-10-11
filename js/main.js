@@ -495,10 +495,248 @@
     box.innerHTML = out.join("");
   }
 
+  /* ============================================================
+   * Skills 仓库 / 提示词仓库
+   * ============================================================ */
+  var SHARE_TEXT = {}; // 预览/复制内容缓存（同源按需加载）
+
+  function loadShareText(url, cb) {
+    if (SHARE_TEXT[url] != null) { cb(SHARE_TEXT[url]); return; }
+    fetch(url)
+      .then(function (r) { return r.ok ? r.text() : null; })
+      .then(function (t) {
+        if (t != null) SHARE_TEXT[url] = t;
+        cb(t);
+      })
+      .catch(function () { cb(null); });
+  }
+
+  function copyText(text, cb) {
+    function fallback() {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.cssText = "position:fixed;top:-9999px;opacity:0";
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand("copy");
+        ta.remove();
+        cb(!!ok);
+      } catch (e) { cb(false); }
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { cb(true); }, fallback);
+        return;
+      }
+    } catch (e) {}
+    fallback();
+  }
+
+  function btnFlash(btn, text) {
+    if (!btn) return;
+    if (!btn._orig) btn._orig = btn.textContent;
+    btn.textContent = text;
+    clearTimeout(btn._ft);
+    btn._ft = setTimeout(function () { btn.textContent = btn._orig; }, 1500);
+  }
+
+  function uniqCats(list, key) {
+    var o = {};
+    list.forEach(function (x) { if (x[key]) o[x[key]] = 1; });
+    return Object.keys(o);
+  }
+
+  function shareChips(container, cats, onPick) {
+    if (!container) return;
+    container.innerHTML = ["全部"].concat(cats).map(function (c) {
+      return '<button type="button" class="hub-filter' + (c === "全部" ? " active" : "") + '" data-cat="' + esc(c) + '">' + esc(c) + "</button>";
+    }).join("");
+    $$(".hub-filter", container).forEach(function (b) {
+      b.addEventListener("click", function () {
+        $$(".hub-filter", container).forEach(function (x) { x.classList.toggle("active", x === b); });
+        onPick(b.getAttribute("data-cat") || "全部");
+      });
+    });
+  }
+
+  function sharePreviewBlock(fname, sizeText, id) {
+    return '<div class="sc-preview">' +
+      '<div class="sc-preview-bar"><span class="fname">' + esc(fname) + "</span><span>" + esc(sizeText) + "</span>" +
+      '<button class="copy" type="button" data-copyshare="' + esc(id) + '">复制全文</button></div>' +
+      '<pre class="sc-preview-body">（点击「预览原文」加载…）</pre></div>';
+  }
+
+  /* ---------- Skills ---------- */
+  function skillCard(s) {
+    var dlText = s.files > 1 ? "⬇ 下载 .zip" : "⬇ 下载 SKILL.md";
+    return '<article class="share-card skill reveal" data-id="' + esc(s.id) + '">' +
+      '<div class="sc-head"><span class="sc-badge">' + esc(s.badge) + "</span>" +
+      '<span class="sc-meta">' + esc(s.size) + " · " + esc(s.updated) + "</span></div>" +
+      '<h3 class="sc-title"><span class="emoji">' + esc(s.emoji) + "</span>" + esc(s.name) + "</h3>" +
+      '<p class="sc-desc">' + esc(s.desc) + "</p>" +
+      '<div class="sc-tags">' + (s.tags || []).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("") + "</div>" +
+      '<div class="sc-actions">' +
+        '<a class="btn btn-primary btn-sm" href="' + esc(s.file) + '" download="' + esc(s.dlName || "SKILL.md") + '">' + dlText + "</a>" +
+        '<button class="btn btn-ghost btn-sm" type="button" data-copycmd="' + esc(s.id) + '" title="适用于 opencode；其他工具见上方安装说明">📋 复制安装命令</button>' +
+        (s.github ? '<a class="link-plain" href="' + esc(s.github) + '" target="_blank" rel="noopener noreferrer">GitHub ↗</a>' : "") +
+        '<button class="sc-preview-toggle" type="button" data-preview="' + esc(s.id) + '" aria-expanded="false">预览原文 <span class="arrow">▼</span></button>' +
+      "</div>" + sharePreviewBlock("SKILL.md", s.size, s.id) + "</article>";
+  }
+
+  function initSkillsSection() {
+    var list = window.SKILLS || [];
+    var grid = $("#skillGrid");
+    if (!grid || !list.length) return;
+    var state = { q: "", cat: "全部" };
+
+    function render() {
+      var out = list.filter(function (s) {
+        if (state.cat !== "全部" && s.cat !== state.cat) return false;
+        var q = state.q.toLowerCase();
+        if (!q) return true;
+        return ((s.name || "") + " " + (s.desc || "") + " " + (s.tags || []).join(" ")).toLowerCase().indexOf(q) > -1;
+      });
+      grid.innerHTML = out.map(skillCard).join("");
+      var empty = $("#skillEmpty");
+      if (empty) empty.hidden = out.length > 0;
+      var cnt = $("#skillCount");
+      if (cnt) cnt.textContent = "（" + list.length + " 个）";
+      observeReveals(grid);
+    }
+
+    shareChips($("#skillFilters"), uniqCats(list, "cat"), function (c) { state.cat = c; render(); });
+    var input = $("#skillSearch");
+    if (input) {
+      var timer = null;
+      input.addEventListener("input", function () {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function () { state.q = input.value.trim(); render(); }, 160);
+      });
+      input.addEventListener("keydown", function (e) { if (e.key === "Escape") { input.value = ""; state.q = ""; render(); } });
+    }
+    render();
+  }
+
+  /* ---------- 提示词 ---------- */
+  function promptCard(p) {
+    return '<article class="share-card prompt reveal" data-id="' + esc(p.id) + '">' +
+      '<div class="sc-head"><span class="sc-badge">' + esc(p.cat) + "</span>" +
+      '<span class="sc-meta">' + esc(p.chars || "") + " · " + esc(p.updated) + "</span></div>" +
+      '<h3 class="sc-title"><span class="emoji">' + esc(p.emoji || "📝") + "</span>" + esc(p.title) + "</h3>" +
+      '<p class="sc-desc">' + esc(p.desc) + "</p>" +
+      '<div class="sc-tags">' + (p.tags || []).map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("") + "</div>" +
+      '<div class="sc-actions">' +
+        '<button class="btn btn-primary btn-sm" type="button" data-copytxt="' + esc(p.id) + '">📋 复制全文</button>' +
+        '<a class="btn btn-ghost btn-sm" href="' + esc(p.file) + '" download="' + esc(p.dlName || "") + '">⬇ .txt</a>' +
+        (p.github ? '<a class="link-plain" href="' + esc(p.github) + '" target="_blank" rel="noopener noreferrer">GitHub ↗</a>' : "") +
+        '<button class="sc-preview-toggle" type="button" data-preview="' + esc(p.id) + '" aria-expanded="false">预览原文 <span class="arrow">▼</span></button>' +
+      "</div>" + sharePreviewBlock(p.dlName || (p.id + ".txt"), p.chars || "", p.id) + "</article>";
+  }
+
+  function initPromptsSection() {
+    var list = window.PROMPTS || [];
+    var grid = $("#promptGrid");
+    if (!grid || !list.length) return;
+    var state = { q: "", cat: "全部" };
+
+    function render() {
+      var out = list.filter(function (p) {
+        if (state.cat !== "全部" && p.cat !== state.cat) return false;
+        var q = state.q.toLowerCase();
+        if (!q) return true;
+        return ((p.title || "") + " " + (p.desc || "") + " " + (p.tags || []).join(" ")).toLowerCase().indexOf(q) > -1;
+      });
+      grid.innerHTML = out.map(promptCard).join("");
+      var empty = $("#promptEmpty");
+      if (empty) empty.hidden = out.length > 0;
+      var cnt = $("#promptCount");
+      if (cnt) cnt.textContent = "（" + list.length + " 个）";
+      observeReveals(grid);
+    }
+
+    shareChips($("#promptFilters"), uniqCats(list, "cat"), function (c) { state.cat = c; render(); });
+    var input = $("#promptSearch");
+    if (input) {
+      var timer = null;
+      input.addEventListener("input", function () {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function () { state.q = input.value.trim(); render(); }, 160);
+      });
+      input.addEventListener("keydown", function (e) { if (e.key === "Escape") { input.value = ""; state.q = ""; render(); } });
+    }
+    render();
+  }
+
+  function findShareItem(id) {
+    var all = (window.SKILLS || []).concat(window.PROMPTS || []);
+    for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
+    return null;
+  }
+
+  /* 安装说明开合 */
+  var installToggle = $("#installToggle");
+  if (installToggle) {
+    installToggle.addEventListener("click", function () {
+      var box = $("#installBox");
+      var open = box.hidden;
+      box.hidden = !open;
+      installToggle.setAttribute("aria-expanded", String(open));
+      installToggle.textContent = open ? "📦 收起安装说明 ▴" : "📦 如何安装 ▾";
+    });
+  }
+
+  /* 分享区事件委托：预览 / 复制命令 / 复制全文 */
+  document.addEventListener("click", function (e) {
+    if (!e.target || !e.target.closest) return;
+
+    var pv = e.target.closest("[data-preview]");
+    if (pv) {
+      var id = pv.getAttribute("data-preview");
+      var card = pv.closest(".share-card");
+      var item = findShareItem(id);
+      if (!card || !item) return;
+      var open = card.classList.toggle("open");
+      pv.setAttribute("aria-expanded", String(open));
+      if (open) {
+        var pre = $(".sc-preview-body", card);
+        if (pre && !card._loaded) {
+          card._loaded = true;
+          pre.textContent = "加载中…";
+          loadShareText(item.file, function (txt) {
+            pre.textContent = txt != null ? txt : "预览加载失败，可点「下载」查看原文件。";
+          });
+        }
+      }
+      return;
+    }
+
+    var cc = e.target.closest("[data-copycmd]");
+    if (cc) {
+      var sk = findShareItem(cc.getAttribute("data-copycmd"));
+      if (sk && sk.cmd) copyText(sk.cmd, function (ok) { btnFlash(cc, ok ? "✅ 已复制" : "⚠️ 复制失败"); });
+      return;
+    }
+
+    var cp = e.target.closest("[data-copytxt]");
+    if (!cp) cp = e.target.closest("[data-copyshare]");
+    if (cp) {
+      var pid = cp.getAttribute("data-copytxt") || cp.getAttribute("data-copyshare");
+      var it = findShareItem(pid);
+      if (!it) return;
+      loadShareText(it.file, function (txt) {
+        if (txt == null) { btnFlash(cp, "⚠️ 加载失败"); return; }
+        copyText(txt, function (ok) { btnFlash(cp, ok ? "✅ 已复制" : "⚠️ 复制失败"); });
+      });
+    }
+  });
+
   /* ---------- 启动 ---------- */
   renderStats();
   renderFooter();
   initFeedback();
+  initSkillsSection();
+  initPromptsSection();
   observeReveals(document);
 
   var grid = $("#projectGrid");

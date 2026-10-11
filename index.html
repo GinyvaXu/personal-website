@@ -46,6 +46,8 @@
     </button>
     <ul class="nav-links" id="navLinks">
       <li><a class="nav-link" href="#projects">项目</a></li>
+      <li><a class="nav-link" href="#skills">Skills</a></li>
+      <li><a class="nav-link" href="#prompts">提示词</a></li>
       <li><a class="nav-link" href="#feedback">社区反馈</a></li>
       <li><a class="nav-link" href="https://github.com/GinyvaXu" target="_blank" rel="noopener noreferrer">GitHub</a></li>
     </ul>
@@ -91,6 +93,54 @@
       </div>
       <div class="hub-empty" id="hubEmpty" hidden>没有匹配的项目，换个关键词试试。</div>
       <div class="hub-grid" id="projectGrid"></div>
+    </div>
+  </section>
+
+  <!-- ========== Skills 仓库 ========== -->
+  <section class="section section-alt" id="skills">
+    <div class="container">
+      <div class="share-head-row">
+        <div>
+          <h2 class="section-title reveal">🧩 Skills 仓库</h2>
+          <p class="section-sub reveal">我自己在用的 AI Agent 技能（Skills）：下载即用，或从 GitHub 仓库拿最新版。<span id="skillCount"></span></p>
+        </div>
+        <button class="install-toggle reveal" id="installToggle" type="button" aria-expanded="false" aria-controls="installBox">📦 如何安装 ▾</button>
+      </div>
+      <div class="install-box" id="installBox" hidden>
+        <h4>安装方法（二选一）</h4>
+        <ol>
+          <li><strong>直接下载（推荐）</strong>：点卡片上的「下载」拿到 SKILL.md（多文件技能为 zip），放进对应目录 —— opencode：<code>~/.config/opencode/skills/</code>；Claude Code：<code>~/.claude/skills/</code>；Codex：<code>~/.agents/skills/</code>。重开对话即可生效。</li>
+          <li><strong>命令行安装</strong>：点卡片「复制安装命令」拿到一行命令（走 jsDelivr 镜像，国内可直连）；也可以 <code>git clone https://github.com/GinyvaXu/ginyva-share.git</code>，再把 <code>skills/&lt;名字&gt;/</code> 整个文件夹复制到上述目录。</li>
+        </ol>
+      </div>
+      <div class="share-tools">
+        <div class="hub-search">
+          <span class="hub-search-ico" aria-hidden="true">🔍</span>
+          <input id="skillSearch" type="search" placeholder="搜索 Skills（名称 / 功能 / 标签）…" aria-label="搜索 Skills" autocomplete="off">
+          <kbd class="hub-kbd" aria-hidden="true">/</kbd>
+        </div>
+        <div class="hub-filters" id="skillFilters" role="group" aria-label="按分类筛选 Skills"></div>
+      </div>
+      <div class="hub-empty" id="skillEmpty" hidden>没有匹配的 Skill，换个关键词试试。</div>
+      <div class="share-grid" id="skillGrid"></div>
+    </div>
+  </section>
+
+  <!-- ========== 提示词仓库 ========== -->
+  <section class="section" id="prompts">
+    <div class="container">
+      <h2 class="section-title reveal">📝 提示词仓库</h2>
+      <p class="section-sub reveal">现成可用的提示词模板：点「复制」直接拿去用，或下载 txt 收藏。<span id="promptCount"></span></p>
+      <div class="share-tools">
+        <div class="hub-search">
+          <span class="hub-search-ico" aria-hidden="true">🔍</span>
+          <input id="promptSearch" type="search" placeholder="搜索提示词（标题 / 用途）…" aria-label="搜索提示词" autocomplete="off">
+          <kbd class="hub-kbd" aria-hidden="true">/</kbd>
+        </div>
+        <div class="hub-filters" id="promptFilters" role="group" aria-label="按场景筛选提示词"></div>
+      </div>
+      <div class="hub-empty" id="promptEmpty" hidden>没有匹配的提示词，换个关键词试试。</div>
+      <div class="share-grid prompts" id="promptGrid"></div>
     </div>
   </section>
 
@@ -155,6 +205,8 @@
 
 <script src="data/site.js"></script>
 <script src="data/projects.js"></script>
+<script src="data/skills.js"></script>
+<script src="data/prompts.js"></script>
 <script src="data/releases.js"></script>
 <script src="js/main.js"></script>
 </body>
