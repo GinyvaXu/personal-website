@@ -5,38 +5,45 @@
  * ============================================================ */
 window.LANDINGS = {
 
-  /* ---------------- GinyScreen ---------------- */
-  "ginyscreen": {
-    short: "GinyScreen",
-    accent: ["#22d3ee", "#0ea5e9"],
+  /* ---------------- Gracs ---------------- */
+  "gracs": {
+    short: "Gracs",
+    accent: ["#22d3ee", "#6366f1"],
     heroTitle: "把屏幕，<em>递给远方的人</em>",
-    heroSub: "自托管联机屏幕共享 + 语音：WebRTC P2P 直连，输入房号即加入——和朋友一起看视频、追剧、打游戏，无需注册、无需中转服务器。",
-    trust: ["P2P 直连", "无需注册", "1080p60 可选", "免费使用"],
-    heroMedia: "../../assets/ginyscreen/demo.gif",
-    demoSub: "从建房到开看，三步就绪。",
+    heroSub: "云房间网页版打开即用：输昵称建房，6 位房间码或邀请链接让朋友（含手机）直接加入；画面走 WebRTC P2P 直连、端到端加密，开房者不需要公网 IP、不需要任何联机软件。",
+    trust: ["☁️ 云房间免安装", "P2P 直连 · 端到端加密", "零外置联机软件", "Windows 桌面版"],
+    webUrl: "https://gracs.ginyva.site/",
+    webLabel: "网页版立即使用",
+    heroMedia: "../../assets/gracs/room.png",
+    demoSub: "从打开网页到朋友进房，不到一分钟。",
     demo: [
-      { label: "① 建房与加入", src: "../../assets/ginyscreen/login.png", caption: "输入昵称即可建房，朋友凭房号或 IP 加入。" },
-      { label: "② 屏幕共享 + 语音", src: "../../assets/ginyscreen/room.png", caption: "共享可含系统声音，语音频道带 AEC 回声消除。" },
-      { label: "③ 联机与画质（动图）", src: "../../assets/ginyscreen/demo.gif", caption: "1080p60 / 720p / 480p 随时切换；Radmin VPN 一键联机。" }
+      { label: "① 打开即建房", src: "../../assets/gracs/lobby.png", caption: "输昵称 → 云房间 → 自动生成房间码与邀请链接。" },
+      { label: "② 邀请与加入", src: "../../assets/gracs/invite.png", caption: "链接 / 二维码 / 6 位码，手机扫码直接进。" },
+      { label: "③ 一起看屏幕", src: "../../assets/gracs/room.png", caption: "多宫格观看、点击聚焦；共享可带系统声音。" }
     ],
-    featuresTitle: "一起看屏幕，也一起说话",
-    featuresSub: "六个能力，覆盖从联机到画质的每一环。",
+    featuresTitle: "不用联机软件，也不用装东西",
+    featuresSub: "云信令 + P2P 直连 + 内置中继兜底，把「联机」这件事从使用步骤里删掉。",
     features: [
-      { icon: "🖥", title: "屏幕共享（含系统声音）", text: "共享窗口或整个桌面，可只转发该窗口的声音。" },
-      { icon: "🎙", title: "内置语音频道", text: "说话指示灯、AEC 回声消除、逐人音量调节。" },
-      { icon: "⚡", title: "WebRTC P2P 直连", text: "不经中转服务器，画面延迟取决于双方网络。" },
-      { icon: "🎚", title: "画质随时切换", text: "1080p60 / 720p / 480p 在线切换，观看端自适应。" },
-      { icon: "🔗", title: "内嵌联机三件套", text: "Radmin VPN 一键组网、SakuraFrp 穿透、公网 IP 直连。" },
-      { icon: "🔄", title: "多镜像自动更新", text: "安装版带多镜像更新与 PE 校验，升级无感。" }
+      { icon: "☁️", title: "云房间（免安装）", text: "网页版打开即用，房间码 / 邀请链接 / 二维码进出，跨网络免组网。" },
+      { icon: "🔒", title: "P2P 直连 · 端到端加密", text: "画面与声音不经服务器；打洞失败自动走中继，依然加密。" },
+      { icon: "🛟", title: "零外置联机软件", text: "内置 STUN/TURN、UPnP/NAT-PMP 打洞与 IPv6 / 局域网直连。" },
+      { icon: "🎞️", title: "双链路可选", text: "标准链路低延迟适合游戏；影院模式画质恒定适合看电影。" },
+      { icon: "📶", title: "画质可控可观测", text: "五档画质实时切换，逐观看者自适应码率 + 实时质量面板。" },
+      { icon: "📱", title: "手机也能看", text: "响应式界面、扫码进入、全屏兜底与 PWA，手机即观看端。" }
     ],
     deep: [
-      { kicker: "SHARE", title: "把自己变成一台小型直播服务器", text: "创建房间 → 选择要共享的屏幕或窗口 → 朋友用浏览器或客户端加入；共享窗口时可只传该窗口的声音，看电影不会把通知音带过去。", bullets: ["全屏 / 系统级画中画", "画面比例自适应", "观看端浏览器直达，无需安装"], media: "../../assets/ginyscreen/room.png", caption: "房间界面 · 语音与屏幕共享" },
-      { kicker: "VOICE", title: "像开黑一样自然地说话", text: "音频走 WebRTC，内置 AEC 回声消除与降噪；谁在说话一眼可见，每个人还能单独调音量。", bullets: ["说话指示灯", "逐人音量", "静音 / 免打扰"], media: "../../assets/ginyscreen/login.png", caption: "首页 · 输入昵称即可建房" },
-      { kicker: "NETWORK", title: "不会联机？也帮你联好", text: "内嵌 Radmin VPN 一键组网（自动检测虚拟 IP 并填入）；也支持 SakuraFrp 公网穿透与纯 IP 直连。", bullets: ["Radmin VPN 内嵌", "SakuraFrp 穿透", "局域网 / 公网皆可"], media: "../../assets/ginyscreen/demo.gif", caption: "联机流程 · 动图演示" }
+      { kicker: "CLOUD", title: "开房者不再需要「可被连接」", text: "云房间把信令托管到 Cloudflare：开房不暴露 IP、不用端口映射、不用组网；邀请链接指向公网页版，朋友手机扫码就能进。", bullets: ["6 位房间码 / 邀请链接", "手机扫码直接加入", "媒体仍走 P2P 直连"], media: "../../assets/gracs/lobby.png", caption: "网页版进入页 · 云房间" },
+      { kicker: "SHARE", title: "一起看电影，画面不抖", text: "影院模式用 WebCodecs + 服务器中继把码率固定住，弱网也不忽明忽暗；标准链路则把延迟压到最低，适合游戏与互动。", bullets: ["影院 1080p30 / 游戏 1080p60", "文字档优先保清晰度", "共享中随时切换"], media: "../../assets/gracs/room.png", caption: "房间 · 大屏观看" },
+      { kicker: "AUDIO", title: "系统声音也一起传", text: "共享时可勾选系统声音，队友直接听到视频原声；桌面版共享窗口时自动静音其它应用，避免通知音混进来。", bullets: ["浏览器 / 桌面版均可用", "窗口声音隔离（桌面版）", "声卡不兼容时自动降级仅画面"], media: "../../assets/gracs/invite.png", caption: "邀请朋友一起看" }
     ],
-    dlSub: "免费使用 · P2P 直连 · 无需注册",
-    os: "Windows 10 / 11",
-    req: ["系统：Windows 10 / 11（64 位）", "联机：同一网络直连，或使用内置 Radmin VPN / 公网 IP", "安装：下载安装包 → 双击安装；覆盖安装即可升级"]
+    dlSub: "网页版免安装 · Windows 桌面版支持影院模式与本机开房",
+    os: "Windows 10 / 11 + 任意现代浏览器",
+    req: [
+      "网页版：Edge / Chrome / Safari 打开 gracs.ginyva.site 即用（共享屏幕需桌面浏览器）",
+      "桌面版：Windows 10 / 11（64 位），安装包 / 便携版任选",
+      "联机：云房间免设置；本机开房模式内置中继与 UPnP，严格网络自动兜底",
+      "手机：扫码进入即可观看（手机浏览器不支持采集屏幕）"
+    ]
   },
 
   /* ---------------- CloudBox ---------------- */

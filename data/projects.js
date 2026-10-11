@@ -72,31 +72,31 @@ window.PROJECTS = [
     "lastUpdate": "v3.8.0 · 2026-10-07 — 安全加固（本地接口鉴权 / 更新包 SHA256 校验）+ 体验优化（设计令牌统一、多屏热插拔自愈、进程检测提速约 15 倍）"
   },
   {
-    "id": "ginyscreen",
-    "name": "GinyScreen · 一起看屏幕",
-    "type": "软件",
+    "id": "gracs",
+    "name": "Gracs · 格瑞克斯（一起看屏幕）",
+    "type": "软件 + 网页版",
     "status": "进行中",
     "featured": false,
     "screenshots": [
-      {"src": "assets/ginyscreen/demo.gif", "caption": "动图演示 · 房间语音与屏幕共享"},
-      {"src": "assets/ginyscreen/login.png", "caption": "首页 · 输入昵称即可建房"},
-      {"src": "assets/ginyscreen/room.png", "caption": "房间 · 语音与屏幕共享"}
+      {"src": "assets/gracs/lobby.png", "caption": "网页版 · 打开即用，输昵称建房/加入"},
+      {"src": "assets/gracs/room.png", "caption": "房间 · 多宫格观看，系统声音一起看"},
+      {"src": "assets/gracs/invite.png", "caption": "邀请 · 房间码 / 邀请链接 / 二维码"}
     ],
-    "summary": "自托管联机屏幕共享 + 语音：和朋友一起看视频 / 电影 / 游戏，输入房号即加入，WebRTC P2P 直连、无需注册。",
-    "detail": "把自己变成一台小型直播服务器：创建房间分享屏幕（可同时传系统声音），朋友用浏览器或客户端输入 IP:端口即加入；WebRTC P2P mesh 直连，画质可选 1080p60 / 720p / 480p 并支持在线切换，观看端有全屏与系统级画中画、画面比例自适应；内置语音频道（说话指示灯、AEC 回声消除、逐人音量），共享窗口时可只传该窗口的声音；内嵌 Radmin VPN 一键联机（自动检测虚拟 IP 并填入），也支持 SakuraFrp 公网穿透；Electron 三形态分发（Debug / 便携 / 安装），安装版带多镜像自动更新与 PE 校验。",
-    "tech": ["Node.js", "Electron", "WebRTC", "Socket.IO", "Radmin VPN", "NSIS"],
-    "highlights": ["屏幕共享（含系统声音）", "内置语音 + AEC 回声消除", "Radmin VPN 内嵌联机", "全屏 / 系统级画中画", "房间聊天", "多镜像自动更新"],
-    "page": "projects/ginyscreen/",
+    "summary": "自托管屏幕共享：云房间网页版打开即用，6 位码 / 邀请链接让朋友（含手机）直接加入；媒体 WebRTC P2P 直连不经服务器，零外置联机软件，打洞失败自动走中继。",
+    "detail": "Gracs（格瑞克斯）是一款自托管的屏幕共享工具：房间里谁都能开播，其他人跟着看，一起看视频、电影与游戏画面。网页版提供「云房间」——打开 gracs.ginyva.site 输入昵称就能建房，把 6 位房间码或邀请链接/二维码发给朋友（手机也可以）直接加入，开房者不需要公网 IP、不需要安装任何联机软件；画面与声音走 WebRTC P2P 直连、端到端加密，打洞失败自动走中继。零外置软件联机：内置 STUN/TURN、UPnP/NAT-PMP 自动端口映射与 IPv6/局域网直连，网络诊断页逐项给出人话结论。双链路：标准链路低延迟适合游戏；影院模式（WebCodecs 服务器中继）画质恒定适合看电影（桌面版开房）。画质档位（自动 / 电影 / 游戏 / 文字 / 省流）可实时切换，每位观看者独立自适应码率，质量面板实时显示码率、帧率、RTT、丢包、直连或中继与声音状态。观看端支持全屏（含手机 CSS 兜底）、系统级画中画、画面比例与逐人音量；桌面版为 Windows exe，内嵌服务器与系统声音，带多镜像自动更新。",
+    "tech": ["WebRTC", "WebCodecs", "Cloudflare Workers", "Node.js", "Electron", "PWA"],
+    "highlights": ["☁️ 云房间：免安装网页版，邀请链接/扫码即加入", "手机/平板直接观看（响应式 + 全屏兜底）", "标准链路 + 影院模式双链路", "画质实时切换 + 质量面板", "零外置软件联机（内置中继 / UPnP / IPv6）", "系统声音一起看（浏览器 / 桌面版）"],
+    "page": "projects/gracs/",
     "downloads": [
-      {"label": "Windows 安装包", "url": "https://github.com/GinyvaXu/GinyScreen/releases/download/v1.5.1/GinyScreen-Setup-v1.5.1.exe", "size": "130 MB"},
-      {"label": "便携版", "url": "https://github.com/GinyvaXu/GinyScreen/releases/download/v1.5.1/GinyScreen-Portable-v1.5.1.exe", "size": "129.8 MB"},
-      {"label": "Debug 版", "url": "https://github.com/GinyvaXu/GinyScreen/releases/download/v1.5.1/GinyScreen-Debug-v1.5.1.exe", "size": "129.8 MB"}
+      {"label": "网页版（免安装）", "url": "https://gracs.ginyva.site/", "size": "打开即用"},
+      {"label": "Windows 桌面版", "url": "https://github.com/GinyvaXu/Gracs/releases/latest", "size": "见 Release"}
     ],
     "links": [
-      {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/GinyScreen"},
-      {"label": "发布页", "url": "https://github.com/GinyvaXu/GinyScreen/releases"}
+      {"label": "网页版直接使用", "url": "https://gracs.ginyva.site/"},
+      {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/Gracs"},
+      {"label": "发布页", "url": "https://github.com/GinyvaXu/Gracs/releases"}
     ],
-    "lastUpdate": "v1.5.1 · 2026-08-16 — 房间聊天上线、切换服务器免重启、Radmin 联机自动启动修复；自动更新全链路（多镜像 + PE 校验）启用"
+    "lastUpdate": "v2.2.0 · 2026-10-08 — 云房间网页版上线（gracs.ginyva.site 打开即用、邀请链接/扫码即加入）+ 系统声音不可用时自动仅画面降级"
   },
   {
     "id": "cloudbox",

@@ -6,7 +6,7 @@
 import { json, sha256hex, clientIp } from "../_lib/utils.js";
 import { ensureTables } from "../_lib/db.js";
 
-const PROJECTS = ["projectdock", "agentfloat", "cloudbox", "ginyscreen", "nottingham", "claudefloat", "hexwar"];
+const PROJECTS = ["projectdock", "agentfloat", "cloudbox", "gracs", "nottingham", "claudefloat", "hexwar"];
 
 async function record(env, p, f, request) {
   const day = new Date().toISOString().slice(0, 10);

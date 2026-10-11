@@ -17,7 +17,6 @@ const HOST_ROUTES = {
   "projectdock.ginyva.site": "/projects/projectdock/",
   "agentfloat.ginyva.site":  "/projects/agentfloat/",
   "cloudbox.ginyva.site":    "/projects/cloudbox/",
-  "ginyscreen.ginyva.site":  "/projects/ginyscreen/",
   "nottingham.ginyva.site":  "/projects/nottingham/",
   "claudefloat.ginyva.site": "/projects/claudefloat/",
   "hexwar.ginyva.site":      "/projects/hexwar/",
@@ -61,6 +60,13 @@ export async function onRequest(context) {
   // 裸域统一跳转到 www，避免重复内容
   if (host === APEX) {
     return withSecHeaders(Response.redirect("https://" + WWW + url.pathname + url.search, 301));
+  }
+
+  // 品牌迁移：GinyScreen → Gracs（旧子域名与旧路径 301 到新项目页；网页版本体在 gracs.ginyva.site）
+  if (host === "ginyscreen.ginyva.site" || url.pathname === "/projects/ginyscreen" || url.pathname.startsWith("/projects/ginyscreen/")) {
+    let suffix = url.pathname.replace(/^\/projects\/ginyscreen\/?/, "").replace(/^\/+/, "");
+    if (suffix === "guide") suffix = "guide/";
+    return withSecHeaders(Response.redirect("https://" + WWW + "/projects/gracs/" + suffix, 301));
   }
 
   // 子域名：项目本地路径重写到项目目录；其余路径（/assets、/data、/js、/css 等）原样透传。

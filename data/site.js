@@ -20,7 +20,7 @@ window.SITE_DATA = {
   "names": ["Ginyva", "八奈見真尋"],
   "avatar": "assets/我的头像.jpg",
   "tagline": "无尽界限",
-  "about": "你好，我是 Ginyva / 八奈見真尋，一个爱折腾的独立开发者。当前主力项目是 ProjectDock（项目坞）——把本地项目收进 iOS 风格的界面，统一管理版本、构建、备份与发布，并让 AI agent 直接参与开发闭环。围绕它还有一整套自研工具链：AI 桌面浮窗助手 AgentFloat、自托管联机开黑工具 GinyScreen、跨设备云存储 CloudBox、本地插画图库管理器，以及《守望圣山》战棋与《诺丁汉警长》桌游电子化。一切美好的事物都是曲折地接近自己的目标，一切笔直都是骗人的，所有真理都是弯曲的。",
+  "about": "你好，我是 Ginyva / 八奈見真尋，一个爱折腾的独立开发者。当前主力项目是 ProjectDock（项目坞）——把本地项目收进 iOS 风格的界面，统一管理版本、构建、备份与发布，并让 AI agent 直接参与开发闭环。围绕它还有一整套自研工具链：AI 桌面浮窗助手 AgentFloat、自托管零外设联机的屏幕共享工具 Gracs、跨设备云存储 CloudBox、本地插画图库管理器，以及《守望圣山》战棋与《诺丁汉警长》桌游电子化。一切美好的事物都是曲折地接近自己的目标，一切笔直都是骗人的，所有真理都是弯曲的。",
   "socials": {
     "github": "https://github.com/GinyvaXu",
     "steam": "https://steamcommunity.com/profiles/76561198965163771/",

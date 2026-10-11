@@ -154,8 +154,11 @@
       '<h1 class="hero-title reveal in">' + L.heroTitle + "</h1>" +
       '<p class="hero-sub reveal in">' + esc(L.heroSub) + "</p>" +
       '<div class="hero-cta reveal in">' +
-        '<a class="btn btn-primary btn-lg" href="#download">⬇ 下载' + (ctaSize ? '<span class="btn-sub">v' + esc(verTag.replace(/^v/i, "")) + " · " + esc(ctaSize) + "</span>" : "") + "</a>" +
-        '<a class="btn btn-ghost btn-lg" href="' + guideUrl + '">📖 使用教程</a>' +
+        (L.webUrl
+          ? '<a class="btn btn-primary btn-lg" href="' + esc(L.webUrl) + '" target="_blank" rel="noopener noreferrer">🌐 ' + esc(L.webLabel || "网页版立即使用") + "</a>" +
+            '<a class="btn btn-ghost btn-lg" href="#download">⬇ 下载桌面版</a>'
+          : '<a class="btn btn-primary btn-lg" href="#download">⬇ 下载' + (ctaSize ? '<span class="btn-sub">v' + esc(verTag.replace(/^v/i, "")) + " · " + esc(ctaSize) + "</span>" : "") + "</a>" +
+            '<a class="btn btn-ghost btn-lg" href="' + guideUrl + '">📖 使用教程</a>') +
       "</div>" +
       '<ul class="hero-trust reveal in">' + (L.trust || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" +
       (heroMedia ? '<figure class="window reveal in">' + mediaTag(heroMedia, P.name) + '</figure>' +
@@ -196,7 +199,8 @@
         (L.os ? '<span class="chip">' + esc(L.os) + "</span>" : "") +
       "</div>" +
       '<div class="dl-actions">' +
-        '<a class="btn btn-primary btn-lg" href="' + esc(dlUrl) + '" target="_blank" rel="noopener noreferrer">⬇ ' + esc(dlLabel) + "</a>" +
+        (L.webUrl ? '<a class="btn btn-primary btn-lg" href="' + esc(L.webUrl) + '" target="_blank" rel="noopener noreferrer">🌐 ' + esc(L.webLabel || "网页版立即使用") + "</a>" : "") +
+        '<a class="btn ' + (L.webUrl ? "btn-ghost" : "btn-primary") + ' btn-lg" href="' + esc(dlUrl) + '" target="_blank" rel="noopener noreferrer">⬇ ' + esc(dlLabel) + "</a>" +
         '<a class="btn btn-ghost btn-lg" href="' + guideUrl + '">📖 使用教程</a>' +
       "</div>" +
       '<p class="dl-note">' + (L.dlUrl

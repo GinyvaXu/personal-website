@@ -11,6 +11,12 @@
  * ============================================================ */
 window.LOGS = [
   {
+    "date": "2026-10-11",
+    "title": "Gracs v2.2：云房间与网页版上线（原 GinyScreen 更名收尾）",
+    "tags": ["Gracs"],
+    "content": "GinyScreen 更名为 Gracs 后的一次大版本：新增「云房间」——信令托管到 Cloudflare Workers + Durable Objects，用 6 位房间码 / 邀请链接 / 二维码进出，开房者不需要公网 IP、不用组网；云信令服务同站托管网页版客户端，打开 gracs.ginyva.site 即用，手机扫码直接观看；画面与声音仍走 WebRTC P2P 直连、端到端加密。系统声音在少数声卡驱动不兼容时自动降级为仅画面，不再让整个共享失败；二维码改为客户端本地生成。自托管玩法完整保留：内置 STUN/TURN 中继、UPnP / NAT-PMP、IPv6 / 局域网直连与网络诊断，桌面版另享影院模式。网站侧同步更名：新增 Gracs 项目页，旧 GinyScreen 子域名与路径 301 跳转。"
+  },
+  {
     "date": "2026-09-14",
     "title": "Gallery Super Manager 开源：本地插画图库管理器",
     "tags": ["图库管理器"],

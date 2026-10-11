@@ -88,7 +88,7 @@ jobs:
           mirror projectdock  GinyvaXu/ProjectDock
           mirror agentfloat   GinyvaXu/AgentFloat
           mirror cloudbox     GinyvaXu/cloudbox-portable
-          mirror ginyscreen   GinyvaXu/GinyScreen
+          mirror gracs        GinyvaXu/Gracs
           mirror nottingham   GinyvaXu/SheriffOfNottingham---Ultimate
           mirror claudefloat  GinyvaXu/ClaudeFloat
           mirror hexwar       GinyvaXu/HexWarDemo
@@ -102,7 +102,7 @@ jobs:
           cat > work/gen.cjs <<'NODE'
           const { execSync } = require("child_process");
           const fs = require("fs");
-          const ids = ["projectdock","agentfloat","cloudbox","ginyscreen","nottingham","claudefloat","hexwar"];
+          const ids = ["projectdock","agentfloat","cloudbox","gracs","nottingham","claudefloat","hexwar"];
           const out = {};
           for (const id of ids) {
             try {
