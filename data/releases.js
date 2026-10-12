@@ -39,24 +39,24 @@ window.RELEASES = {
   },
   "gracs": {
     "project": "gracs",
-    "tag": "v1.5.1",
-    "updatedAt": "2026-10-11T23:40:01Z",
+    "tag": "v2.5.1",
+    "updatedAt": "2026-10-12T23:44:46Z",
     "base": "https://dl.ginyva.site/releases/gracs/latest/",
     "files": [
       {
-        "name": "GinyScreen-Debug-v1.5.1.exe",
-        "size": 136192269,
-        "sha256": "2cf4427ae0243831293553d1cf094a8f9ad3eb9bf07e2b984b0cb57aad0a7915"
+        "name": "Gracs-Debug-v2.5.1.exe",
+        "size": 93035041,
+        "sha256": "045d874e2b7b9e472a893fd58d523438034671fa087771a8d0c8d7136f6593b4"
       },
       {
-        "name": "GinyScreen-Portable-v1.5.1.exe",
-        "size": 136192120,
-        "sha256": "1763a1a7a556390123c19ec9968ee0875a60d356ea015c8ee5f5dbc873055ae1"
+        "name": "Gracs-Portable-v2.5.1.exe",
+        "size": 93035043,
+        "sha256": "f32adb516bd7b2d6694591b88ec3423274c6dea2273f21ab9e8abd1c38b4d76f"
       },
       {
-        "name": "GinyScreen-Setup-v1.5.1.exe",
-        "size": 136400343,
-        "sha256": "ba9a72993519ffb66e3f677042b69161857ed34a4ff03f4a246e933e898b6865"
+        "name": "Gracs-Setup-v2.5.1.exe",
+        "size": 103565052,
+        "sha256": "e118986b50f1e664597b9b992998de242c405dcfba27e7ce1ff035cc9e8903b5"
       }
     ]
   },
