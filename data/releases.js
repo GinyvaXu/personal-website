@@ -1,5 +1,23 @@
 /* 由镜像管线自动生成（GitHub Actions），请勿手改 */
 window.RELEASES = {
+  "vidar": {
+    "project": "vidar",
+    "tag": "v0.14.0",
+    "updatedAt": "2026-10-13T02:57:10Z",
+    "base": "https://dl.ginyva.site/releases/vidar/latest/",
+    "files": [
+      {
+        "name": "VIDAR-v0.14.0-win64-portable.zip",
+        "size": 187841305,
+        "sha256": "40df52b2f4895960786fcb2e08b214c95258e887c9ee05a0003d014029197882"
+      },
+      {
+        "name": "VIDAR-v0.14.0-win64-portable.zip.sha256",
+        "size": 101,
+        "sha256": "3ca462b079c9cc5cf98ff568ca414643b52cc929c7c781263119936d0a303f6c"
+      }
+    ]
+  },
   "projectdock": {
     "project": "projectdock",
     "tag": "v1.9.0",
