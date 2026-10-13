@@ -14,6 +14,7 @@ import { ensureTables } from "./_lib/db.js";
 import { sha256hex, clientIp } from "./_lib/utils.js";
 
 const HOST_ROUTES = {
+  "vidar.ginyva.site":       "/projects/vidar/",
   "projectdock.ginyva.site": "/projects/projectdock/",
   "agentfloat.ginyva.site":  "/projects/agentfloat/",
   "cloudbox.ginyva.site":    "/projects/cloudbox/",

@@ -5,6 +5,47 @@
  * ============================================================ */
 window.LANDINGS = {
 
+  /* ---------------- VIDAR ---------------- */
+  "vidar": {
+    short: "VIDAR",
+    logo: "../../assets/vidar/icon.png",
+    accent: ["#0ea5e9", "#14b8a6"],
+    heroTitle: "把 B 站视频，<em>变成可读的知识文档</em>",
+    heroSub: "本地语音识别 + 大模型整理：一条链接产出结构化摘要、分章节目录、精修逐字稿、思维大纲与打印级 PDF / Word / EPUB；自动省略广告、断点续跑、批量队列，全程在自己电脑上完成。",
+    trust: ["本地 ASR（faster-whisper）", "广告自动省略", "报刊/论文 PDF 一键出", "断点续跑不白跑"],
+    heroMedia: "../../assets/vidar/task-running.png",
+    demoSub: "粘贴链接 → 出稿：几张图看懂全流程。",
+    demo: [
+      { label: "① 一条链接开跑", src: "../../assets/vidar/task-running.png", caption: "粘贴 BV 号/链接 → 自动解析、下载音频、识别、精修、成稿，右侧实时步骤与日志。" },
+      { label: "② 批量队列", src: "../../assets/vidar/batch.png", caption: "多条视频排队处理：失败不中断，每条都可续跑、可停止、可重试失败项。" },
+      { label: "③ 大模型接入向导", src: "../../assets/vidar/wizard.png", caption: "选服务商 → 填 Key → 连通测试，1 分钟完成；环境变量已提供 Key 时不落盘。" },
+      { label: "④ 历史与断点续跑", src: "../../assets/vidar/history.png", caption: "每个任务记住进度：一键继续 / 从任意步骤重跑 / 进度徽标一目了然。" }
+    ],
+    featuresTitle: "从视频到文档，全流程自动化",
+    featuresSub: "下载 → 识别 → 精修 → 广告省略 → 章节 → 摘要 → 排版导出；每一步都可单独重跑。",
+    features: [
+      { icon: "🎙️", title: "本地语音识别", text: "faster-whisper large-v3（CUDA 加速）：词级时间戳 + VAD 防幻觉 + 幻听短语过滤，隐私不外流。" },
+      { icon: "✂️", title: "段级精修", text: "LLM 去口水词、纠错别字、统一术语；原文/精修双版本保留，时间戳零漂移可追溯。" },
+      { icon: "🚫", title: "广告自动省略", text: "识别赞助口播/带货引导/产品植入（宁缺毋滥），成品直接省略并留「省略广告」记录文件。" },
+      { icon: "🧠", title: "结构化总结", text: "一句话结论 + 核心要点 + 章节小结；要点带时间戳，可点击跳回 B 站对应位置。" },
+      { icon: "📄", title: "打印级导出", text: "报刊风 / 论文风 PDF、Word、EPUB（微信读书）、SRT 字幕与 Markdown 全套。" },
+      { icon: "🌍", title: "双语翻译", text: "外语视频自动检测语言逐段翻译；精修稿 / PDF / EPUB / Word / SRT 双语对照。" }
+    ],
+    deep: [
+      { kicker: "LOCAL", title: "识别在本机，隐私不外流", text: "语音识别走本机 GPU（faster-whisper），只有文稿文本才交给大模型；不配 LLM 也能跑完整条逐字稿。", bullets: ["本地 CUDA 推理（N 卡）", "无显卡自动回退 CPU", "模型外置、按显存一键下载"], media: "../../assets/vidar/models.png", caption: "模型管理 · 按显存推荐档位" },
+      { kicker: "ROBUST", title: "1 小时长视频也敢跑", text: "12 步状态机逐段落盘：暂停 / 继续 / 释放显存、崩溃后从检查点接着跑；ASR 甚至按时间点切片续识别，不从头再来。", bullets: ["暂停 / 继续 / 释放显存", "失败步骤独立重跑", "批量队列失败不中断"], media: "../../assets/vidar/history.png", caption: "历史页 · 进度与续跑" },
+      { kicker: "EXPORT", title: "不只是摘要，是可打印的成品", text: "同一份文稿渲染成报刊风 / 论文风 PDF、Word、EPUB 电子书与双语 SRT；正文自动分语段、首行缩进两格，直接能读、能打印。", bullets: ["报刊风 / 论文风 PDF", "EPUB 导入微信读书", "双语对照排版"], media: "../../assets/vidar/task-running.png", caption: "一键出全套文档" }
+    ],
+    dlSub: "Windows 便携版 · 解压即用；语音模型与大模型 API 自行配置（可选免费额度服务商）",
+    os: "Windows 10 / 11（64 位）· NVIDIA 显卡加速（可选）",
+    req: [
+      "便携版解压双击即用；GUI 与命令行（VIDAR-CLI.exe）双入口",
+      "语音识别模型约 3GB：VIDAR-CLI.exe model download large-v3 一键下载",
+      "N 卡用户：VIDAR-CLI.exe gpu install 安装 CUDA 运行时（可选，约 1.5GB）",
+      "大模型：首次启动接入向导（OpenCode Go / DeepSeek / 硅基流动 / Kimi / 智谱 / 本地 Ollama）"
+    ]
+  },
+
   /* ---------------- Gracs ---------------- */
   "gracs": {
     short: "Gracs",

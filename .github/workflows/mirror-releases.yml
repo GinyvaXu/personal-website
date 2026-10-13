@@ -92,6 +92,7 @@ jobs:
           mirror nottingham   GinyvaXu/SheriffOfNottingham---Ultimate
           mirror claudefloat  GinyvaXu/ClaudeFloat
           mirror hexwar       GinyvaXu/HexWarDemo
+          mirror vidar        GinyvaXu/VIDAR
 
           echo "镜像全部完成"
 
@@ -102,7 +103,7 @@ jobs:
           cat > work/gen.cjs <<'NODE'
           const { execSync } = require("child_process");
           const fs = require("fs");
-          const ids = ["projectdock","agentfloat","cloudbox","gracs","nottingham","claudefloat","hexwar"];
+          const ids = ["vidar","projectdock","agentfloat","cloudbox","gracs","nottingham","claudefloat","hexwar"];
           const out = {};
           for (const id of ids) {
             try {

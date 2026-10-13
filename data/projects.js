@@ -23,6 +23,33 @@
  * ============================================================ */
 window.PROJECTS = [
   {
+    "id": "vidar",
+    "name": "VIDAR · 维达",
+    "type": "软件",
+    "status": "进行中",
+    "featured": false,
+    "screenshots": [
+      {"src": "assets/vidar/task-running.png", "caption": "任务页 · 一键出全套文档"},
+      {"src": "assets/vidar/batch.png", "caption": "批量队列 · 多视频排队处理"},
+      {"src": "assets/vidar/wizard.png", "caption": "LLM 接入向导 · 1 分钟配置"},
+      {"src": "assets/vidar/history.png", "caption": "历史 · 断点续跑与重跑"},
+      {"src": "assets/vidar/models.png", "caption": "模型管理 · 按显存推荐"}
+    ],
+    "summary": "把 B 站视频变成可读、可检索、可打印的知识文档：本地识别 + 大模型整理，自动省略广告，一条链接产出摘要/章节/逐字稿/大纲与 PDF·Word·EPUB。",
+    "detail": "输入一条 B 站链接，VIDAR 自动完成：解析 → 只下音频 → 本地语音识别（faster-whisper，词级时间戳 + VAD 防幻觉）→ LLM 段级精修（原文/精修双版本可追溯）→ 广告识别与省略（成品省略、另存「省略广告版」记录）→ 章节切分 → map-reduce 摘要（结论 + 要点 + 章节小结，可跳回视频时间）→ 语段编辑（文章体排版、首行缩进两格）→ 关键帧截图 → 导出 Markdown / 报刊风与论文风 PDF / Word / EPUB / SRT 全套。支持外语视频自动翻译（双语对照）、多条视频批量队列、全流水线暂停 / 继续 / 释放显存、检查点续跑（ASR 按时间切片续识别）、模型管理与 LLM 接入向导。",
+    "tech": ["Python 3.12", "PySide6", "faster-whisper", "yt-dlp", "ReportLab", "PyInstaller"],
+    "highlights": ["本地语音识别（CUDA）", "广告自动省略", "结构化摘要 + 章节时间戳", "报刊/论文 PDF + Word + EPUB", "双语翻译对照", "批量队列", "断点续跑 / 暂停释放", "LLM 接入向导"],
+    "page": "projects/vidar/",
+    "downloads": [
+      {"label": "Windows 便携版", "url": "https://github.com/GinyvaXu/VIDAR/releases/latest", "size": "约 179 MB"}
+    ],
+    "links": [
+      {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/VIDAR"},
+      {"label": "发布页", "url": "https://github.com/GinyvaXu/VIDAR/releases"}
+    ],
+    "lastUpdate": "v0.14.0 · 2026-10-13 — 应用图标换新（清新薄荷）+ 全量代码审查 23 项修复（续跑时间戳 / 分P串档 / 广告变更下游重算 / 导出排版等）"
+  },
+  {
     "id": "project-dock",
     "name": "ProjectDock · 项目坞",
     "type": "软件",
