@@ -57,24 +57,24 @@ window.RELEASES = {
   },
   "gracs": {
     "project": "gracs",
-    "tag": "v2.5.1",
-    "updatedAt": "2026-10-12T23:44:46Z",
+    "tag": "v2.5.2",
+    "updatedAt": "2026-10-13T03:28:24Z",
     "base": "https://dl.ginyva.site/releases/gracs/latest/",
     "files": [
       {
-        "name": "Gracs-Debug-v2.5.1.exe",
-        "size": 93035041,
-        "sha256": "045d874e2b7b9e472a893fd58d523438034671fa087771a8d0c8d7136f6593b4"
+        "name": "Gracs-Debug-v2.5.2.exe",
+        "size": 93035376,
+        "sha256": "ceb9609b3fc69883da268a4e8ca598f8eec30e6cb5734a3e8434fd87d03b0ac8"
       },
       {
-        "name": "Gracs-Portable-v2.5.1.exe",
-        "size": 93035043,
-        "sha256": "f32adb516bd7b2d6694591b88ec3423274c6dea2273f21ab9e8abd1c38b4d76f"
+        "name": "Gracs-Portable-v2.5.2.exe",
+        "size": 93032820,
+        "sha256": "8281b38cdf0570b2f6701b3ce174b856c9b3437a127b29f2dc326da6f737e7c3"
       },
       {
-        "name": "Gracs-Setup-v2.5.1.exe",
-        "size": 103565052,
-        "sha256": "e118986b50f1e664597b9b992998de242c405dcfba27e7ce1ff035cc9e8903b5"
+        "name": "Gracs-Setup-v2.5.2.exe",
+        "size": 103565288,
+        "sha256": "02f00b8cef202f9c265eba97263995ae96f5535ac0006fbd505dc0a0538a5094"
       }
     ]
   },
