@@ -123,7 +123,7 @@ window.PROJECTS = [
       {"label": "GitHub 仓库", "url": "https://github.com/GinyvaXu/Gracs"},
       {"label": "发布页", "url": "https://github.com/GinyvaXu/Gracs/releases"}
     ],
-    "lastUpdate": "v2.5.1 · 2026-10-13 — 全新图标（G+播放 · 清新薄荷）+ 启动加载动画 + 安全加固；按应用采声 / 文字聊天自 v2.3–2.4 起可用，已发布 Releases 与国内镜像"
+    "lastUpdate": "v2.5.2 · 2026-10-13 — 自动更新修复（安装批处理转义 + 慢网络卡死检测）；全新图标 + 启动动画 + 安全加固（v2.5.0/2.5.1）"
   },
   {
     "id": "cloudbox",
