@@ -52,7 +52,7 @@ window.LANDINGS = {
     accent: ["#22d3ee", "#6366f1"],
     heroTitle: "把屏幕，<em>递给远方的人</em>",
     heroSub: "云房间网页版打开即用：输昵称建房，6 位房间码或邀请链接让朋友（含手机）直接加入；画面走 WebRTC P2P 直连、端到端加密，开房者不需要公网 IP、不需要任何联机软件。",
-    trust: ["☁️ 云房间免安装", "P2P 直连 · 端到端加密", "零外置联机软件", "Windows 桌面版"],
+    trust: ["☁️ 云房间免安装", "P2P 直连 · 端到端加密", "零外置联机软件", "🎧 按应用采声"],
     webUrl: "https://gracs.ginyva.site/",
     webLabel: "网页版立即使用",
     heroMedia: "../../assets/gracs/room.png",
@@ -60,7 +60,8 @@ window.LANDINGS = {
     demo: [
       { label: "① 打开即建房", src: "../../assets/gracs/lobby.png", caption: "输昵称 → 云房间 → 自动生成房间码与邀请链接。" },
       { label: "② 邀请与加入", src: "../../assets/gracs/invite.png", caption: "链接 / 二维码 / 6 位码，手机扫码直接进。" },
-      { label: "③ 一起看屏幕", src: "../../assets/gracs/room.png", caption: "多宫格观看、点击聚焦；共享可带系统声音。" }
+      { label: "③ 一起看屏幕", src: "../../assets/gracs/room.png", caption: "多宫格观看、点击聚焦；共享可带系统声音（可按应用）。" },
+      { label: "④ 房间聊天", src: "../../assets/gracs/chat.png", caption: "成员 / 聊天页签、未读徽标，重进房间保留最近记录。" }
     ],
     featuresTitle: "不用联机软件，也不用装东西",
     featuresSub: "云信令 + P2P 直连 + 内置中继兜底，把「联机」这件事从使用步骤里删掉。",
@@ -70,12 +71,14 @@ window.LANDINGS = {
       { icon: "🛟", title: "零外置联机软件", text: "内置 STUN/TURN、UPnP/NAT-PMP 打洞与 IPv6 / 局域网直连。" },
       { icon: "🎞️", title: "双链路可选", text: "标准链路低延迟适合游戏；影院模式画质恒定适合看电影。" },
       { icon: "📶", title: "画质可控可观测", text: "五档画质实时切换，逐观看者自适应码率 + 实时质量面板。" },
-      { icon: "📱", title: "手机也能看", text: "响应式界面、扫码进入、全屏兜底与 PWA，手机即观看端。" }
+      { icon: "📱", title: "手机也能看", text: "响应式界面、扫码进入、全屏兜底与 PWA，手机即观看端。" },
+      { icon: "🎧", title: "按应用采声 · 无回音", text: "只采集选定应用的声音，语音软件不被采进去也不被静音。" },
+      { icon: "💬", title: "房间文字聊天", text: "成员 / 聊天页签、未读徽标，重进房间保留最近记录。" }
     ],
     deep: [
       { kicker: "CLOUD", title: "开房者不再需要「可被连接」", text: "云房间把信令托管到 Cloudflare：开房不暴露 IP、不用端口映射、不用组网；邀请链接指向公网页版，朋友手机扫码就能进。", bullets: ["6 位房间码 / 邀请链接", "手机扫码直接加入", "媒体仍走 P2P 直连"], media: "../../assets/gracs/lobby.png", caption: "网页版进入页 · 云房间" },
       { kicker: "SHARE", title: "一起看电影，画面不抖", text: "影院模式用 WebCodecs + 服务器中继把码率固定住，弱网也不忽明忽暗；标准链路则把延迟压到最低，适合游戏与互动。", bullets: ["影院 1080p30 / 游戏 1080p60", "文字档优先保清晰度", "共享中随时切换"], media: "../../assets/gracs/room.png", caption: "房间 · 大屏观看" },
-      { kicker: "AUDIO", title: "系统声音也一起传", text: "共享时可勾选系统声音，队友直接听到视频原声；桌面版共享窗口时自动静音其它应用，避免通知音混进来。", bullets: ["浏览器 / 桌面版均可用", "窗口声音隔离（桌面版）", "声卡不兼容时自动降级仅画面"], media: "../../assets/gracs/invite.png", caption: "邀请朋友一起看" }
+      { kicker: "AUDIO", title: "只分享想分享的声音", text: "音频源可选「整机 / 跟随共享窗口 / 指定应用」：指定应用时只采集该应用的声音；语音软件不会被采进去、也不会被静音——边看边聊不再有回音。声卡驱动不兼容时桌面版自动启用兼容采集。", bullets: ["指定应用采声（Windows 进程回环）", "跟随共享窗口（窗口声音隔离）", "语音软件不受影响", "声卡不兼容自动兜底"], media: "../../assets/gracs/invite.png", caption: "邀请朋友一起看" }
     ],
     dlSub: "网页版免安装 · Windows 桌面版支持影院模式与本机开房",
     os: "Windows 10 / 11 + 任意现代浏览器",
