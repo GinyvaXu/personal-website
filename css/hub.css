@@ -79,7 +79,7 @@
   transition: border-color .2s ease, background .2s ease, color .2s ease; box-shadow: var(--shadow-sm);
 }
 .hub-filter:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
-.hub-filter.active { background: linear-gradient(135deg, var(--accent), var(--accent-2, #a855f7)); color: #fff; border-color: transparent; }
+.hub-filter.active { background: var(--grad-btn); color: #fff; border-color: transparent; }
 .hub-empty { text-align: center; padding: 44px 0 28px; opacity: .6; font-size: 14.5px; }
 
 /* ---------- 社区反馈 ---------- */
@@ -120,7 +120,7 @@
   transition: border-color .2s ease, background .2s ease, color .2s ease;
 }
 .fb-filter:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
-.fb-filter.active { background: var(--accent); border-color: transparent; color: #fff; }
+.fb-filter.active { background: var(--grad-btn); border-color: transparent; color: #fff; }
 .fb-list { display: grid; gap: 12px; max-height: 640px; overflow: auto; padding-right: 4px; }
 
 /* ---------- Skills 仓库 / 提示词仓库 ---------- */
@@ -132,7 +132,7 @@
 }
 .install-toggle:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
 .install-box { margin: 14px 0 20px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow-sm); padding: 18px 20px; }
-.install-box h4 { margin: 0 0 10px; font-size: 14px; }
+.install-box h4, .install-box h3 { margin: 0 0 10px; font-size: 14px; }
 .install-box ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 13.5px; line-height: 1.8; opacity: .85; }
 .install-box code { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px; font-size: 12.5px; }
 
@@ -177,6 +177,10 @@
 .sc-preview-bar .copy { margin-left: auto; background: rgba(255,255,255,.1); border: 0; color: #fff; font-size: 11.5px; padding: 4px 12px; border-radius: 999px; cursor: pointer; }
 .sc-preview-bar .copy:hover { background: rgba(255,255,255,.2); }
 .sc-preview pre { margin: 0; padding: 14px 16px; max-height: 320px; overflow: auto; color: #c9cede; font-family: ui-monospace, Consolas, "Cascadia Mono", monospace; font-size: 12.5px; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
+
+/* 暗色主题下徽章文字提亮（≥4.5:1） */
+[data-theme="dark"] .share-card.skill .sc-badge { color: #b8a4ff; }
+[data-theme="dark"] .share-card.prompt .sc-badge { color: #86d7fb; }
 
 @media (max-width: 900px) {
   .share-grid, .share-grid.prompts { grid-template-columns: 1fr 1fr; }

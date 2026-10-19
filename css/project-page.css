@@ -44,14 +44,14 @@
 
 .pp-dls { display: grid; gap: 10px; }
 .pp-dl { display: flex; justify-content: space-between; align-items: center; gap: 12px; text-decoration: none; }
-[data-theme="dark"] .pp-dl { color: #12142b; }              /* 深色模式下浅紫底改用深色字，保证可读 */
-[data-theme="dark"] .pp-dl:hover { color: #12142b; }
-.pp-dl em.pp-dl-note { font-style: normal; font-size: 12px; opacity: .7; }
-.pp-dl-size { font-size: 12px; opacity: .8; white-space: nowrap; }
+[data-theme="dark"] .pp-dl { color: #fff; }              /* 深色模式：按钮为深紫渐变，使用白字 */
+[data-theme="dark"] .pp-dl:hover { color: #fff; }
+.pp-dl em.pp-dl-note { font-style: normal; font-size: 12px; opacity: .85; }
+.pp-dl-size { font-size: 12px; opacity: .9; white-space: nowrap; }
 
-.pp-note { font-size: 12px; opacity: .62; margin: 12px 0 0; line-height: 1.8; }
+.pp-note { font-size: 12px; opacity: .8; margin: 12px 0 0; line-height: 1.8; }
 
-.pp-foot { margin-top: 44px; font-size: 13px; opacity: .6; text-align: center; }
+.pp-foot { margin-top: 44px; font-size: 13px; opacity: .78; text-align: center; }
 .pp-loading { padding: 70px 0; text-align: center; opacity: .6; }
 
 /* ---------- 通用适配修复 ---------- */
@@ -67,7 +67,7 @@
 .pp-ver-head b { font-size: 14.5px; color: var(--accent); }
 .pp-ver-head time { font-size: 12px; opacity: .5; }
 .pp-ver .pp-list { font-size: 13.5px; }
-.pp-faq details { border: 1px solid var(--border); border-radius: 12px; background: var(--bg); margin-bottom: 10px; overflow: hidden; }
+.pp-faq details { border: 0; border-bottom: 1px solid var(--border); border-radius: 0; background: transparent; margin-bottom: 0; }
 .pp-faq summary { cursor: pointer; list-style: none; padding: 13px 16px; font-weight: 600; font-size: 14px; position: relative; }
 .pp-faq summary::-webkit-details-marker { display: none; }
 .pp-faq summary::after { content: "+"; position: absolute; right: 16px; color: var(--accent); font-size: 17px; transition: transform .25s ease; }

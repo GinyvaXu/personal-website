@@ -24,8 +24,8 @@
 
       var colors = {
         info: ["#4f46e5", "#7c3aed"],
-        promo: ["#0ea5e9", "#6366f1"],
-        warn: ["#d97706", "#dc2626"],
+        promo: ["#0369a1", "#4338ca"],
+        warn: ["#b45309", "#b91c1c"],
       };
       var c = colors[a.type] || colors.info;
 

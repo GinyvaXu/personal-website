@@ -101,8 +101,7 @@
   var heroIsGif = heroMedia && /\.gif$/i.test(heroMedia);
 
   var featuresHtml = (L.features || []).map(function (f) {
-    return '<article class="card reveal"><span class="card-ico">' + esc(f.icon || "✦") + "</span>" +
-      "<h3>" + esc(f.title) + "</h3><p>" + esc(f.text) + "</p></article>";
+    return '<article class="card reveal"><h3><span class="card-ico">' + esc(f.icon || "✦") + "</span>" + esc(f.title) + "</h3><p>" + esc(f.text) + "</p></article>";
   }).join("");
 
   var deepHtml = (L.deep || []).map(function (d, i) {
@@ -110,7 +109,7 @@
       '<div class="deep-media"><figure class="window">' +
         (d.media ? mediaTag(d.media, d.caption || "", true) : "") +
       "</figure>" + (d.caption ? '<p class="media-cap">' + esc(d.caption) + "</p>" : "") + "</div>" +
-      '<div class="deep-body"><p class="kicker">' + esc(d.kicker || "") + "</p><h3>" + esc(d.title) + "</h3>" +
+      '<div class="deep-body"><h3>' + esc(d.title) + "</h3>" +
       "<p>" + esc(d.text) + "</p>" +
       (d.bullets ? '<ul class="tick">' + d.bullets.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + "</ul>" : "") +
       "</div></div>";
@@ -167,7 +166,7 @@
     "<main>" +
     /* 演示 */
     (demoItems.length ? '<section class="section" id="demo"><div class="container">' +
-      '<div class="section-head reveal"><p class="kicker">DEMO</p><h2>快速看懂 ' + esc(L.short || P.name) + "</h2><p class=\"section-sub\">" + esc(L.demoSub || "几张图，看完就知道它是不是你要的工具。") + "</p></div>" +
+      '<div class="section-head reveal"><h2>快速看懂 ' + esc(L.short || P.name) + "</h2><p class=\"section-sub\">" + esc(L.demoSub || "几张图，看完就知道它是不是你要的工具。") + "</p></div>" +
       '<div class="demo"><div class="demo-tabs" id="ldTabs">' + demoItems.map(function (d, i) {
         return '<button class="demo-tab' + (i === 0 ? " active" : "") + '" type="button" data-pane="ldp' + i + '">' + esc(d.label) + "</button>";
       }).join("") + "</div><div class=\"demo-stage\">" + demoItems.map(function (d, i) {
@@ -176,22 +175,22 @@
       }).join("") + "</div></div></div></section>" : "") +
     /* 功能 */
     (featuresHtml ? '<section class="section section-alt" id="features"><div class="container">' +
-      '<div class="section-head reveal"><p class="kicker">FEATURES</p><h2>' + esc(L.featuresTitle || "它能做什么") + "</h2>" +
+      '<div class="section-head reveal"><h2>' + esc(L.featuresTitle || "它能做什么") + "</h2>" +
       (L.featuresSub ? '<p class="section-sub">' + esc(L.featuresSub) + "</p>" : "") + "</div>" +
       '<div class="grid-3">' + featuresHtml + "</div></div></section>" : "") +
     /* 深度展示 */
     (deepHtml ? '<section class="section" id="deep"><div class="container">' + deepHtml + "</div></section>" : "") +
     /* 画廊 */
     (galleryHtml ? '<section class="section section-alt" id="gallery"><div class="container">' +
-      '<div class="section-head reveal"><p class="kicker">SCREENS</p><h2>界面画廊</h2><p class="section-sub">点击查看大图。</p></div>' +
+      '<div class="section-head reveal"><h2>界面画廊</h2><p class="section-sub">点击查看大图。</p></div>' +
       '<div class="gallery">' + galleryHtml + "</div></div></section>" : "") +
     /* 更新日志 */
     (changelogHtml ? '<section class="section" id="changelog"><div class="container">' +
-      '<div class="section-head reveal"><p class="kicker">CHANGELOG</p><h2>一直在更新</h2><p class="section-sub">完整说明见<a href="' + guideUrl + '">使用教程</a>。</p></div>' +
+      '<div class="section-head reveal"><h2>一直在更新</h2><p class="section-sub">完整说明见<a href="' + guideUrl + '">使用教程</a>。</p></div>' +
       '<div class="timeline reveal">' + changelogHtml + "</div></div></section>" : "") +
     /* 下载 */
     '<section class="section section-alt" id="download"><div class="container">' +
-      '<div class="section-head reveal"><p class="kicker">DOWNLOAD</p><h2>下载 ' + esc(L.short || P.name) + "</h2><p class=\"section-sub\">" + esc(L.dlSub || "免费使用 · 本地运行") + "</p></div>" +
+      '<div class="section-head reveal"><h2>下载 ' + esc(L.short || P.name) + "</h2><p class=\"section-sub\">" + esc(L.dlSub || "免费使用 · 本地运行") + "</p></div>" +
       '<div class="dl-card reveal"><div class="dl-meta">' +
         (verTag ? '<span class="chip chip-accent">' + esc((isPre ? "预览版 " : "正式版 ") + "v" + verTag.replace(/^v/i, "")) + "</span>" : "") +
         (ctaSize ? '<span class="chip">' + esc(ctaSize) + "</span>" : "") +
@@ -210,7 +209,7 @@
       "</div></div></section>" +
     /* FAQ */
     (faqHtml ? '<section class="section" id="faq"><div class="container container-narrow">' +
-      '<div class="section-head reveal"><p class="kicker">FAQ</p><h2>常见问题</h2></div>' +
+      '<div class="section-head reveal"><h2>常见问题</h2></div>' +
       '<div class="faq reveal">' + faqHtml + '</div><p class="center reveal" style="margin-top:18px"><a class="btn btn-ghost btn-sm" href="' + guideUrl + '">查看完整教程与全部问题 →</a></p></div></section>' : "") +
     /* 打赏 */
     '<section class="section section-alt" id="support"><div class="container container-narrow"><div class="support-card reveal">' +
