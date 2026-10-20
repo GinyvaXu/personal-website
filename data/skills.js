@@ -34,5 +34,21 @@ window.SKILLS = [
     "files": 1,
     "github": "https://github.com/GinyvaXu/ginyva-share/tree/main/skills/projectdock-dev",
     "cmd": "mkdir -p ~/.config/opencode/skills/projectdock-dev && curl -fsSL -o ~/.config/opencode/skills/projectdock-dev/SKILL.md \"https://cdn.jsdelivr.net/gh/GinyvaXu/ginyva-share@main/skills/projectdock-dev/SKILL.md\""
+  },
+  {
+    "id": "group-meeting-brainstorm",
+    "emoji": "🎭",
+    "name": "组会脑暴",
+    "badge": "opencode Skill",
+    "cat": "协作",
+    "desc": "让 5~6 个性格、专业、视角不同、带着私心和盲区的角色，由独立子智能体分别扮演，用真实组会的方式诊断、设计、压测、收束；产出决策日志、认领表、开发草案与可选逻辑架构图。不是一个人换声线。",
+    "tags": ["多角色", "组会", "头脑风暴", "子智能体"],
+    "updated": "2026-10-20",
+    "file": "share/skills/group-meeting-brainstorm/SKILL.md",
+    "dlName": "group-meeting-brainstorm-SKILL.md",
+    "size": "13.3 KB",
+    "files": 1,
+    "github": "https://github.com/GinyvaXu/ginyva-share/tree/main/skills/group-meeting-brainstorm",
+    "cmd": "mkdir -p ~/.config/opencode/skills/group-meeting-brainstorm && curl -fsSL -o ~/.config/opencode/skills/group-meeting-brainstorm/SKILL.md \"https://cdn.jsdelivr.net/gh/GinyvaXu/ginyva-share@main/skills/group-meeting-brainstorm/SKILL.md\""
   }
 ];
