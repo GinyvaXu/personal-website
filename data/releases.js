@@ -20,13 +20,19 @@ window.RELEASES = {
   },
   "projectdock": {
     "project": "projectdock",
-    "tag": "v1.9.0",
-    "updatedAt": "2026-09-30T10:25:01Z",
+    "tag": "v1.10.0",
+    "updatedAt": "2026-10-26T05:40:25Z",
     "base": "https://dl.ginyva.site/releases/projectdock/latest/",
     "files": [
       {
-        "name": "ProjectDock_Setup_v1.9.0.exe",
-        "size": 21585595
+        "name": "ProjectDock_Setup_v1.10.0.exe",
+        "size": 21904488,
+        "sha256": "f72bb69b971ff29402a3f88bdf642e09a1918f1c987802895d02304687386063"
+      },
+      {
+        "name": "ProjectDock_v1.10.0.exe",
+        "size": 10932947,
+        "sha256": "ebeba6da0fa12cbccacc95d973be45023068ac970496ef8dce8b760a227d7b69"
       }
     ]
   },
