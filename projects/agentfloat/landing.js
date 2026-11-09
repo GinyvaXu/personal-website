@@ -98,7 +98,7 @@
 
   /* ---------- 6. 版本信息自动获取（稳定版 + 预发布版） ---------- */
   var REPO = "GinyvaXu/AgentFloat";
-  var CACHE_KEY = "af-release-cache-v1";
+  var CACHE_KEY = "af-release-cache-v2";
 
   function fmtSize(bytes) {
     if (!bytes) return "";
@@ -119,21 +119,54 @@
   function apply(data) {
     if (!data) return;
     var stable = data.stable, beta = data.beta;
+    var rel = (window.RELEASES || {})["agentfloat"];
+    var mirrorUrl = "";
+    if (rel && rel.files && rel.files.length && stable) {
+      var stVer = String(stable.tag_name || "").replace(/^v/i, "");
+      /* 镜像启用条件：tag 与最新正式版一致，且文件名带上该版本号（防止旧包挂新 tag） */
+      if (String(rel.tag) === String(stable.tag_name) && stVer &&
+          new RegExp(stVer.replace(/\./g, "\\.")).test(String(rel.files[0].name))) {
+        mirrorUrl = rel.base + encodeURIComponent(rel.files[0].name);
+      }
+    }
     if (stable) {
       var ver = String(stable.tag_name || "").replace(/^v/i, "");
       var asset = pickAsset(stable);
-      var size = asset ? fmtSize(asset.size) : "";
-      var date = fmtDate(stable.published_at);
       setAll("[data-version]", ver);
-      setAll("[data-size]", size);
-      setAll("[data-date]", date);
+      if (asset) {
+        setAll("[data-size]", fmtSize(asset.size));
+        var sha = String(asset.digest || "").replace(/^sha256:/i, "").toUpperCase();
+        setAll("[data-sha]", sha);
+      }
+      setAll("[data-date]", fmtDate(stable.published_at));
+      /* 下载按钮：镜像 tag 与 GitHub 最新正式版一致才用镜像，否则用 GitHub Release 附件 */
+      var btn = document.getElementById("dlBtn");
+      if (btn) {
+        if (mirrorUrl) btn.href = mirrorUrl;
+        else if (asset && asset.browser_download_url) btn.href = asset.browser_download_url;
+      }
     }
+    /* 镜像入口：只有镜像 tag 与 GitHub 最新正式版一致时启用 */
+    var mlink = document.querySelector("[data-mirror-link]");
+    var mstate = document.querySelector("[data-mirror-state]");
+    if (mlink) {
+      if (mirrorUrl) {
+        mlink.href = mirrorUrl;
+        mlink.hidden = false;
+        if (mstate) mstate.hidden = true;
+      } else {
+        mlink.hidden = true;
+        if (mstate) mstate.hidden = false;
+      }
+    }
+    /* 预发布版：有非 draft 的 prerelease 才显示入口 */
+    var row = document.querySelector("[data-beta-row]");
     if (beta) {
-      setAll("[data-beta-version]", String(beta.tag_name || "").replace(/^v/i, ""));
-      var row = document.querySelector("[data-beta-row]");
-      var link = document.querySelector("[data-beta-link]");
-      if (link) link.href = beta.html_url || link.href;
+      var blink = document.querySelector("[data-beta-link]");
+      if (blink) blink.href = beta.html_url || blink.href;
       if (row) row.hidden = false;
+    } else if (row) {
+      row.hidden = true;
     }
   }
   function setAll(sel, text) {
@@ -161,25 +194,6 @@
       })
       .catch(function () { /* 静默降级：保留页面静态版本号 */ });
   }
-  /* ---------- 7. 镜像管线数据（data/releases.js）：按发布通道自动呈现 ---------- */
-  (function applyMirror() {
-    var rel = (window.RELEASES || {})["agentfloat"];
-    if (!rel || !rel.files || !rel.files.length) return;
-    var isPre = /beta|alpha|rc/i.test(rel.tag || "");
-    var url = rel.base + encodeURIComponent(rel.files[0].name);
-    var row = document.querySelector("[data-beta-row]");
-    if (isPre) {
-      /* 预览版：主按钮保持稳定版，尝鲜入口指向国内镜像 */
-      var link = document.querySelector("[data-beta-link]");
-      if (link) { link.href = url; link.title = "国内高速镜像（Cloudflare R2）"; }
-      if (row) row.hidden = false;
-    } else {
-      /* 正式版：主按钮直接指向国内镜像，隐藏尝鲜入口 */
-      if (row) row.hidden = true;
-      var btn = document.getElementById("dlBtn");
-      if (btn) btn.href = url;
-    }
-  })();
-
+  /* ---------- 7. 镜像管线数据（data/releases.js）已在 apply() 内按 tag 一致性裁决 ---------- */
   fetchReleases();
 })();

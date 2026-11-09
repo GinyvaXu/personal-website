@@ -44,8 +44,9 @@
 
 .pp-dls { display: grid; gap: 10px; }
 .pp-dl { display: flex; justify-content: space-between; align-items: center; gap: 12px; text-decoration: none; }
-[data-theme="dark"] .pp-dl { color: #fff; }              /* 深色模式：按钮为深紫渐变，使用白字 */
-[data-theme="dark"] .pp-dl:hover { color: #fff; }
+/* 下载按钮走主色渐变（深浅色一致），必须白字：.pp a 的 accent 色会覆盖 .btn-primary */
+.pp .pp-dl { color: #fff; }
+.pp .pp-dl:hover, .pp .pp-dl:focus { color: #fff; }
 .pp-dl em.pp-dl-note { font-style: normal; font-size: 12px; opacity: .85; }
 .pp-dl-size { font-size: 12px; opacity: .9; white-space: nowrap; }
 

@@ -66,6 +66,21 @@
     if (!bytes) return "";
     return (bytes / 1048576).toFixed(1).replace(/\.0$/, "") + " MB";
   }
+  /* 版本比较：把 v1.10.0 这类 tag 规范成数字段，用于判断镜像是否落后于文档版本 */
+  function verNums(tag) {
+    var m = /(\d+(?:\.\d+){0,3})/.exec(String(tag || ""));
+    return m ? m[1].split(".") : [];
+  }
+  function verGte(a, b) {
+    var A = verNums(a), B = verNums(b);
+    if (!A.length || !B.length) return true;
+    for (var i = 0; i < Math.max(A.length, B.length); i++) {
+      var x = parseInt(A[i] || 0, 10), y = parseInt(B[i] || 0, 10);
+      if (x > y) return true;
+      if (x < y) return false;
+    }
+    return true;
+  }
   function labelForFile(name) {
     if (/debug/i.test(name)) return "Debug 版";
     if (/portable/i.test(name)) return "便携版";
@@ -76,20 +91,35 @@
     var R = window.RELEASES || {};
     var m = /^projects\/([^/]+)\/?$/.exec(p.page || "");
     var rel = R[m ? m[1] : p.id];
-    if (rel && rel.files && rel.files.length) {
+    /* 镜像只有不落后于文档记录的版本时才用；否则回退到 p.downloads（GitHub 官方附件） */
+    if (rel && rel.files && rel.files.length && verGte(rel.tag, docs && docs.latest)) {
       var key = m ? m[1] : p.id;
-      return rel.files.map(function (f) {
-        return { label: labelForFile(f.name), url: "/api/dl?p=" + encodeURIComponent(key) + "&f=" + encodeURIComponent(f.name), size: fmtMb(f.size), note: "R2 镜像" };
-      });
+      return {
+        mirror: true,
+        items: rel.files.map(function (f) {
+          return { label: labelForFile(f.name), url: "/api/dl?p=" + encodeURIComponent(key) + "&f=" + encodeURIComponent(f.name), size: fmtMb(f.size), note: "R2 镜像" };
+        })
+      };
     }
-    return (p.downloads || []).map(function (d) { return { label: d.label, url: d.url, size: d.size, note: d.note }; });
+    return {
+      mirror: false,
+      items: (p.downloads || []).map(function (d) { return { label: d.label, url: d.url, size: d.size, note: d.note }; })
+    };
   }
-  var dls = downloadList(p).map(function (d) {
+  var dlInfo = downloadList(p);
+  var dls = dlInfo.items.map(function (d) {
     return '<a class="btn btn-primary pp-dl" href="' + esc(d.url) + '" target="_blank" rel="noopener noreferrer">' +
       "<span>" + esc(d.label) + (d.note ? ' <em class="pp-dl-note">' + esc(d.note) + "</em>" : "") + "</span>" +
       (d.size ? '<span class="pp-dl-size">' + esc(d.size) + " ↓</span>" : "<span>↓</span>") +
       "</a>";
   }).join("");
+  var dlNoteHtml = dlInfo.mirror
+    ? "国内高速镜像（Cloudflare R2）" +
+      (ghReleases ? '；也可在 <a href="' + esc(ghReleases) + '" target="_blank" rel="noopener noreferrer">GitHub Releases</a> 获取官方原件' : "") +
+      "。"
+    : "安装包来自 " +
+      (ghReleases ? '<a href="' + esc(ghReleases) + '" target="_blank" rel="noopener noreferrer">GitHub Releases</a>' : "GitHub Releases") +
+      " 官方附件；国内高速镜像同步后会自动切换。";
 
   var shots = (p.screenshots || []).map(function (s) {
     return '<figure class="pp-shot"><img src="' + PP + esc(s.src) + '" alt="' + esc(s.caption || p.name) + '" loading="lazy">' +
@@ -152,9 +182,7 @@
     (p.detail ? '<p class="pp-detail">' + esc(p.detail) + "</p>" : "") +
     (dls
       ? '<div class="pp-block"><h2>⬇ 下载</h2><div class="pp-dls">' + dls + "</div>" +
-        '<p class="pp-note">国内高速镜像（Cloudflare R2）' +
-        (ghReleases ? '；也可在 <a href="' + esc(ghReleases) + '" target="_blank" rel="noopener noreferrer">GitHub Releases</a> 获取官方原件' : "") +
-        "。</p></div>"
+        '<p class="pp-note">' + dlNoteHtml + "</p></div>"
       : "") +
     featuresHtml +
     usageHtml +
@@ -175,9 +203,10 @@
     try { localStorage.setItem("site-theme", dark ? "light" : "dark"); } catch (e) {}
   });
 
-  // 版本号：优先用镜像管线的 RELEASES 数据（与下载链接一致），失败再退回 GitHub API
+  // 版本号：优先用镜像管线的 RELEASES 数据（与下载链接一致），镜像落后于文档版本时用文档 latest；GitHub API 最后校准
   var relM = (window.RELEASES || {})[mirrorKey];
-  if (relM && relM.tag) setVersionChip(relM.tag);
+  if (relM && relM.tag && verGte(relM.tag, docs && docs.latest)) setVersionChip(relM.tag);
+  else if (docs && docs.latest) setVersionChip(docs.latest);
   if (ghPage) {
     var m = /github\.com\/([^\/]+)\/([^\/?#]+)/.exec(ghPage.url);
     if (m) {
