@@ -2,19 +2,19 @@
 window.RELEASES = {
   "vidar": {
     "project": "vidar",
-    "tag": "v0.14.0",
-    "updatedAt": "2026-10-13T02:57:10Z",
+    "tag": "v1.0.0",
+    "updatedAt": "2026-11-22T07:22:06Z",
     "base": "https://dl.ginyva.site/releases/vidar/latest/",
     "files": [
       {
-        "name": "VIDAR-v0.14.0-win64-portable.zip",
-        "size": 187841305,
-        "sha256": "40df52b2f4895960786fcb2e08b214c95258e887c9ee05a0003d014029197882"
+        "name": "VIDAR-v1.0.0-win64-portable.zip",
+        "size": 187996531,
+        "sha256": "3cc68094413ea29dc86a19a76a715c59acda4530279959f8feb79173f437cf9b"
       },
       {
-        "name": "VIDAR-v0.14.0-win64-portable.zip.sha256",
-        "size": 101,
-        "sha256": "3ca462b079c9cc5cf98ff568ca414643b52cc929c7c781263119936d0a303f6c"
+        "name": "VIDAR-v1.0.0-win64-portable.zip.sha256",
+        "size": 99,
+        "sha256": "e8d0edac07ab8e6d04047a70c1fec2cf4dbd19c9318e2787f5071d78452a2f8d"
       }
     ]
   },
