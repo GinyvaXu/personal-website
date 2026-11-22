@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F2ECE0">
+<title>柳荫册 · 网页演示</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234F7359'/%3E%3Cpath d='M8 22c6-1 10-5 12-12' stroke='%23F2ECE0' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --paper:#F2ECE0;
+    --paper-2:#F7F3E9;
+    --card:#FBF8F1;
+    --ink:#1A1D18;
+    --ink-2:#41473D;
+    --dim:#7D857A;
+    --dim-2:#9AA096;
+    --green:#4F7359;
+    --green-deep:#3C5A45;
+    --green-wash:rgba(79,115,89,.10);
+    --line:rgba(26,29,24,.13);
+    --line-soft:rgba(26,29,24,.07);
+    --serif:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun",serif;
+    --sans:"Noto Sans SC","Source Han Sans SC","PingFang SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+    --mono:"JetBrains Mono","IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+    --ease:cubic-bezier(.22,.61,.24,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none !important}
+  html,body{height:100%}
+  body{
+    background:#10160F;
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:14px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px 0;
+  }
+  /* ---------- 手机框 ---------- */
+  .phone{
+    position:relative;
+    width:390px;height:844px;
+    max-height:calc(100dvh - 48px);
+    background:var(--paper);
+    border-radius:34px;
+    overflow:hidden;
+    display:flex;flex-direction:column;
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.75),0 0 0 1px rgba(239,231,214,.10);
+    isolation:isolate;
+  }
+  .phone::before{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(680px 380px at 50% -8%,rgba(255,255,255,.72),transparent 62%);
+  }
+  .phone::after{
+    content:"";position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.55;
+    background:repeating-linear-gradient(0deg,rgba(26,29,24,.028) 0 1px,transparent 1px 44px);
+  }
+  .phone > *{position:relative;z-index:1}
+
+  @media (max-width:560px){
+    body{padding:0;background:var(--paper)}
+    .phone{width:100%;height:100dvh;max-height:none;border-radius:0;box-shadow:none}
+    .phone::after{opacity:.4}
+  }
+
+  /* ---------- 顶栏 ---------- */
+  .bar{
+    flex:none;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+    padding:22px 22px 14px;border-bottom:1px solid var(--line-soft);
+  }
+  .bar .bld{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--green);text-transform:uppercase}
+  .bar .name{font-family:var(--serif);font-weight:700;font-size:23px;letter-spacing:.06em;line-height:1.25;margin-top:3px}
+  .bar .count{text-align:right;flex:none}
+  .bar .count b{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--green);letter-spacing:.02em}
+  .bar .count span{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--dim);margin-top:2px}
+
+  /* ---------- 屏幕容器 ---------- */
+  .stage{flex:1;overflow:hidden;position:relative}
+  .scr{
+    position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+    padding:20px 22px 26px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .scr::-webkit-scrollbar{display:none}
+  .scr[hidden]{display:none}
+  .scr.in{animation:rise .34s var(--ease) both}
+  @keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+
+  /* ---------- 通用 ---------- */
+  .kick{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--green);text-transform:uppercase}
+  h1.t{font-family:var(--serif);font-size:27px;font-weight:700;line-height:1.3;letter-spacing:.01em;margin-top:8px}
+  p.sub{color:var(--ink-2);font-size:13.5px;line-height:1.75;margin-top:9px}
+  .muted{color:var(--dim);font-size:11.5px;line-height:1.65}
+  .hair{height:1px;background:var(--line);margin:20px 0}
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;min-height:48px;padding:0 18px;border:0;border-radius:9px;
+    background:var(--green);color:#F7F3E9;font-family:var(--sans);font-size:15px;font-weight:500;
+    letter-spacing:.04em;cursor:pointer;
+    transition:background .2s var(--ease),transform .12s var(--ease),box-shadow .2s var(--ease);
+    box-shadow:0 8px 18px -12px rgba(79,115,89,.9);
+  }
+  .btn:hover{background:var(--green-deep)}
+  .btn:active{transform:translateY(1px) scale(.995)}
+  .btn.ghost{background:transparent;color:var(--green);border:1px solid rgba(79,115,89,.42);box-shadow:none}
+  .btn.ghost:hover{background:var(--green-wash)}
+  .btn.demo{
+    background:transparent;color:var(--green-deep);border:1px dashed rgba(79,115,89,.5);
+    box-shadow:none;font-size:13.5px;
+  }
+  .btn.demo:hover{background:var(--green-wash)}
+  .btn:focus-visible,a:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+  .link{
+    display:inline-block;background:none;border:0;padding:0;margin-top:14px;
+    font-family:var(--sans);font-size:12.5px;color:var(--dim);cursor:pointer;
+    border-bottom:1px solid rgba(26,29,24,.18);line-height:1.5;
+  }
+  .link:hover{color:var(--green);border-bottom-color:rgba(79,115,89,.55)}
+  .tag{
+    display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;
+    padding:2px 7px;border-radius:3px;background:var(--green-wash);color:var(--green);vertical-align:middle;
+  }
+  .tag.plain{background:rgba(26,29,24,.05);color:var(--dim)}
+
+  /* ---------- 顺路卡 ---------- */
+  .card{
+    background:var(--card);border:1px solid var(--line-soft);border-radius:11px;
+    padding:16px 16px 15px;
+    box-shadow:0 1px 0 rgba(255,255,255,.85) inset;
+  }
+  .card + .card{margin-top:10px}
+  .card .row1{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .card .who{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:.02em}
+  .card .tm{font-family:var(--mono);font-size:15px;color:var(--green);letter-spacing:.02em;font-weight:500}
+  .card .route{margin-top:9px;font-size:13.5px;color:var(--ink-2);line-height:1.7}
+  .card .route .dot{color:var(--dim-2);padding:0 6px}
+  .card .meta{margin-top:9px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .card .note{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--dim);font-style:italic}
+  .mine{border-color:rgba(79,115,89,.34);background:var(--card)}
+
+  .sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin:22px 0 10px}
+  .empty{font-size:12.5px;color:var(--dim);padding:14px 0}
+
+  /* ---------- 表单 ---------- */
+  .field{margin-top:16px}
+  .field > label{display:block;font-size:12px;letter-spacing:.06em;color:var(--dim);margin-bottom:7px}
+  .inp{
+    width:100%;min-height:46px;padding:0 13px;border:1px solid var(--line);border-radius:8px;
+    background:var(--card);font-family:var(--inherit, inherit);font-size:14.5px;color:var(--ink);
+    font-family:var(--mono);letter-spacing:.03em;
+  }
+  input.inp{font-size:15px}
+  .inp:focus{outline:none;border-color:rgba(79,115,89,.62);box-shadow:0 0 0 3px var(--green-wash)}
+  .pills{display:flex;gap:8px}
+  .pill{
+    flex:1;min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--card);
+    font-family:var(--mono);font-size:14px;color:var(--ink-2);cursor:pointer;
+    transition:.18s var(--ease);
+  }
+  .pill[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#F7F3E9}
+  .pill:hover{border-color:rgba(79,115,89,.45)}
+  .hint{margin-top:10px;font-size:11.5px;color:var(--dim);line-height:1.65}
+  .formnote{
+    margin-top:20px;padding:12px 13px;border-left:2px solid rgba(79,115,89,.4);
+    background:rgba(79,115,89,.05);font-size:11.5px;color:var(--ink-2);line-height:1.75;
+    border-radius:0 6px 6px 0;
+  }
+
+  /* ---------- 步骤条 ---------- */
+  .steps{display:flex;gap:5px;margin-bottom:18px}
+  .steps i{
+    flex:1;height:2px;border-radius:2px;background:rgba(26,29,24,.12);transition:background .3s var(--ease);
+  }
+  .steps i.on{background:var(--green)}
+
+  /* ---------- 双确认 ---------- */
+  .conf{
+    display:flex;gap:12px;align-items:flex-start;padding:14px 15px;
+    border:1px solid var(--line-soft);border-radius:10px;background:var(--card);
+  }
+  .conf + .conf{margin-top:9px}
+  .conf .idx{
+    flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+    font-family:var(--mono);font-size:11px;border:1px solid rgba(79,115,89,.4);color:var(--green);
+    margin-top:1px;
+  }
+  .conf.done .idx{background:var(--green);color:#F7F3E9;border-color:var(--green)}
+  .conf .body{flex:1;min-width:0}
+  .conf .h{font-size:13.5px;font-weight:500;letter-spacing:.01em}
+  .conf .d{font-size:11.5px;color:var(--dim);margin-top:3px;line-height:1.6}
+  .conf .st{flex:none;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--dim-2);margin-top:2px}
+  .conf.done .st{color:var(--green)}
+
+  /* ---------- 取件码票券 ---------- */
+  .ticket{
+    position:relative;margin:20px 0 4px;padding:24px 18px 20px;
+    background:var(--card);border:1px solid rgba(79,115,89,.34);border-radius:12px;
+    text-align:center;overflow:hidden;
+  }
+  .ticket::before,.ticket::after{
+    content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:var(--paper);
+    top:50%;margin-top:-9px;
+  }
+  .ticket::before{left:-10px}
+  .ticket::after{right:-10px}
+  .ticket .lb{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
+  .ticket .code{
+    font-family:var(--mono);font-size:40px;font-weight:500;letter-spacing:.06em;color:var(--ink);
+    line-height:1.2;margin:8px 0 6px;
+  }
+  .ticket .code em{color:var(--green);font-style:normal}
+  .ticket .cap{font-size:11px;color:var(--dim);letter-spacing:.04em}
+
+  /* ---------- 账本 ---------- */
+  .ledger{border-top:1px solid var(--line)}
+  .entry{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line-soft)}
+  .entry .txt{font-family:var(--serif);font-size:14px;line-height:1.6}
+  .entry .txt b{font-weight:700}
+  .entry .st{flex:none;font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.06em}
+  .entry .st.new{color:var(--green);opacity:.95}
+  .rules{list-style:none;margin-top:6px}
+  .rules li{
+    display:flex;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line-soft);
+    font-size:13px;color:var(--ink-2);
+  }
+  .rules li:last-child{border-bottom:0}
+  .rules li b{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--green);flex:none;width:44px}
+
+  /* ---------- 结单 ---------- */
+  .end{padding-top:6px;text-align:left}
+  .end .big{
+    font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.62;letter-spacing:.01em;
+    margin:10px 0 0;
+  }
+  .end .big em{font-style:normal;color:var(--green);border-bottom:1px solid rgba(79,115,89,.35);padding-bottom:1px}
+  .end .small{font-size:12.5px;color:var(--dim);line-height:1.8;margin-top:16px}
+  .seal{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--green);text-transform:uppercase;
+    border:1px solid rgba(79,115,89,.35);border-radius:3px;padding:3px 8px;display:inline-block;
+  }
+
+  /* ---------- 底栏 ---------- */
+  .foot{
+    flex:none;padding:12px 22px 16px;border-top:1px solid var(--line-soft);
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .foot .nav{display:flex;gap:18px}
+  .foot .nav button{
+    background:none;border:0;padding:2px 0;cursor:pointer;
+    font-family:var(--sans);font-size:12.5px;color:var(--dim);letter-spacing:.04em;
+    border-bottom:1px solid transparent;line-height:1.4;transition:.2s var(--ease);
+  }
+  .foot .nav button.on{color:var(--green);border-bottom-color:rgba(79,115,89,.6)}
+  .foot .nav button:hover{color:var(--ink-2)}
+  .foot .safe{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--dim-2);text-align:right;line-height:1.5}
+
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (prefers-reduced-motion:reduce){
+    .scr.in{animation:none}
+    *{transition:none !important}
+  }
+</style>
+</head>
+<body>
+<main class="phone" id="phone">
+  <!-- 顶栏 -->
+  <header class="bar">
+    <div>
+      <div class="bld" id="bld">6 号楼 · 3 层</div>
+      <div class="name">柳荫册</div>
+    </div>
+    <div class="count">
+      <b id="cnt">2</b>
+      <span>件顺路</span>
+    </div>
+  </header>
+
+  <div class="stage">
+    <!-- 1 楼里 -->
+    <section class="scr in" id="scr-home">
+      <div class="kick">楼里 · 今天</div>
+      <h1 class="t">谁正好经过，<br>就顺手带一件。</h1>
+      <p class="sub">顺路卡只写三件事：几点、从哪回哪、能带几件。<br>不接单，不派单，也不承诺时间。</p>
+
+      <div id="mine-wrap" hidden>
+        <div class="sec">我的 · 进行中</div>
+        <div id="mine-card"></div>
+      </div>
+
+      <div class="sec">楼里的顺路</div>
+      <div id="others"></div>
+
+      <button class="btn" id="go-post" style="margin-top:22px">发一条顺路卡</button>
+      <p class="hint" style="text-align:center">挂卡不占谁的时间，只是把「我正好经过」说出来。</p>
+    </section>
+
+    <!-- 2 发卡 -->
+    <section class="scr" id="scr-post" hidden>
+      <div class="steps" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+      <div class="kick">发一条顺路卡</div>
+      <h1 class="t">写清楚路线，<br>就不用多说一句客气话。</h1>
+
+      <div class="field">
+        <label for="f-time">几点</label>
+        <input class="inp" id="f-time" type="time" value="18:10">
+      </div>
+      <div class="field">
+        <label for="f-from">从哪</label>
+        <select class="inp" id="f-from">
+          <option>驿站</option>
+          <option>菜鸟驿站</option>
+          <option>快递柜</option>
+          <option>楼下便利店</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-to">回哪</label>
+        <select class="inp" id="f-to">
+          <option>6 号楼</option>
+          <option>3 层门口</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>能带几件</label>
+        <div class="pills" id="f-cap">
+          <button class="pill" data-n="1" aria-pressed="false">1 件</button>
+          <button class="pill" data-n="2" aria-pressed="true">2 件</button>
+          <button class="pill" data-n="3" aria-pressed="false">3 件</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-note">留一句（可不写）</label>
+        <input class="inp" id="f-note" type="text" maxlength="24" placeholder="顺手，不用客气" style="font-family:var(--sans)">
+      </div>
+
+      <button class="btn" id="do-post" style="margin-top:22px">挂上去</button>
+      <div class="formnote">
+        挂出去的是路线，不是承诺：不接单、不派单、不承诺时效。<br>
+        别人要带，是他自己顺路，不是你派的活。
+      </div>
+    </section>
+
+    <!-- 3 我这单 -->
+    <section class="scr" id="scr-card" hidden>
+      <div class="steps" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+      <div class="kick">顺路卡 · 进行中</div>
+      <div id="card-body" style="margin-top:14px"></div>
+
+      <div id="wait-take">
+        <p class="sub" style="margin-top:20px">卡挂出去了。楼里有人正好走这条线，就会自己接。</p>
+        <button class="btn demo" id="do-take" style="margin-top:18px">演示：小柳接单</button>
+        <p class="hint" id="demo-note">这一下只在本机模拟，不会通知任何人，也不会有真的订单。</p>
+      </div>
+
+      <button class="link" id="back-home-1">← 回楼里</button>
+    </section>
+
+    <!-- 4 双确认 -->
+    <section class="scr" id="scr-confirm" hidden>
+      <div class="steps" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      <div class="kick">双确认 · 一人一下</div>
+      <h1 class="t">两边都点了，<br>这单才算数。</h1>
+      <p class="sub">取件码由发单方给，接的人凭码取件——这样谁都不会白跑。</p>
+
+      <div style="margin-top:18px">
+        <div class="conf" id="conf-a">
+          <div class="idx">1</div>
+          <div class="body">
+            <div class="h">小柳 · 我顺路，带得下</div>
+            <div class="d">6 号楼 3 层 · 走这条线回家</div>
+          </div>
+          <div class="st" id="st-a">待确认</div>
+        </div>
+        <div class="conf" id="conf-b">
+          <div class="idx">2</div>
+          <div class="body">
+            <div class="h">你 · 我把件和码交给小柳</div>
+            <div class="d">件在驿站，取件码只给他一个人</div>
+          </div>
+          <div class="st" id="st-b">待确认</div>
+        </div>
+      </div>
+
+      <button class="btn" id="do-confirm" style="margin-top:22px">我确认（第 2 步）</button>
+      <p class="hint" id="demo-note-2">第 1 步由「演示：小柳接单」完成；这里只补发单方这一下。</p>
+
+      <div id="code-wrap" hidden>
+        <div class="ticket">
+          <div class="lb">取件码</div>
+          <div class="code"><em>A</em>·1236</div>
+          <div class="cap">只给接单的人 · 凭码取件</div>
+        </div>
+        <button class="btn" id="do-deliver" style="margin-top:14px">小柳已送到 3 层门口</button>
+        <p class="hint" style="text-align:center">这一单的路线：驿站 → 6 号楼 → 3 层门口</p>
+      </div>
+
+      <button class="link" id="back-home-2">← 回楼里</button>
+    </section>
+
+    <!-- 5 记一笔 -->
+    <section class="scr" id="scr-ledger" hidden>
+      <div class="steps" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+      <div class="kick">人情点 · 只记一句</div>
+      <h1 class="t">账本上多了一句：<br>欠一次。</h1>
+      <p class="sub">不写金额，不写分数，不写排名。写下来的只是「谁帮过谁」。</p>
+
+      <div class="ledger" id="ledger-list" style="margin-top:18px"></div>
+
+      <div class="sec">五条边界</div>
+      <ul class="rules">
+        <li><b>不兑钱</b><span>点数换不成钱，也买不到东西</span></li>
+        <li><b>不转赠</b><span>不能送给别人，也不能卖</span></li>
+        <li><b>不计息</b><span>放久了也不会变多</span></li>
+        <li><b>不催收</b><span>没有提醒、没有排名、没有催</span></li>
+        <li><b>不跨楼</b><span>只在这一栋楼里算数</span></li>
+      </ul>
+
+      <button class="btn" id="go-done" style="margin-top:22px">看一眼这一单的结尾</button>
+    </section>
+
+    <!-- 6 结单 -->
+    <section class="scr" id="scr-done" hidden>
+      <div class="steps" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      <span class="seal">已结单 · 18:15</span>
+      <div class="end">
+        <div class="big">这一单走完了，<br>账上只多了一句：<br><em>欠一次</em>。</div>
+        <p class="small">
+          没有积分，没有等级，没有利息，也没有人会来催。<br>
+          下次你顺路，把它带回去就行。
+        </p>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <div class="row1">
+          <div class="who">小柳 · 6 号楼 3 层</div>
+          <div class="tm">18:10</div>
+        </div>
+        <div class="route">驿站<span class="dot">→</span>6 号楼<span class="dot">→</span>3 层门口</div>
+        <div class="meta"><span class="tag">顺手带 2 件</span><span class="tag plain">取件码 A·1236</span></div>
+      </div>
+
+      <button class="btn ghost" id="go-ledger-2" style="margin-top:20px">看账本</button>
+      <button class="link" id="do-reset">从头再走一遍（清掉本机数据）</button>
+    </section>
+  </div>
+
+  <!-- 底栏 -->
+  <footer class="foot">
+    <nav class="nav">
+      <button id="nav-home" class="on">楼里</button>
+      <button id="nav-ledger">账本</button>
+    </nav>
+    <div class="safe">演示版<br>数据不离开本机</div>
+  </footer>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var KEY = "liuyin-demo-v1";
+  var OTHERS = [
+    {who:"小柳", tm:"18:10", from:"驿站", to:"6 号楼", cap:2, note:"顺手，不用客气"},
+    {who:"老周", tm:"19:30", from:"菜鸟驿站", to:"6 号楼", cap:1, note:""}
+  ];
+
+  var S = load();
+
+  function load(){
+    var base = {step:"home", mine:null, confirms:0, code:null, delivered:false,
+                entries:[{txt:"<b>我</b> 帮老周带过一次", when:"上周"}], tab:"home"};
+    try{
+      var raw = localStorage.getItem(KEY);
+      if(raw){
+        var p = JSON.parse(raw);
+        if(p && typeof p === "object"){ return Object.assign(base, p); }
+      }
+    }catch(e){}
+    return base;
+  }
+  function save(){
+    try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  }
+
+  var $ = function(id){ return document.getElementById(id); };
+  var screens = {home:$("scr-home"), post:$("scr-post"), card:$("scr-card"),
+                 confirm:$("scr-confirm"), ledger:$("scr-ledger"), done:$("scr-done")};
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function show(name){
+    Object.keys(screens).forEach(function(k){
+      var el = screens[k];
+      if(k === name){
+        el.hidden = false;
+        el.classList.remove("in");
+        void el.offsetWidth;
+        el.classList.add("in");
+        el.scrollTop = 0;
+      }else{
+        el.hidden = true;
+      }
+    });
+    S.step = name;
+    save();
+    render();
+  }
+
+  function routeLabel(c){
+    return esc(c.from) + '<span class="dot">→</span>' + esc(c.to) + '<span class="dot">·</span>可带 ' + c.cap + ' 件';
+  }
+
+  function cardHTML(c, opts){
+    opts = opts || {};
+    var note = c.note ? '<div class="note">「' + esc(c.note) + '」</div>' : "";
+    return '<div class="card' + (opts.mine ? ' mine' : '') + '">' +
+      '<div class="row1"><div class="who">' + esc(c.who) + (opts.mine ? ' <span class="tag">我的</span>' : '') + '</div>' +
+      '<div class="tm">' + esc(c.tm) + '</div></div>' +
+      '<div class="route">' + routeLabel(c) + '</div>' +
+      '<div class="meta">' + (opts.badge || "") + '</div>' + note + '</div>';
+  }
+
+  function render(){
+    // 顶栏件数：楼里别人挂的 + 我这单（未收货才算）
+    var n = OTHERS.length + (S.mine && !S.delivered ? 1 : 0);
+    $("cnt").textContent = String(n);
+
+    // 楼里
+    var others = OTHERS.map(function(o){
+      var badge = '<span class="tag plain">楼里的顺路</span>';
+      return cardHTML({who:o.who, tm:o.tm, from:o.from, to:o.to, cap:o.cap, note:o.note}, {badge:badge});
+    }).join("");
+    $("others").innerHTML = others;
+
+    if(S.mine){
+      $("mine-wrap").hidden = false;
+      var tag = S.delivered ? '<span class="tag">已结单</span>'
+              : (S.confirms >= 2 ? '<span class="tag">待送达</span>' : '<span class="tag">进行中</span>');
+      $("mine-card").innerHTML = cardHTML(
+        {who:"我", tm:S.mine.tm, from:S.mine.from, to:S.mine.to, cap:S.mine.cap, note:S.mine.note},
+        {mine:true, badge:tag}
+      );
+    }else{
+      $("mine-wrap").hidden = true;
+    }
+
+    // 详情页
+    if(S.mine){
+      $("card-body").innerHTML = cardHTML(
+        {who:"我", tm:S.mine.tm, from:S.mine.from, to:S.mine.to, cap:S.mine.cap, note:S.mine.note},
+        {mine:true, badge:S.delivered ? '<span class="tag">已结单</span>' : '<span class="tag">进行中</span>'}
+      );
+      $("wait-take").hidden = (S.confirms > 0);
+    }
+
+    // 双确认
+    if(S.confirms >= 1){
+      $("conf-a").classList.add("done");
+      $("st-a").textContent = "已确认";
+    }
+    if(S.confirms >= 2){
+      $("conf-b").classList.add("done");
+      $("st-b").textContent = "已确认";
+      $("code-wrap").hidden = false;
+      $("do-confirm").hidden = true;
+      $("demo-note-2").hidden = true;
+    }
+
+    // 账本
+    $("ledger-list").innerHTML = S.entries.map(function(e){
+      return '<div class="entry"><div class="txt">' + e.txt + '</div><div class="st">欠一次</div></div>';
+    }).join("") || '<div class="empty">还没有人欠谁，也还没人记着。</div>';
+
+    // 底栏导航
+    $("nav-home").classList.toggle("on", S.step !== "ledger");
+    $("nav-ledger").classList.toggle("on", S.step === "ledger");
+  }
+
+  // ---- 发卡 ----
+  var cap = 2;
+  $("f-cap").addEventListener("click", function(ev){
+    var b = ev.target.closest(".pill");
+    if(!b) return;
+    cap = parseInt(b.dataset.n, 10);
+    Array.prototype.forEach.call(this.querySelectorAll(".pill"), function(p){
+      p.setAttribute("aria-pressed", String(p === b));
+    });
+  });
+
+  $("go-post").addEventListener("click", function(){ show("post"); });
+
+  $("do-post").addEventListener("click", function(){
+    var tm = $("f-time").value || "18:10";
+    S.mine = {
+      tm: tm,
+      from: $("f-from").value,
+      to: $("f-to").value,
+      cap: cap,
+      note: ($("f-note").value || "").trim()
+    };
+    S.confirms = 0; S.delivered = false; S.code = null;
+    save();
+    show("card");
+  });
+
+  // ---- 演示接单 ----
+  $("do-take").addEventListener("click", function(){
+    S.confirms = 1;
+    save();
+    show("confirm");
+  });
+
+  // ---- 发单方确认 ----
+  $("do-confirm").addEventListener("click", function(){
+    S.confirms = 2;
+    S.code = "A·1236";
+    save();
+    show("confirm");
+  });
+
+  // ---- 送达，记一笔 ----
+  $("do-deliver").addEventListener("click", function(){
+    var first = !S.delivered;
+    S.delivered = true;
+    if(first){
+      S.entries.unshift({txt:"<b>小柳</b> 帮我把件带到 3 层门口", when:"刚刚"});
+    }
+    save();
+    show("ledger");
+  });
+
+  $("go-done").addEventListener("click", function(){ show("done"); });
+  $("go-ledger-2").addEventListener("click", function(){ show("ledger"); });
+
+  $("do-reset").addEventListener("click", function(){
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    S = load();
+    cap = 2;
+    Array.prototype.forEach.call($("f-cap").querySelectorAll(".pill"), function(p){
+      p.setAttribute("aria-pressed", String(p.dataset.n === "2"));
+    });
+    $("conf-a").classList.remove("done");
+    $("conf-b").classList.remove("done");
+    $("st-a").textContent = "待确认";
+    $("st-b").textContent = "待确认";
+    $("code-wrap").hidden = true;
+    $("do-confirm").hidden = false;
+    $("demo-note-2").hidden = false;
+    show("home");
+  });
+
+  // ---- 导航 ----
+  $("nav-home").addEventListener("click", function(){ show("home"); });
+  $("nav-ledger").addEventListener("click", function(){ show("ledger"); });
+  $("back-home-1").addEventListener("click", function(){ show("home"); });
+  $("back-home-2").addEventListener("click", function(){ show("home"); });
+
+  // 恢复上次所在屏（保持演示可继续）
+  var start = S.step && screens[S.step] ? S.step : "home";
+  if(start === "confirm" && !S.mine) start = "home";
+  if(start === "card" && !S.mine) start = "home";
+  show(start);
+})();
+</script>
+</body>
+</html>
