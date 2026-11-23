@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ece6da">
+<meta name="robots" content="noindex,nofollow">
+<title>柳荫册 · 管理后台</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234F7359'/%3E%3Cpath d='M8 22c6-1 10-5 12-12' stroke='%23F4EFE4' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../app.css">
+</head>
+<body class="admin">
+<div class="admin-wrap">
+  <header class="admin-head">
+    <div>
+      <div class="kick">6 号楼 · 管理后台</div>
+      <h1 class="admin-title">柳荫册 · 楼里的账</h1>
+      <div class="admin-sub" id="admin-sub">看人数、看订单，也负责把不该留的删掉。</div>
+    </div>
+    <div class="admin-actions" id="head-actions"></div>
+  </header>
+  <main id="view"></main>
+  <div class="admin-foot">清理操作不可撤销 · 数据只在这栋楼里</div>
+</div>
+<div class="admin-toast" id="toast" role="status" aria-live="polite"></div>
+<script src="../_mock.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
