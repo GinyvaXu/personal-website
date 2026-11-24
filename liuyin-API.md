@@ -1,4 +1,7 @@
-# 柳荫册 Web 版 · 接口契约
+# 柳荫册 Web 版 · 接口契约（v1，历史）
+
+> ⚠️ 2026-11-24 已升级为 v2（模板/步骤/双确认/顺路卡/机器人/管理台）。最新契约见 `dev/liuyin-parity/PARITY-PLAN.md` §3；小程序侧规格见 `dev/liuyin-parity/MINIPROGRAM-SPEC.md`；本文件仅作 v1 历史参考。
+
 
 > 后端：Cloudflare Pages Functions（`functions/api/liuyin/`）
 > 数据库：D1（表 `ly_*`，绑定名 `env.DB`）
