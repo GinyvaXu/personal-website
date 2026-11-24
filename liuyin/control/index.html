@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="theme-color" content="#10160f">
+<title>提词台 · 柳荫册</title>
+<style>
+  :root{
+    --bg:#10160f; --card:#181f18; --card2:#1d251d; --line:rgba(239,231,214,.12);
+    --ink:#ece4d4; --ink2:#b9b4a4; --dim:#7d8478; --green:#8fae95; --red:#ff7a68;
+    --serif:"Noto Serif SC","Songti SC",serif;
+    --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);
+    display:flex;flex-direction:column;overflow:hidden;
+    padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+  /* 顶栏 */
+  header{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:12px 16px 10px;border-bottom:1px solid var(--line);flex:none}
+  .brand{font-family:var(--serif);font-size:16px;letter-spacing:.04em}
+  .brand small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;
+    color:var(--dim);margin-top:3px;font-weight:400}
+  .stat{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.08em;padding:5px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink2)}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--dim)}
+  .stat.on .dot{background:#7ec98d;box-shadow:0 0 0 3px rgba(126,201,141,.15)}
+  .stat.off{color:#e08a7c;border-color:rgba(255,122,104,.35)}
+  .stat.off .dot{background:var(--red)}
+  /* 页码条 */
+  .pager{display:flex;align-items:center;gap:12px;padding:12px 16px;flex:none}
+  .pgbtn{width:46px;height:46px;flex:none;border-radius:12px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink);font-size:22px;line-height:1;cursor:pointer}
+  .pgbtn:active{background:var(--card2);transform:scale(.96)}
+  .pginfo{flex:1;min-width:0;text-align:center}
+  .pginfo b{font-family:var(--mono);font-size:19px;letter-spacing:.06em}
+  .pginfo span{display:block;font-size:12.5px;color:var(--ink2);margin-top:3px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* 提词区 */
+  .script{flex:1;min-height:0;margin:4px 14px 0;border-radius:14px;background:var(--card);
+    border:1px solid var(--line);overflow-y:auto;-webkit-overflow-scrolling:touch;
+    padding:18px 18px 28px;position:relative}
+  .script p{font-family:var(--serif);font-size:19px;line-height:1.95;color:var(--ink);
+    text-align:justify;letter-spacing:.01em}
+  .script p + p{margin-top:14px}
+  .script .empty{color:var(--dim);font-size:14px;text-align:center;padding:40px 0}
+  /* 工具条 */
+  .tools{display:flex;align-items:center;gap:8px;padding:10px 16px 6px;flex:none;flex-wrap:wrap}
+  .tool{min-height:38px;padding:0 10px;border-radius:10px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink2);font-size:13px;font-family:var(--sans);cursor:pointer}
+  .tool:active{background:var(--card2)}
+  .tool.warn{color:var(--red);border-color:rgba(255,122,104,.3)}
+  .spacer{flex:1}
+  /* 底部大按钮 */
+  .actions{display:flex;gap:10px;padding:6px 14px 14px;flex:none}
+  .big{flex:1;height:62px;border-radius:14px;border:1px solid var(--line);background:var(--card);
+    color:var(--ink);font-size:16px;font-family:var(--sans);letter-spacing:.04em;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px}
+  .big:active{transform:scale(.985);background:var(--card2)}
+  .big.primary{background:var(--green);color:#10160f;border-color:transparent;font-weight:600}
+  .big.primary:active{background:#7fa387}
+  /* 页码抽屉 */
+  .grid{position:fixed;inset:0;z-index:40;background:rgba(8,11,8,.82);
+    display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(6px)}
+  .grid.on{display:flex}
+  .grid .inner{width:100%;max-width:420px;background:var(--card);border:1px solid var(--line);
+    border-radius:18px;padding:18px}
+  .grid h3{font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:14px;color:var(--ink2)}
+  .grid .cells{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:52vh;overflow-y:auto}
+  .grid .cells button{display:flex;align-items:center;gap:9px;min-width:0;min-height:46px;padding:8px 11px;
+    border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--ink);
+    font-family:var(--sans);font-size:13.5px;cursor:pointer;text-align:left}
+  .grid .cells button i{font-family:var(--mono);font-style:normal;font-size:12px;color:var(--dim);
+    width:20px;flex:none;text-align:right}
+  .grid .cells button span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}\n  .grid .cells button i{flex:none}\n  .grid .cells button em{flex:none}
+  .grid .cells button em{font-style:normal;font-size:10px;color:var(--green);flex:none}
+  .grid .cells button.cur{background:var(--green);color:#10160f;border-color:transparent;font-weight:600}
+  .grid .cells button.cur i,.grid .cells button.cur em{color:rgba(16,22,15,.6)}
+  .tool[disabled]{opacity:.38;pointer-events:none}
+  .grid .cells button.cur{background:var(--green);color:#10160f;border-color:transparent;font-weight:600}
+  .grid .close{margin-top:16px;width:100%;height:46px;border-radius:12px;border:1px solid var(--line);
+    background:transparent;color:var(--ink2);font-size:14px;cursor:pointer}
+
+  /* ---------- iPad / 大屏：限宽居中，行长不变太长 ---------- */
+  @media (min-width:700px){
+    body{max-width:860px;margin:0 auto;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+    .script p{font-size:23px;line-height:2.05}
+    .big{height:70px;font-size:17px}
+    .pgbtn{width:54px;height:54px;font-size:26px}
+    .pginfo b{font-size:22px}
+    .grid .inner{max-width:520px}
+    .grid .cells{grid-template-columns:repeat(3,1fr)}
+  }
+  /* 连接失败提示 */
+  .toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,10px);z-index:50;
+    max-width:86%;padding:10px 16px;border-radius:10px;background:rgba(208,80,60,.94);color:#fff;
+    font-size:13px;line-height:1.5;text-align:center;opacity:0;pointer-events:none;
+    transition:opacity .2s,transform .2s}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">提词台<small>LIUYIN · TELEPROMPTER</small></div>
+    <div class="stat" id="stat"><i class="dot"></i><span id="statTxt">连接中</span></div>
+  </header>
+
+  <div class="pager">
+    <button class="pgbtn" id="prev" aria-label="上一页">‹</button>
+    <div class="pginfo"><b id="pgNum">— / 14</b><span id="pgTitle">等待演示端</span></div>
+    <button class="pgbtn" id="next" aria-label="下一页">›</button>
+  </div>
+
+  <div class="script" id="script"><div class="empty">等演示端打开后，这里会显示当前页的稿子。</div></div>
+
+  <div class="tools">
+    <button class="tool" id="minus">A−</button>
+    <button class="tool" id="plus">A＋</button>
+    <button class="tool" id="follow">跟随：开</button>
+    <button class="tool" id="act" disabled>无交互</button>
+    <span class="spacer"></span>
+    <button class="tool" id="pages">页码</button>
+    <button class="tool warn" id="reset">重开</button>
+  </div>
+
+  <div class="actions">
+    <button class="big" id="prevBig">‹ 上一页</button>
+    <button class="big primary" id="nextBig">下一页 ›</button>
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="inner">
+      <h3>跳到第几页</h3>
+      <div class="cells" id="cells"></div>
+      <button class="close" id="gridClose">关闭</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var ROOM = (params.get('room') || 'finals').slice(0, 32);
+  var API = '/api/liuyin/pres';
+  var TOTAL = 14;
+
+  var SLIDES = [];
+  var page = 0, follow = true, fs = 19, lastStateAt = 0, alive = false, localUntil = 0;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var scriptEl = $('script'), pgNum = $('pgNum'), pgTitle = $('pgTitle');
+  var statEl = $('stat'), statTxt = $('statTxt');
+
+  function toast(msg){
+    var t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+  }
+
+  // ---------- 稿子 ----------
+  fetch('script.json?v=1', { cache: 'force-cache' })
+    .then(function(r){ return r.json(); })
+    .then(function(list){ SLIDES = list || []; buildCells(); render(); })
+    .catch(function(){ SLIDES = []; render(); });
+
+  function render(){
+    var s = SLIDES[page];
+    pgNum.textContent = (page + 1) + ' / ' + TOTAL;
+    pgTitle.textContent = s ? s.title : '（未取到稿子）';
+    scriptEl.style.fontSize = fs + 'px';
+    if(!s){ scriptEl.innerHTML = '<div class="empty">这一页没有稿子。</div>'; return; }
+    var parts = (s.text || '').split(/\n\n+/).filter(Boolean);
+    scriptEl.innerHTML = parts.map(function(p){ return '<p>' + esc(p) + '</p>'; }).join('') ||
+      '<div class="empty">这一页没有稿子。</div>';
+    if(follow) scriptEl.scrollTop = 0;
+    if(typeof syncActBtn === 'function') syncActBtn();
+    // 抽屉高亮
+    Array.prototype.forEach.call(document.querySelectorAll('#cells button'), function(b, i){
+      b.classList.toggle('cur', i === page);
+    });
+  }
+  function esc(t){
+    return String(t).replace(/[&<>"]/g, function(c){
+      return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' })[c];
+    });
+  }
+
+  // ---------- 命令 ----------
+  function send(cmd, arg){
+    fetch(API + '/cmd', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ room: ROOM, cmd: cmd, arg: arg == null ? null : String(arg) })
+    }).then(function(r){ return r.json(); }).then(function(j){
+      if(!j || !j.ok) toast((j && j.error) || '命令没发出去');
+    }).catch(function(){ toast('网络异常，命令没发出去'); });
+  }
+  function goto(n){
+    n = Math.max(0, Math.min(TOTAL - 1, n));
+    localUntil = Date.now() + 1500;      // 本地优先 1.5 秒，避免被旧状态拉回去
+    send('go', n);
+    page = n; render();            // 本地先动，手感跟手
+  }
+
+  // ---------- 轮询演示端状态 ----------
+  function poll(){
+    fetch(API + '/state?room=' + encodeURIComponent(ROOM), { cache: 'no-store' })
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(!j || !j.ok) throw new Error('bad');
+        var d = j.data || {};
+        lastStateAt = Date.now();
+        alive = !d.stale;
+        statEl.className = 'stat ' + (alive ? 'on' : 'off');
+        statTxt.textContent = alive ? '演示端在线' : '演示端未连接';
+        if(Date.now() > localUntil && typeof d.page === 'number' && d.page !== page){
+          page = Math.max(0, Math.min(TOTAL - 1, d.page));
+          render();
+        }
+      })
+      .catch(function(){
+        statEl.className = 'stat off';
+        statTxt.textContent = '离线';
+      });
+  }
+  setInterval(poll, 900); poll();
+
+  // ---------- 交互 ----------
+  $('prev').onclick = $('prevBig').onclick = function(){ goto(page - 1); };
+  $('next').onclick = $('nextBig').onclick = function(){ goto(page + 1); };
+  $('minus').onclick = function(){ fs = Math.max(14, fs - 2); scriptEl.style.fontSize = fs + 'px'; };
+  $('plus').onclick = function(){ fs = Math.min(34, fs + 2); scriptEl.style.fontSize = fs + 'px'; };
+  $('follow').onclick = function(){
+    follow = !follow;
+    this.textContent = '跟随：' + (follow ? '开' : '关');
+  };
+  $('act').onclick = function(){
+    if(!ACTIVE_PAGES[page + 1]) { toast('这一页没有可重放的交互'); return; }
+    send('act');
+    toast('已触发本页交互');
+  };
+  $('reset').onclick = function(){
+    if(confirm('重开演示？电脑上的页面会刷新，计时也会重置。')) send('reset');
+  };
+
+  // 页码抽屉
+  // 有交互的页（1 基显示页码）：02 撤回 / 04 定位落位 / 05 数据 / 06 顺路卡 / 07 人情点 / 08 双确认
+  var ACTIVE_PAGES = { 2:1, 4:1, 5:1, 6:1, 7:1, 8:1, 9:1 };
+  var SHORT = { 2:'研究缘起', 4:'既有方案', 5:'需求调查', 6:'顺路卡', 7:'人情点', 8:'双确认', 10:'端到端', 11:'设计伦理', 13:'结论' };
+
+  var cells = $('cells');
+  function buildCells(){
+    cells.innerHTML = '';
+    for(var i = 0; i < TOTAL; i++){
+      (function(n){
+        var s = SLIDES[n];
+        var b = document.createElement('button');
+        var i0 = document.createElement('i');
+        i0.textContent = String(n + 1).padStart(2, '0');
+        var sp = document.createElement('span');
+        sp.textContent = SHORT[n + 1] || (s ? s.title : '第 ' + (n + 1) + ' 页');
+        b.appendChild(i0); b.appendChild(sp);
+        if(ACTIVE_PAGES[n + 1]){
+          var em = document.createElement('em'); em.textContent = '可重放'; b.appendChild(em);
+        }
+        b.onclick = function(){ goto(n); $('grid').classList.remove('on'); };
+        cells.appendChild(b);
+      })(i);
+    }
+    syncActBtn();
+  }
+
+  function syncActBtn(){
+    var btn = $('act');
+    if(!btn) return;
+    var on = !!ACTIVE_PAGES[page + 1];
+    btn.disabled = !on;
+    btn.textContent = on ? '重放' : '无交互';
+  }
+
+  buildCells();
+  $('pages').onclick = function(){ $('grid').classList.add('on'); };
+  $('gridClose').onclick = function(){ $('grid').classList.remove('on'); };
+  $('grid').onclick = function(e){ if(e.target === this) this.classList.remove('on'); };
+
+  // 键盘（连着蓝牙键盘时也能用）
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goto(page + 1); }
+    if(e.key === 'ArrowLeft') { e.preventDefault(); goto(page - 1); }
+  });
+
+  // 屏幕常亮（支持的话）
+  if('wakeLock' in navigator){
+    navigator.wakeLock.request('screen').catch(function(){});
+  }
+})();
+</script>
+</body>
+</html>

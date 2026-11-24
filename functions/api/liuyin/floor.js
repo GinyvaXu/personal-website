@@ -1,9 +1,9 @@
 /* ============================================================
  * GET /api/liuyin/floor?floor=3
- *   → { users: [{ id, name, floor, points, online }], building }
- * 公开接口（契约未标需 token）；带 token 时排除自己。
+ *   → { users: [{ id, name, nickname, avatar, floor, points, online, is_demo }], floor, building }
+ * 公开接口；带 token 时排除自己。
  * ============================================================ */
-import { handle, ok, parseFloorValue, floorUsers, BUILDING, ApiError } from "./_lib.js";
+import { handle, ok, parseFloorValue, floorUsers, getBuilding, ApiError } from "./_lib.js";
 
 export async function onRequestGet(context) {
   return handle(context, { auth: "optional", body: false }, async ({ env, url, user }) => {
@@ -13,6 +13,6 @@ export async function onRequestGet(context) {
     if (floor == null) throw new ApiError(400, "请指定楼层（1–6）");
 
     const users = await floorUsers(env.DB, floor, user ? user.id : null);
-    return ok({ users, floor, building: BUILDING });
+    return ok({ users, floor, building: await getBuilding(env.DB, floor) });
   });
 }

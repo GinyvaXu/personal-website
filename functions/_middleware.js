@@ -92,6 +92,7 @@ export async function onRequest(context) {
     ct.indexOf("text/html") > -1 &&
     response.status < 400 &&
     url.pathname.indexOf("/admin") !== 0 &&
+    url.pathname.indexOf("/liuyin") !== 0 &&
     url.pathname.indexOf("/api/") !== 0
   ) {
     if (context.waitUntil) context.waitUntil(trackPageview(context, url, host));

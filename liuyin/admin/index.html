@@ -2,28 +2,79 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#ece6da">
 <meta name="robots" content="noindex,nofollow">
 <title>柳荫册 · 管理后台</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234F7359'/%3E%3Cpath d='M8 22c6-1 10-5 12-12' stroke='%23F4EFE4' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="../app.css">
+<link rel="stylesheet" href="admin.css">
 </head>
 <body class="admin">
-<div class="admin-wrap">
-  <header class="admin-head">
-    <div>
+
+<div class="wrap">
+  <!-- ========== 密码登录 ========== -->
+  <section id="login-view" hidden>
+    <div class="login-card">
       <div class="kick">6 号楼 · 管理后台</div>
-      <h1 class="admin-title">柳荫册 · 楼里的账</h1>
-      <div class="admin-sub" id="admin-sub">看人数、看订单，也负责把不该留的删掉。</div>
+      <h1 class="login-title">柳荫册 · 楼里的账</h1>
+      <p class="login-lead">看人数、看订单，也负责把不该留的删掉。只处理异常，不替大家做决定。</p>
+      <form id="login-form" novalidate>
+        <label class="label" for="admin-pw">管理密码</label>
+        <input class="input" id="admin-pw" type="password" autocomplete="current-password"
+               placeholder="后台密码" enterkeyhint="go" aria-describedby="login-err">
+        <p class="form-err" id="login-err" role="alert" hidden></p>
+        <button class="btn primary block" id="login-btn" type="submit">进去</button>
+      </form>
+      <div class="login-foot">
+        <a href="../">‹ 回前台</a>
+        <span>登录状态只在这台设备上保留</span>
+      </div>
     </div>
-    <div class="admin-actions" id="head-actions"></div>
-  </header>
-  <main id="view"></main>
-  <div class="admin-foot">清理操作不可撤销 · 数据只在这栋楼里</div>
+  </section>
+
+  <!-- ========== 管理台 ========== -->
+  <section id="admin-view" hidden>
+    <header class="head">
+      <div class="head-main">
+        <div class="kick">6 号楼 · 管理后台</div>
+        <h1>柳荫册 · 楼里的账</h1>
+        <p class="head-sub">提醒 → 订单 → 用户。只处理异常，不替大家做决定。</p>
+      </div>
+      <div class="head-actions">
+        <button type="button" class="btn sm" data-a="refresh">刷新</button>
+        <button type="button" class="btn sm" data-a="logout">退出</button>
+      </div>
+    </header>
+
+    <div class="stats" id="stats" aria-label="概览统计"></div>
+
+    <nav class="seg" id="seg" role="tablist" aria-label="管理分段">
+      <button type="button" role="tab" data-seg="alerts" aria-selected="true">提醒</button>
+      <button type="button" role="tab" data-seg="orders" aria-selected="false">订单</button>
+      <button type="button" role="tab" data-seg="users" aria-selected="false">用户</button>
+      <button type="button" role="tab" data-seg="robot" aria-selected="false">机器人</button>
+      <button type="button" role="tab" data-seg="more" aria-selected="false">更多</button>
+    </nav>
+
+    <main id="view" class="view" aria-busy="false"></main>
+
+    <footer class="foot">清理操作不可撤销 · 数据只在这栋楼里</footer>
+  </section>
 </div>
-<div class="admin-toast" id="toast" role="status" aria-live="polite"></div>
-<script src="../_mock.js"></script>
-<script src="admin.js"></script>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-body">
+    <h2 id="modal-title">确认操作</h2>
+    <p id="modal-body"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn" id="modal-cancel" data-m="cancel">先不动</button>
+      <button type="button" class="btn primary" id="modal-ok" data-m="ok">确认</button>
+    </div>
+  </div>
+</div>
+
+<script src="admin.js" defer></script>
 </body>
 </html>

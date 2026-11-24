@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#f4efe4">
 <meta name="format-detection" content="telephone=no">
 <title>柳荫册 · 6 号楼</title>
+<meta name="description" content="柳荫册 · 一层楼的人，互相搭把手。写个名字就能进楼，发一条顺手的事，等一个顺路的人。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234F7359'/%3E%3Cpath d='M8 22c6-1 10-5 12-12' stroke='%23F4EFE4' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="app.css">
 </head>
@@ -16,22 +17,19 @@
 
   <div class="stage" id="stage"></div>
 
-  <form class="composer" id="composer" hidden autocomplete="off">
-    <input id="msg-input" type="text" maxlength="100" placeholder="说一句…" aria-label="输入消息">
-    <button type="submit">发送</button>
-  </form>
+  <div class="bottombar" id="bottombar" hidden></div>
 
   <nav class="tabbar" id="tabbar" hidden aria-label="主导航">
     <button class="tab" data-action="go" data-route="home" type="button">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5.5h-5V21H5a1 1 0 0 1-1-1z"/></svg>
-      <span>首页</span>
+      <span>楼里</span>
     </button>
-    <button class="tab" data-action="go" data-route="post" type="button">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-      <span>发单</span>
+    <button class="tab" data-action="go" data-route="route" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h4a4 4 0 0 0 4-4V8"/></svg>
+      <span>顺路</span>
     </button>
     <button class="tab" data-action="go" data-route="orders" type="button">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h9l4 4v12H6z"/><path d="M9 12h6M9 16h4"/></svg>
       <span>订单</span>
     </button>
     <button class="tab" data-action="go" data-route="me" type="button">
@@ -40,17 +38,26 @@
     </button>
   </nav>
 
-  <button class="fab" id="fab" data-action="go-post" type="button" hidden>
+  <div class="fab-scrim" id="fab-scrim" hidden aria-hidden="true"></div>
+  <button class="fab" id="fab" data-action="go" data-route="post" type="button" hidden aria-label="发一条">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
     <span>发一条</span>
   </button>
 
   <div class="netbar" id="netbar" hidden role="status">网络不太好，重试中…</div>
-  <div class="stage-fade" id="stage-fade" hidden aria-hidden="true"></div>
   <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+  <div class="overlay" id="overlay" hidden></div>
 
 </main>
-<script src="_mock.js"></script>
+<script>
+/* 本地联调用：仅 ?devmock=1 时加载内存版后端（生产默认不加载、index.html 也不引用它） */
+(function () {
+  try {
+    if (!/[?&]devmock=1(?:&|$)/.test(location.search)) return;
+    document.write('<script src="_devmock.js"><\/script>');
+  } catch (e) {}
+})();
+</script>
 <script src="app.js"></script>
 </body>
 </html>
