@@ -164,9 +164,9 @@
   }
 
   // ---------- 稿子 ----------
-  fetch('script.json?v=1', { cache: 'force-cache' })
+  fetch('script.json?v=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.json(); })
-    .then(function(list){ SLIDES = list || []; buildCells(); render(); })
+    .then(function(list){ SLIDES = list || []; var n=0; SLIDES.forEach(function(s){ n += (s.chars||0); }); var el=document.querySelector('.brand small'); if(el) el.textContent='LIUYIN · 提词台 · '+SLIDES.length+' 段 '+n+' 字'; buildCells(); render(); })
     .catch(function(){ SLIDES = []; render(); });
 
   function render(){
